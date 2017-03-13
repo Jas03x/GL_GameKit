@@ -19,4 +19,3 @@ const float QUAD[12] =
     -1.0f, -1.0f, // bottom left
     1.0f, -1.0f  // bottom right
 };
-

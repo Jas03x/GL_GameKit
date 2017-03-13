@@ -3,7 +3,7 @@
 
 #ifdef __APPLE__
     #include "TargetConditionals.h"
-    #elif TARGET_OS_IPHONE
+    #ifdef TARGET_OS_IPHONE
         #include "../mobile/ios/File.h"
     #else
         #include "../pc/File.h"

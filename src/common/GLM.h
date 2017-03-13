@@ -9,8 +9,8 @@
 #ifndef GLM_h
 #define GLM_h
 
-#include "../../TreeD/libs/glm/glm/glm.hpp"
-#include "../../TreeD/libs/glm/glm/gtx/transform.hpp"
-#include "../../TreeD/libs/glm/glm/gtx/quaternion.hpp"
+#include "../../../Libraries/glm/glm/glm.hpp"
+#include "../../../Libraries/glm/glm/gtx/transform.hpp"
+#include "../../../Libraries/glm/glm/gtx/quaternion.hpp"
 
 #endif /* GLM_h */
