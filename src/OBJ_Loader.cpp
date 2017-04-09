@@ -20,12 +20,12 @@ bool OBJ_Loader::read_objects(const char* path)
         printf("Error: File %s not found.\n", path);
         return false;
     }
-    
+
     char buffer[256];
     while(true)
     {
         if(fscanf(file, "%s", buffer) == EOF) break;
-        
+
         if(strcmp(buffer, "v") == 0) {
             glm::vec3 v;
             fscanf(file, "%f %f %f\n", &v[0], &v[1], &v[2]);
@@ -47,14 +47,15 @@ bool OBJ_Loader::read_objects(const char* path)
                    &v[0][0], &v[0][1], &v[0][2],
                    &v[1][0], &v[1][1], &v[1][2],
                    &v[2][0], &v[2][1], &v[2][2]);
-            
-            for(unsigned int i = 0; i < 3; i++)
-                this->indices.push_back(v[i]);
+
+            this->indices.push_back(v[0]);
+            this->indices.push_back(v[1]);
+            this->indices.push_back(v[2]);
         }
         else fgets(buffer, 256, file);
     }
-    
+
     fclose(file);
-    
+
     return true;
 }
