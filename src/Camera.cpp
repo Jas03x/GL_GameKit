@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Camera.hpp"
+#include "Camera.h"
 
 glm::mat4 Camera::model, Camera::view, Camera::projection;
 glm::mat4 Camera::mv, Camera::mvp;

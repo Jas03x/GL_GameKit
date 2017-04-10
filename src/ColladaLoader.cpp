@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "ColladaLoader.hpp"
+#include "ColladaLoader.h"
 
 ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
 {

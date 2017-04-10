@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "DebugDrawer.hpp"
+#include "DebugDrawer.h"
 
 
 DebugDrawer::DebugDrawer()

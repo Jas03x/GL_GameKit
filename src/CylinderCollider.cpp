@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "CylinderCollider.hpp"
+#include "CylinderCollider.h"
 
 CylinderCollider::CylinderCollider(const glm::vec3& length, const glm::vec3& scale, float mass) : Collider(scale)
 {

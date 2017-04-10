@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Shader.hpp"
+#include "Shader.h"
 
 bool shader_status(GLuint id, GLenum type) {
     GLint status = 0;

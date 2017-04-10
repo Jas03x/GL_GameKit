@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Clock.hpp"
+#include "Clock.h"
 
 Uint32 Clock::last;
 Uint32 Clock::current;

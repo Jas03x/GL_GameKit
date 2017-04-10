@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Texture.hpp"
+#include "Texture.h"
 
 
 TextureLoader::TextureLoader(const char* path)

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Quad.hpp"
+#include "Quad.h"
 
 const float QUAD[12] =
 {

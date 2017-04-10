@@ -6,7 +6,7 @@
 //  Copyright © 2016 Jas S. All rights reserved.
 //
 
-#include "OBJ_Loader.hpp"
+#include "OBJ_Loader.h"
 
 OBJ_Loader::OBJ_Loader(const char* obj_path)
 {

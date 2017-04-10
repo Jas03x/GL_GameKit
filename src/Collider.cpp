@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Collider.hpp"
+#include "Collider.h"
 
 Collider::Collider(const glm::vec3& _scale)
 {
