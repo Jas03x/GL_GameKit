@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "GL.h"
-#include "File.hpp"
+#include "File.h"
 
 // Class to manage the shader code
 class ShaderSource

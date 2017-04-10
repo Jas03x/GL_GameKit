@@ -13,7 +13,7 @@
 
 #include "GLM.h"
 #include "World.hpp"
-#include "Collider.hpp"
+#include "Collider.h"
 
 class CylinderCollider : public Collider
 {

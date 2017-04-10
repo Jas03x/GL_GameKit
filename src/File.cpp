@@ -13,15 +13,15 @@ std::string File::read(const char* path)
     FILE* file = File::open(path, "r");
 
     fseek(file, 0L, SEEK_END);
-    unsigned long size = ftell(file);
+    unsigned long length = ftell(file);
     rewind(file);
 
     char* data = new char[length + 1];
-    fread(data, 1, size, file);
+    fread(data, 1, length, file);
     fclose(file);
 
-    data[size] = '\0';
-    std::string str = std::string(cstr);
+    data[length] = '\0';
+    std::string str = std::string(data);
 
     delete[] data;
     return str;

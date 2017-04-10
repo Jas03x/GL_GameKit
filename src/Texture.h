@@ -14,7 +14,7 @@
 #include <string.h>
 
 #include "GL.h"
-#include "File.hpp"
+#include "File.h"
 
 class TextureLoader
 {
