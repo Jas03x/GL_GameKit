@@ -31,12 +31,11 @@ public:
 class Texture
 {
     GLenum id;
-    void load(const char* path);
 
 public:
     Texture() {}
-    Texture(const char* path);
-    ~Texture();
+    void load(const char* path);
+    void destroy();
 
     void bind(GLenum uniform, int target) const {
         glActiveTexture(GL_TEXTURE0 + target);

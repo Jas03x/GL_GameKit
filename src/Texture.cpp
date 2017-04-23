@@ -118,7 +118,7 @@ TextureLoader::~TextureLoader()
     if(this->data != NULL) free(this->data);
 }
 
-Texture::Texture(const char* path)
+void Texture::load(const char* path)
 {
     TextureLoader loader = TextureLoader(path);
 
@@ -131,7 +131,7 @@ Texture::Texture(const char* path)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
-Texture::~Texture() {
+void Texture::destroy() {
     if(glIsTexture(id) == GL_TRUE)
         glDeleteTextures(1, &id);
 }
