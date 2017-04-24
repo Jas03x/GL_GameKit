@@ -101,7 +101,7 @@ void DebugDrawer::draw()
 {
     this->bind();
     glBindVertexArray(this->vao);
-    glUniformMatrix4fv(matrix, 1, GL_FALSE, &Camera::mvp[0][0]);
+    glUniformMatrix4fv(matrix, 1, GL_FALSE, &Camera::vp[0][0]);
     glDrawArrays(GL_LINES, 0, (GLsizei) this->vertex_count);
     glBindVertexArray(0);
 }

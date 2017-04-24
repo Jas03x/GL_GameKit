@@ -14,14 +14,21 @@
 // the camera designed to stay behind the player
 namespace Camera
 {
-    extern glm::mat4 model, view, projection;
-    extern glm::mat4 mv, mvp;
+    extern glm::mat4 view, projection;
+    extern glm::mat4 vp;
     
-    void init(float width, float height);
+    void init(float width, float height, const glm::vec3& position, const glm::vec3& target);
     
     inline void update() {
-        mv = view * model;
-        mvp = projection * mv;
+        vp = projection * view;
+    }
+    
+    inline void translate(const glm::vec3& translation) {
+        Camera::view = glm::translate(Camera::view, translation);
+    }
+    
+    inline void rotate(float radians, const glm::vec3& axis) {
+        Camera::view = glm::rotate(Camera::view, radians, axis);
     }
 }
 
