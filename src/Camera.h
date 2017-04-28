@@ -17,7 +17,8 @@ namespace Camera
     extern glm::mat4 view, projection;
     extern glm::mat4 vp;
     
-    void init(float width, float height, const glm::vec3& position, const glm::vec3& target);
+    void perspectiveView(float width, float height, const glm::vec3& position, const glm::vec3& target);
+    void orthographicView(float width, float height, const glm::vec3& position);
     
     inline void update() {
         vp = projection * view;

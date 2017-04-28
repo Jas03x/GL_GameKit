@@ -11,6 +11,17 @@
 
 #include <stdio.h>
 
-extern const float QUAD[12];
+#include "GL.h"
+
+namespace Quad
+{
+    extern const float DATA[12];
+    extern GLuint _VAO;
+    extern GLuint _VBO;
+    
+    void init();
+    void bind();
+    void destroy();
+}
 
 #endif /* Quad_hpp */
