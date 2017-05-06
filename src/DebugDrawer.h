@@ -17,7 +17,7 @@
 #include "GL.h"
 #include "Camera.h"
 #include "Shader.h"
-#include <btIDebugDraw.h>
+#include <LinearMath/btIDebugDraw.h>
 
 #define P_DEBUG_MAX_BUFFER_LENGTH 1000000
 
