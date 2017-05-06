@@ -121,7 +121,8 @@ TextureLoader::~TextureLoader()
 void Texture::load(const char* path)
 {
     TextureLoader loader = TextureLoader(path);
-
+    this->dimensions = glm::uvec2(loader.width, loader.height);
+    
     glGenTextures(1, &this->id);
     glBindTexture(GL_TEXTURE_2D, this->id);
     glTexImage2D(GL_TEXTURE_2D, 0, loader.type, loader.width, loader.height, 0, loader.type, GL_UNSIGNED_BYTE, loader.data);

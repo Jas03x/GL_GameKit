@@ -18,13 +18,15 @@ void Camera::perspectiveView(float width, float height, const glm::vec3& positio
     Camera::update();
 }
 
-void Camera::orthographicView(float width, float height, const glm::vec3& position)
+void Camera::orthographicView(float width, float height)
 {
-    view = glm::translate(position);
+    view = glm::mat4(1.0f);
+    // origin = lower left of screen
     projection = glm::mat4(
                            2.0f / width, 0, 0, 0,
                            0, 2.0f / height, 0 , 0,
                            0, 0, 1, 0,
                            0, 0, 0, 1
                         );
+    projection = glm::translate(projection, glm::vec3(-width/2.0f, -height/2.0f, 0.0f));
 }

@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "GL.h"
+#include "GLM.h"
 #include "File.h"
 
 class TextureLoader
@@ -31,6 +32,7 @@ public:
 class Texture
 {
     GLenum id;
+    glm::uvec2 dimensions;
 
 public:
     Texture() {}
@@ -42,6 +44,8 @@ public:
         glBindTexture(GL_TEXTURE_2D, this->id);
         glUniform1i(uniform, target);
     }
+    
+    inline const glm::uvec2& getDimensions() const { return this->dimensions; }
 };
 
 #endif /* Texture_hpp */

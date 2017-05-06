@@ -31,10 +31,10 @@ private:
     
 protected:
     Shader(){}
-    ~Shader();
     
     void source(const ShaderSource& shader_source);
     void link(const ShaderSource& shader_source);
+    void destroy();
     GLint getAttribute(const char* name);
     GLint getUniform(const char* name);
     void bindAttributeLocation(GLuint index, const char* name);

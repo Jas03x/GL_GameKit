@@ -73,7 +73,7 @@ void Shader::link(const ShaderSource& shader_source)
     glDetachShader(this->id, shader_source.fragment_shader);
 }
 
-Shader::~Shader() {
+void Shader::destroy() {
     if(glIsProgram(this->id) == GL_TRUE) glDeleteProgram(this->id);
 }
 

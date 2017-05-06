@@ -40,4 +40,15 @@ namespace Clock
     }
 }
 
+class CClock
+{
+private:
+    float delta;
+    float ms; // ticks every ms seconds
+public:
+    CClock();
+    CClock(Uint32 milliseconds);
+    bool tick();
+};
+
 #endif /* Clock_hpp */
