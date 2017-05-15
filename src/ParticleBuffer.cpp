@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "ParticleBuffer.hpp"
+#include "ParticleBuffer.h"
 
 void ParticleBuffer::genVertexArrays(int max_particles)
 {

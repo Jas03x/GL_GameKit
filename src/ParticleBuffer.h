@@ -14,7 +14,7 @@
 
 #include "Quad.h"
 #include "Texture.h"
-#include "Particle.hpp"
+#include "Particle.h"
 
 class ParticleBuffer
 {

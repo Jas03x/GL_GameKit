@@ -6,4 +6,4 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Particle.hpp"
+#include "Particle.h"

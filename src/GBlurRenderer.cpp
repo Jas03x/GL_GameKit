@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "GBlurRenderer.hpp"
+#include "GBlurRenderer.h"
 
 void GBlurRenderer::init(float width, float height)
 {

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "FrameRenderer.hpp"
+#include "FrameRenderer.h"
 
 void FrameRenderer::init()
 {

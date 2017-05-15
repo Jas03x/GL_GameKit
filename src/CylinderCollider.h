@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "GLM.h"
-#include "World.hpp"
+#include "World.h"
 #include "Collider.h"
 
 class CylinderCollider : public Collider

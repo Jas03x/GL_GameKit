@@ -58,6 +58,14 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                 if(v->y < this->global_min.y) this->global_min.y = v->y;
                 if(v->z < this->global_min.z) this->global_min.z = v->z;
                 
+                // OR
+                /*
+                if(glm::length(vec) > glm::length(max)) max = vec;
+                if(glm::length(vec) < glm::length(min)) min = vec;
+                if(glm::length(vec) > glm::length(this->global_max)) this->global_max = vec;
+                if(glm::length(vec) > glm::length(this->global_min)) this->global_min = vec;
+                */
+                
                 _vertices.push_back(vec);
             }
             if(mesh->HasNormals()) {

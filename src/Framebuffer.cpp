@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Framebuffer.hpp"
+#include "Framebuffer.h"
 
 void Framebuffer::init(unsigned int width, unsigned int height)
 {

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "World.hpp"
+#include "World.h"
 
 btBroadphaseInterface* World::broadphase;
 btDefaultCollisionConfiguration* World::collision_configuration;

@@ -21,6 +21,7 @@ void Camera::perspectiveView(float width, float height, const glm::vec3& positio
 void Camera::orthographicView(float width, float height)
 {
     view = glm::mat4(1.0f);
+    
     // origin = lower left of screen
     projection = glm::mat4(
                            2.0f / width, 0, 0, 0,
@@ -28,5 +29,7 @@ void Camera::orthographicView(float width, float height)
                            0, 0, 1, 0,
                            0, 0, 0, 1
                         );
+    // translate the projection matrix because we have to move the origin of the screen
     projection = glm::translate(projection, glm::vec3(-width/2.0f, -height/2.0f, 0.0f));
+    Camera::update();
 }
