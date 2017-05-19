@@ -10,7 +10,7 @@
 
 void CharacterRenderer::load()
 {
-    ShaderSource source = ShaderSource("/Users/Jas/Documents/GameKit/src/Shaders/character.vert", "/Users/Jas/Documents/GameKit/src/Shaders/character.frag");
+    ShaderSource source = ShaderSource("character.vert", "character.frag");
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");

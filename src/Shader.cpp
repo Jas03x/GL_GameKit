@@ -26,8 +26,8 @@ bool shader_status(GLuint id, GLenum type) {
 
 ShaderSource::ShaderSource(const char* vpath, const char* fpath)
 {
-    std::string vertex_source = File::read(vpath);
-    std::string fragment_source = File::read(fpath);
+    std::string vertex_source = File::read((std::string(SHADERS_PATH) + vpath).c_str());
+    std::string fragment_source = File::read((std::string(SHADERS_PATH) + fpath).c_str());
     
     this->vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     this->fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);

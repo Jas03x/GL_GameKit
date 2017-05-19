@@ -10,7 +10,7 @@
 
 void GBlurRenderer::init(float width, float height)
 {
-    ShaderSource source = ShaderSource("/Users/Jas/Documents/RoughRocket/RoughRocket/Shaders/gblur.vert", "/Users/Jas/Documents/RoughRocket/RoughRocket/Shaders/gblur.frag");
+    ShaderSource source = ShaderSource("gblur.vert", "gblur.frag");
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);

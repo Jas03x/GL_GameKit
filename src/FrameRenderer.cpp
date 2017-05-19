@@ -10,7 +10,7 @@
 
 void FrameRenderer::init()
 {
-    ShaderSource source = ShaderSource("/Users/Jas/Documents/RoughRocket/RoughRocket/Shaders/frame.vert", "/Users/Jas/Documents/RoughRocket/RoughRocket/Shaders/frame.frag");
+    ShaderSource source = ShaderSource("frame.vert", "frame.frag");
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);

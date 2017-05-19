@@ -10,7 +10,7 @@
 
 void MeshRenderer::load()
 {
-    ShaderSource source = ShaderSource("/Users/Jas/Documents/GameKit/src/Shaders/mesh.vert", "/Users/Jas/Documents/GameKit/src/Shaders/mesh.frag");
+    ShaderSource source = ShaderSource("mesh.vert", "mesh.frag");
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");

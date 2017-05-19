@@ -12,6 +12,10 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
 {
     Assimp::Importer* importer = new Assimp::Importer();
     const struct aiScene* scene = importer->ReadFile(path, aiProcess_Triangulate);
+	if (!scene) {
+		printf("Error: Could not open model file %s.\n", path);
+		throw -1;
+	}
     
     std::vector<glm::vec3> _vertices;
     std::vector<glm::vec3> _normals;

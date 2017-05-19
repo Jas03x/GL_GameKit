@@ -13,7 +13,7 @@
 
 #include <vector>
 
-#include <BulletDynamics/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "DebugDrawer.h"
 
 namespace World

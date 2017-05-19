@@ -9,7 +9,12 @@
 #ifndef GL_h
 #define GL_h
 
-#include <OpenGL/gl3.h>
+#ifdef _WIN32
+	#define GLEW_STATIC
+	#include <GL/glew.h>
+#else
+	#include <OpenGL/gl3.h>
+#endif
 
 inline void glUnbindBuffer(){ glBindBuffer(GL_ARRAY_BUFFER, 0); }
 inline void glUnbindVertexArray(){ glBindBuffer(GL_ARRAY_BUFFER, 0); }

@@ -10,7 +10,7 @@
 #define Collider_hpp
 
 #include "GLM.h"
-#include <BulletDynamics/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 
 class Collider
 {

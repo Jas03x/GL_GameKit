@@ -11,7 +11,7 @@
 
 DebugDrawer::DebugDrawer()
 {
-    ShaderSource source = ShaderSource("/Users/Jas/Documents/Zombies/Zombies/Shaders/debug.vert", "/Users/Jas/Documents/Zombies/Zombies/Shaders/debug.frag");
+    ShaderSource source = ShaderSource("debug.vert", "debug.frag");
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);

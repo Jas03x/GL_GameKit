@@ -1,7 +1,13 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include <stdio.h>
+
+#ifdef _WIN32
+	#include <GL/glew.h>
+#endif
 
 #include "Keyboard.h"
 
