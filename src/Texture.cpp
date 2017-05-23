@@ -8,7 +8,6 @@
 
 #include "Texture.h"
 
-
 TextureLoader::TextureLoader(const char* path)
 {
     FILE* file = File::open(path, "rb");

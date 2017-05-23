@@ -8,6 +8,14 @@
 
 #include "Mesh.h"
 
+Mesh::Mesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count)
+{
+	this->vao = _vao;
+	this->vbo = _vbo;
+	this->texture.load(_texture);
+	this->vertex_count = _vertex_count;
+}
+
 void Mesh::load(const char* source, const char* texture)
 {
     OBJ_Loader loader = OBJ_Loader(source);

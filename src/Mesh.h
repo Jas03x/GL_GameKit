@@ -29,7 +29,8 @@ private:
 public:
     glm::mat4 model_matrix;
     
-    Mesh(){}
+	Mesh(){}
+	Mesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count);
     
     void load(const char* source, const char* texture);
     inline void bind() const { glBindVertexArray(this->vao); }
