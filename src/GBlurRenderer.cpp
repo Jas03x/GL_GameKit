@@ -10,7 +10,7 @@
 
 void GBlurRenderer::init(float width, float height)
 {
-    ShaderSource source = ShaderSource(INTERNAL("gblur.vert"), INTERNAL("gblur.frag"));
+    ShaderSource source = ShaderSource(INT_SHDR("gblur.vert"), INT_SHDR("gblur.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);

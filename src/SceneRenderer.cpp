@@ -2,7 +2,7 @@
 
 void SceneRenderer::load()
 {
-	ShaderSource source = ShaderSource(INTERNAL("scene.vert"), INTERNAL("scene.frag"));
+	ShaderSource source = ShaderSource(INT_SHDR("scene.vert"), INT_SHDR("scene.frag"));
 	this->source(source);
 	this->bindAttributeLocation(0, "vertex");
 	this->bindAttributeLocation(1, "normal");

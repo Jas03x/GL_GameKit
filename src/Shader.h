@@ -13,12 +13,7 @@
 
 #include "GL.h"
 #include "File.h"
-
-#ifdef _WIN32
-	#define INTERNAL(x) "C:\\Users\\Jas\\Documents\\Projects\\GameKit\\src\\Shaders\\" x
-#else
-	#define INTERNAL(x) "/Users/Jas/Documents/GameKit/src/Shaders/" x
-#endif
+#include "Path.h"
 
 // Class to manage the shader code
 class ShaderSource

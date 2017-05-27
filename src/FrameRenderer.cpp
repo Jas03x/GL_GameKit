@@ -10,7 +10,7 @@
 
 void FrameRenderer::load()
 {
-    ShaderSource source = ShaderSource(INTERNAL("frame.vert"), INTERNAL("frame.frag"));
+    ShaderSource source = ShaderSource(INT_SHDR("frame.vert"), INT_SHDR("frame.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);

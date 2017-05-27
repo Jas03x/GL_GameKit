@@ -2,7 +2,7 @@
 
 void PointLightRenderer::load(unsigned int width, unsigned int height, const DSFramebuffer& fbo)
 {
-	ShaderSource source = ShaderSource(INTERNAL("point_light.vert"), INTERNAL("point_light.frag"));
+	ShaderSource source = ShaderSource(INT_SHDR("point_light.vert"), INT_SHDR("point_light.frag"));
 	this->source(source);
 	this->bindAttributeLocation(0, "vertex");
 	this->link(source);
