@@ -20,23 +20,42 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
     std::vector<glm::vec3> _vertices;
     std::vector<glm::vec3> _normals;
     std::vector<glm::vec2> _uvs;
+	std::vector<float> t_hash_map = std::vector<float>(scene->mNumMaterials); // the texture hash map; since materials can be split up into different materials, we need to remember which material was the parent
+
+	for (unsigned int i = 0; i < scene->mNumMaterials; i++)
+	{
+		if (scene->mMaterials[i]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString tex_path;
+			if (scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &tex_path, NULL, NULL, NULL, NULL, NULL) != AI_SUCCESS) {
+				puts("Assimp texture path could not be read.");
+				throw - 1;
+			}
+			//printf("Debug: Read texture %s\n", tex_path.C_Str());
+			std::string tex = std::string(tex_path.C_Str());
+			std::vector<std::string>::iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
+			if (index == this->textures.end()) {
+				t_hash_map[i] = this->textures.size();
+				this->textures.push_back(tex);
+			}
+			else t_hash_map[i] = index - this->textures.begin();
+		}
+	}
     
     for(unsigned int i = 0; i < scene->mNumMeshes; i++)
     {
         const struct aiMesh* mesh = scene->mMeshes[i];
         std::string name = std::string(mesh->mName.C_Str());
-        // helper function
-        auto find_node = [this, name]() -> float {
-            for(unsigned int i = 0; i < mesh_names.size(); i++) {
-                if(name == mesh_names[i])
-                    return i;
-            }
-            // else not found:
-            mesh_names.push_back(name);
-            return mesh_names.size() - 1;
-        };
         
-        float node_index = find_node();
+        float node_index = [this, name]() -> float {
+			for (unsigned int i = 0; i < mesh_names.size(); i++) {
+				if (name == mesh_names[i])
+					return i;
+			}
+			// else not found:
+			mesh_names.push_back(name);
+			return mesh_names.size() - 1;
+		}();
         glm::vec3& max = this->max_dimensions[name];
         glm::vec3& min = this->min_dimensions[name];
         
@@ -77,11 +96,11 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                 glm::vec3 vec = glm::vec3(v->x, v->y, v->z);
                 _normals.push_back(vec);
             }
-            if(mesh->HasTextureCoords(0)) {
-                const aiVector3D* v = &mesh->mTextureCoords[0][o];
-                glm::vec2 vec = glm::vec2(v->x, v->y);
-                _uvs.push_back(vec);
-            }
+			if (mesh->HasTextureCoords(0)) { // ONLY SUPPORTS ONE CHANNEL OF UVS (you can't put more than one texture per face)
+				const aiVector3D* v = &mesh->mTextureCoords[0][o];
+				glm::vec2 vec = glm::vec2(v->x, v->y);
+				_uvs.push_back(vec);
+			}
         }
         if(mesh->HasFaces()) {
             for(unsigned int o = 0; o < mesh->mNumFaces; o++) {
@@ -94,6 +113,7 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                     this->vertices.push_back(_vertices.at(face->mIndices[t]));
                     this->normals.push_back(_normals.at(face->mIndices[t]));
                     this->uvs.push_back(_uvs.at(face->mIndices[t]));
+					this->texture_indices.push_back(t_hash_map.at(mesh->mMaterialIndex));
                     this->node_indices.push_back(node_index);
                 }
             }
@@ -163,7 +183,6 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
     memcpy(&this->inverse_root[0][0], &scene->mRootNode->mTransformation[0][0], sizeof(float) * 16);
     this->inverse_root = glm::inverse(this->inverse_root);
     this->process_nodes(scene->mRootNode);
-    this->animation_length = (unsigned int) this->bone_animations.begin()->second.translations.size(); // assume all lengths equal
     delete importer;
 }
 

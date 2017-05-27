@@ -14,13 +14,15 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "Character.h"
+#include "Framebuffer.h"
 
 class CharacterRenderer : public Shader
 {
 private:
     GLuint texture_id;
-    GLuint camera_matrix;
-    
+    GLuint vertex_matrix;
+	GLuint normal_matrix;
+
 public:
     CharacterRenderer(){}
     void load();

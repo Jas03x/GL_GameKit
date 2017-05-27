@@ -8,7 +8,7 @@
 
 #include "FrameRenderer.h"
 
-void FrameRenderer::init()
+void FrameRenderer::load()
 {
     ShaderSource source = ShaderSource("frame.vert", "frame.frag");
     this->source(source);

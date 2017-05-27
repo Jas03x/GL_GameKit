@@ -24,7 +24,7 @@ Window::Window(const char* title, unsigned int width, unsigned int height)
     }
 
 	#ifdef _WIN32
-	#define GLEW_EXPERIMENTAL
+	glewExperimental = true;
 	if (glewInit() != GLEW_OK) {
 		puts("GLEW initalization error.");
 		throw -1;

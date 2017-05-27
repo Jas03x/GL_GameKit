@@ -8,7 +8,7 @@
 
 #include "Shader.h"
 
-bool shader_status(GLuint id, GLenum type) {
+bool shader_status(GLuint id, GLenum type, const std::string& filename) {
     GLint status = 0;
     glGetShaderiv(id, GL_COMPILE_STATUS, &status);
     if(status == GL_FALSE) {
@@ -17,7 +17,7 @@ bool shader_status(GLuint id, GLenum type) {
         char* error = new char[length];
         glGetShaderInfoLog(id, length, &length, error);
         
-        printf("%s shader error:\n%s\n", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", error);
+        printf("%s shader error (%s):\n%s\n", type == GL_VERTEX_SHADER ? "Vertex" : "Fragment", filename.c_str(), error);
         delete[] error;
         return false;
     }
@@ -37,7 +37,7 @@ ShaderSource::ShaderSource(const char* vpath, const char* fpath)
     glShaderSource(this->fragment_shader, 1, &f_source, 0);
     glCompileShader(this->vertex_shader);
     glCompileShader(this->fragment_shader);
-    if(!shader_status(this->vertex_shader, GL_VERTEX_SHADER) || !shader_status(this->fragment_shader, GL_FRAGMENT_SHADER))
+    if(!shader_status(this->vertex_shader, GL_VERTEX_SHADER, vpath) || !shader_status(this->fragment_shader, GL_FRAGMENT_SHADER, fpath))
         throw -1;
 }
 

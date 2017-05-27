@@ -22,7 +22,7 @@ private:
     GLuint tex;
 public:
     FrameRenderer(){}
-    void init();
+    void load();
     void render(GLuint texture_id);
     void destroy();
 };

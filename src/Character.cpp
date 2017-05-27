@@ -8,10 +8,16 @@
 
 #include "Character.h"
 
-void Character::load(const char* source, const char* texture)
+void Character::load(const char* path, const char* name)
 {
-    ColladaLoader loader = ColladaLoader(source);
-    this->texture.load(texture);
+	std::string source = std::string(path) + name;
+    ColladaLoader loader = ColladaLoader(source.c_str());
+	if (loader.getTextures().size() != 1) {
+		printf("Invalid texture count [%i] in collada file [%s].\n", loader.getTextures().size(), source.c_str());
+		throw -1;
+	}
+	std::string t_path = std::string(path) + *loader.getTextures().begin();
+    this->texture.load(t_path.c_str());
     
     size_t vc = loader.getVertices().size();
     
@@ -31,6 +37,9 @@ void Character::load(const char* source, const char* texture)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 3));
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 6));
+	// INSERT BONE DATA HERE
+	// SLOT 3 = index
+	// SLOT 4 = weight
     
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

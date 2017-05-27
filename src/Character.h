@@ -18,6 +18,7 @@
 #include "Texture.h"
 #include "ColladaLoader.h"
 
+// TODO: IMPLEMENT BONES
 class Character
 {
 protected:
@@ -26,7 +27,7 @@ protected:
     Texture texture;
     unsigned int vertex_count;
     
-    void load(const char* source, const char* texture);
+    void load(const char* path, const char* name);
     void destroy();
     
 public:

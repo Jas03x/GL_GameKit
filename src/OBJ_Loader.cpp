@@ -8,18 +8,14 @@
 
 #include "OBJ_Loader.h"
 
-OBJ_Loader::OBJ_Loader(const char* obj_path)
+OBJ_Loader::OBJ_Loader(const char* obj_path, OBJ_Format format)
 {
-    if(!this->read_objects(obj_path)) throw -1;
+    if(!this->read_objects(obj_path, format)) throw -1;
 }
 
-bool OBJ_Loader::read_objects(const char* path)
+bool OBJ_Loader::read_objects(const char* path, OBJ_Format format)
 {
     FILE* file = File::open(path, "r");
-    if(!file) {
-        printf("Error: File %s not found.\n", path);
-        return false;
-    }
 
     char buffer[256];
     while(true)
@@ -41,12 +37,30 @@ bool OBJ_Loader::read_objects(const char* path)
             fscanf(file, "%f %f\n", &v[0], &v[1]);
             this->uvs.push_back(v);
         }
-        else if(strcmp(buffer, "f") == 0) {
+        else if(strcmp(buffer, "f") == 0)
+		{
             glm::uvec3 v[3] = {glm::uvec3(0), glm::uvec3(0), glm::uvec3(0)};
-            fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n",
-                   &v[0][0], &v[0][1], &v[0][2],
-                   &v[1][0], &v[1][1], &v[1][2],
-                   &v[2][0], &v[2][1], &v[2][2]);
+			switch (format)
+			{
+				case V:
+					fscanf(file, "%u// %u// %u//\n", &v[0][0], &v[1][0], &v[2][0]);
+					break;
+				case VN:
+					fscanf(file, "%u//%u %u//%u %u//%u\n",
+						&v[0][0], &v[0][2],
+						&v[1][0], &v[1][2],
+						&v[2][0], &v[2][2]);
+					break;
+				case VNT:
+					fscanf(file, "%u/%u/%u %u/%u/%u %u/%u/%u\n",
+						&v[0][0], &v[0][1], &v[0][2],
+						&v[1][0], &v[1][1], &v[1][2],
+						&v[2][0], &v[2][1], &v[2][2]);
+					break;
+				default:
+					puts("OBJ_Loader unknown format.");
+					throw -1;
+			}
 
             this->indices.push_back(v[0]);
             this->indices.push_back(v[1]);

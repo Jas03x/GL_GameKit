@@ -24,9 +24,11 @@
 class ColladaLoader
 {
 private:
+	// vertex data
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
+	std::vector<float> texture_indices; // the texture which each mesh uses (for multi-textured models)
     std::vector<float> bone_weights; // the weights of each bone
     std::vector<float> bone_indices; // the indices of each bone
     std::vector<float> node_indices; // the index into the world transform nodes
@@ -38,14 +40,15 @@ private:
     std::map<std::string, Animation> bone_animations;
     std::map<std::string, glm::mat4> bone_offsets;
     std::map<std::string, glm::mat4> node_transforms;
+	glm::mat4 inverse_root;
     
-    glm::mat4 inverse_root;
-    unsigned int animation_length;
-    
+	// dimensional data
     glm::vec3 global_max, global_min;
     std::map<std::string, glm::vec3> max_dimensions;
     std::map<std::string, glm::vec3> min_dimensions;
-    
+
+	std::vector<std::string> textures;
+
     glm::mat4 calculate_node(const aiNode* root);
     void process_nodes(const aiNode* node);
     
@@ -55,6 +58,7 @@ public:
     const std::vector<glm::vec3>& getVertices() const { return this->vertices; }
     const std::vector<glm::vec3>& getNormals() const { return this->normals; }
     const std::vector<glm::vec2>& getUVs() const { return this->uvs; }
+	const std::vector<float>& getTextureIndices() const { return this->texture_indices; }
     const std::vector<float>& getBoneWeights() const { return this->bone_weights; }
     const std::vector<float>& getBoneIndices() const { return this->bone_indices; }
     const std::vector<float>& getNodeIndices() const { return this->node_indices; }
@@ -80,7 +84,7 @@ public:
     }
     
     const glm::mat4& getInverseRoot() const { return this->inverse_root; }
-    unsigned int getAnimationLength() const { return this->animation_length; }
+	const std::vector<std::string>& getTextures() const { return this->textures; }
     
     inline void toBuffer(std::vector<float>& buffer) const
     {

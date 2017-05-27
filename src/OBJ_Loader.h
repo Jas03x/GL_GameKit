@@ -18,16 +18,24 @@
 
 class OBJ_Loader
 {
+public:
+	enum OBJ_Format
+	{
+		V,
+		VN,
+		VNT
+	};
+
 private:
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
     std::vector<glm::uvec3> indices;
 
-    bool read_objects(const char* path);
+    bool read_objects(const char* path, OBJ_Format format);
 
 public:
-    OBJ_Loader(const char* obj_path);
+    OBJ_Loader(const char* obj_path, OBJ_Format format = VNT);
 
     const std::vector<glm::vec3>& getVertices() const { return this->vertices; }
     const std::vector<glm::vec3>& getNormals() const { return this->normals; }
