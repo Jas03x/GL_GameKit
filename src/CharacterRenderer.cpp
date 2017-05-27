@@ -10,7 +10,7 @@
 
 void CharacterRenderer::load()
 {
-    ShaderSource source = ShaderSource("character.vert", "character.frag");
+    ShaderSource source = ShaderSource(INTERNAL("character.vert"), INTERNAL("character.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");

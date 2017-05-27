@@ -2,7 +2,7 @@
 
 void SceneRenderer::load()
 {
-	ShaderSource source = ShaderSource("scene.vert", "scene.frag");
+	ShaderSource source = ShaderSource(INTERNAL("scene.vert"), INTERNAL("scene.frag"));
 	this->source(source);
 	this->bindAttributeLocation(0, "vertex");
 	this->bindAttributeLocation(1, "normal");
@@ -36,8 +36,8 @@ void SceneRenderer::render(const Scene& scene)
 		vmatrices[i] = mvp * scene.getNodeTransforms().at(i);
 		nmatrices[i] = glm::inverse(glm::transpose(mv * scene.getNodeTransforms().at(i)));
 	}
-	glUniformMatrix4fv(this->vertex_matrices, scene.getNodeTransforms().size(), GL_FALSE, &vmatrices[0][0][0]);
-	glUniformMatrix4fv(this->normal_matrices, scene.getNodeTransforms().size(), GL_FALSE, &nmatrices[0][0][0]);
+	glUniformMatrix4fv(this->vertex_matrices, (unsigned int) scene.getNodeTransforms().size(), GL_FALSE, &vmatrices[0][0][0]);
+	glUniformMatrix4fv(this->normal_matrices, (unsigned int) scene.getNodeTransforms().size(), GL_FALSE, &nmatrices[0][0][0]);
 
 	glDrawArrays(GL_TRIANGLES, 0, scene.getVertexCount());
 	glBindVertexArray(0);

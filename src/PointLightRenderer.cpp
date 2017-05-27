@@ -2,7 +2,7 @@
 
 void PointLightRenderer::load(unsigned int width, unsigned int height, const DSFramebuffer& fbo)
 {
-	ShaderSource source = ShaderSource("point_light.vert", "point_light.frag");
+	ShaderSource source = ShaderSource(INTERNAL("point_light.vert"), INTERNAL("point_light.frag"));
 	this->source(source);
 	this->bindAttributeLocation(0, "vertex");
 	this->link(source);
@@ -32,7 +32,7 @@ void PointLightRenderer::render(const Light::PointLight& light)
 	glm::mat4 mvp = Camera::vp * glm::translate(light.position) * glm::scale(light.size);
 	glm::vec3 light_pos_eyespace = glm::vec3(Camera::view * glm::vec4(light.position, 1));
 	glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &mvp[0][0]);
-	glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);
 	
 	glUniform2fv(this->screen_size, 1, &this->screen_dimensions[0]);
 	glUniform3fv(this->light_color, 1, &light.color[0]);

@@ -15,9 +15,9 @@
 #include "File.h"
 
 #ifdef _WIN32
-	#define SHADERS_PATH "C:\\Users\\Jas\\Documents\\Projects\\GameKit\\src\\Shaders\\"	
+	#define INTERNAL(x) "C:\\Users\\Jas\\Documents\\Projects\\GameKit\\src\\Shaders\\" x
 #else
-	#define SHADERS_PATH "."
+	#define INTERNAL(x) "/Users/Jas/Documents/GameKit/src/Shaders/" x
 #endif
 
 // Class to manage the shader code

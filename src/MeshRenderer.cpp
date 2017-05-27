@@ -10,7 +10,7 @@
 
 void MeshRenderer::load()
 {
-    ShaderSource source = ShaderSource("mesh.vert", "mesh.frag");
+    ShaderSource source = ShaderSource(INTERNAL("mesh.vert"), INTERNAL("mesh.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");

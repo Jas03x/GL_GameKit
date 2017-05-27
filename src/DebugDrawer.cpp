@@ -11,7 +11,7 @@
 
 DebugDrawer::DebugDrawer()
 {
-    ShaderSource source = ShaderSource("debug.vert", "debug.frag");
+    ShaderSource source = ShaderSource(INTERNAL("debug.vert"), INTERNAL("debug.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->link(source);
