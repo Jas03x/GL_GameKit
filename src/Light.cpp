@@ -17,7 +17,13 @@ Light::PointLight::PointLight(const glm::vec3& _position, const glm::vec3& _size
 
 void Light::PointLight::_init_system()
 {
-	OBJ_Loader loader = OBJ_Loader("C:\\Users\\Jas\\Documents\\Visual Studio 2017\\Projects\\MyApp\\MyApp\\Assets\\UnitSphere.obj", OBJ_Loader::VN);
+    #ifdef _WIN32
+        const char* LIGHT_SPHERE_PATH = "C:\\Users\\Jas\\Documents\\GameKit\\src\\Data\\UnitSphere.obj";
+    #else
+        const char* LIGHT_SPHERE_PATH = "/Users/Jas/Documents/GameKit/src/Data/UnitSphere.obj";
+    #endif
+    
+	OBJ_Loader loader = OBJ_Loader(LIGHT_SPHERE_PATH, OBJ_Loader::VN);
 	std::vector<float> vertex_buffer;
 	vertex_buffer.reserve(loader.getIndices().size() * 3);
 	for (unsigned int i = 0; i < loader.getIndices().size(); i++)
@@ -26,7 +32,7 @@ void Light::PointLight::_init_system()
 		vertex_buffer.insert(vertex_buffer.end(), v, v + 3);
 	}
 
-	_vertex_count = vertex_buffer.size() / 3;
+	_vertex_count = (unsigned int) vertex_buffer.size() / 3;
 	
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);

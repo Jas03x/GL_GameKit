@@ -15,7 +15,7 @@ void FBO::init(unsigned int width, unsigned int height)
     glBindFramebuffer(GL_FRAMEBUFFER, this->id);
 }
 
-bool FBO::check(unsigned int attachments)
+void FBO::check(unsigned int attachments)
 {
 	GLuint status = 0;
 
@@ -62,7 +62,7 @@ bool FBO::check(unsigned int attachments)
 			puts("GL_FRAMEBUFFER_UNDEFINED");
 			break;
 		}
-		throw - 1;
+		throw -1;
 	}
 }
 

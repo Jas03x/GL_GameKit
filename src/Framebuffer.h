@@ -22,7 +22,7 @@ protected:
     glm::uvec2 dimensions;
     
 	void init(unsigned int width, unsigned int height);
-	bool check(unsigned int attachments);
+	void check(unsigned int attachments);
 	void destroy();
 
 public:
