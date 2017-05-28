@@ -10,7 +10,6 @@
 class PointLightRenderer : public Shader
 {
 private:
-	const DSFramebuffer* framebuffer;
 	GLuint mvp_matrix;
 	GLuint inv_proj_matrix; // inverse projection matrix
 	GLuint light_position; // light position in eye space
@@ -20,11 +19,11 @@ private:
 	GLuint depth_texture;
 	GLuint screen_size;
 
-	glm::vec2 screen_dimensions;
-
+    const DSFramebuffer* framebuffer;
+    
 public:
 	PointLightRenderer() {}
-	void load(unsigned int width, unsigned int height, const DSFramebuffer& fbo);
+	void load(const DSFramebuffer& fbo);
 	void render(const PointLight& light);
 	void destroy();
 };

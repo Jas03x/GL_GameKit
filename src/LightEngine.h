@@ -17,7 +17,7 @@ namespace LightEngine
     extern PointLightRenderer _pointlight_renderer;
     extern LightStencilRenderer _stencil_renderer;
 
-	void initalize(unsigned int width, unsigned int height, const DSFramebuffer& fbo);
+	void initalize(const DSFramebuffer& fbo);
 	void insert(const PointLight& point_light);
     void render();
 	void destroy();

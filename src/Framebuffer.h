@@ -37,6 +37,8 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, this->dimensions.x, this->dimensions.y);
     }
+    
+    inline const glm::uvec2& getDimensions() const { return this->dimensions; }
 };
 
 class Framebuffer : public FBO // regular framebuffer

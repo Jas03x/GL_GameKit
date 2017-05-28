@@ -1,6 +1,6 @@
 #include "PointLightRenderer.h"
 
-void PointLightRenderer::load(unsigned int width, unsigned int height, const DSFramebuffer& fbo)
+void PointLightRenderer::load(const DSFramebuffer& fbo)
 {
 	ShaderSource source = ShaderSource(INT_SHDR("point_light.vert"), INT_SHDR("point_light.frag"));
 	this->source(source);
@@ -16,7 +16,6 @@ void PointLightRenderer::load(unsigned int width, unsigned int height, const DSF
 	this->screen_size = this->getUniform("screen_size");
 
 	this->framebuffer = &fbo;
-	this->screen_dimensions = glm::vec2(width, height);
 }
 
 void PointLightRenderer::render(const PointLight& light)
@@ -31,10 +30,11 @@ void PointLightRenderer::render(const PointLight& light)
 	glm::mat4 inverse_projection = glm::inverse(Camera::projection);
 	glm::mat4 mvp = Camera::vp * glm::translate(light.position) * glm::scale(light.size);
 	glm::vec3 light_pos_eyespace = glm::vec3(Camera::view * glm::vec4(light.position, 1));
+    
 	glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &mvp[0][0]);
 	glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);
 	
-	glUniform2fv(this->screen_size, 1, &this->screen_dimensions[0]);
+	glUniform2f(this->screen_size, this->framebuffer->getDimensions().x, this->framebuffer->getDimensions().y);
 	glUniform3fv(this->light_color, 1, &light.color[0]);
 	glUniform3fv(this->light_position, 1, &light_pos_eyespace[0]);
 

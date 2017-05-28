@@ -4,9 +4,9 @@ std::vector<PointLight> LightEngine::point_lights;
 PointLightRenderer LightEngine::_pointlight_renderer;
 LightStencilRenderer LightEngine::_stencil_renderer;
 
-void LightEngine::initalize(unsigned int width, unsigned int height, const DSFramebuffer& fbo)
+void LightEngine::initalize(const DSFramebuffer& fbo)
 {
-    _pointlight_renderer.load(width, height, fbo);
+    _pointlight_renderer.load(fbo);
     _stencil_renderer.load();
     PointLight::_genVAO();
 }
@@ -20,7 +20,6 @@ void LightEngine::render()
 {
     // stencil optimization from: http://ogldev.atspace.co.uk/www/tutorial37/tutorial37.html
     
-    glDepthMask(GL_FALSE);
     glEnable(GL_STENCIL_TEST);
     for (unsigned int i = 0; i < LightEngine::point_lights.size(); i++)
     {
@@ -47,7 +46,6 @@ void LightEngine::render()
     glDisable(GL_BLEND);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
 }
