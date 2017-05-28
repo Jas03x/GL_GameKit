@@ -35,7 +35,7 @@ void CharacterCamera::update()
         for(unsigned int i = 0; i < 3; i++)
         {
             if(this->rotation[i] == 0) continue;
-            this->view = glm::rotate(this->rotation[i], ROTATION_TABLE[i]) * this->view;
+            this->view = this->view * glm::rotate(this->rotation[i], ROTATION_TABLE[i]);
         }
     }
     Camera::update();
