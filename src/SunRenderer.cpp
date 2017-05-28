@@ -28,8 +28,8 @@ void SunRenderer::render()
     this->bind();
     Quad::bind();
     
-    glm::vec3 sun_position_cameraspace = glm::vec3(Camera::view * glm::vec4(Sun::position, 1));
-    glm::mat4 inverse_projection = glm::inverse(Camera::projection);
+    glm::vec3 sun_position_cameraspace = glm::vec3(Camera::getViewMatrix() * glm::vec4(Sun::position, 1));
+    glm::mat4 inverse_projection = glm::inverse(Camera::getProjectionMatrix());
     
     glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);
     

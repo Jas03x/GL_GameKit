@@ -30,8 +30,8 @@ void CharacterRenderer::render(const Character& character)
     character.bind();
     character.getTexture().bind(this->texture_id, 0);
     
-    glm::mat4 vmatrix = Camera::vp * character.model_matrix;
-	glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::view * character.model_matrix));
+    glm::mat4 vmatrix = Camera::getMatrix() * character.model_matrix;
+	glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * character.model_matrix));
     glUniformMatrix4fv(this->vertex_matrix, 1, GL_FALSE, &vmatrix[0][0]);
 	glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
     

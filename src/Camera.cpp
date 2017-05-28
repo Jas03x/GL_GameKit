@@ -8,28 +8,35 @@
 
 #include "Camera.h"
 
-glm::mat4 Camera::view, Camera::projection;
-glm::mat4 Camera::vp;
+Camera* Camera::_global_camera = NULL;
 
-void Camera::perspectiveView(float width, float height, const glm::vec3& position, const glm::vec3& target)
+CharacterCamera::CharacterCamera(float width, float height, const glm::vec3& _position, const glm::vec3& _target)
 {
-    view = glm::lookAt(position, target, glm::vec3(0, 1, 0));
-    projection = glm::perspective(45.0f, (float) width / (float) height, 0.1f, 1000.0f);
+    this->position = _position;
+    this->target = _target;
+    this->rotation = glm::vec3(0);
+    this->view = glm::lookAt(_position, _target, glm::vec3(0, 1, 0));
+    this->projection = glm::perspective(45.0f, (float) width / (float) height, 0.1f, 1000.0f);
     Camera::update();
 }
 
-void Camera::orthographicView(float width, float height)
+void CharacterCamera::update()
 {
-    view = glm::mat4(1.0f);
-    
-    // origin = lower left of screen
-    projection = glm::mat4(
-                           2.0f / width, 0, 0, 0,
-                           0, 2.0f / height, 0 , 0,
-                           0, 0, 1, 0,
-                           0, 0, 0, 1
-                        );
-    // translate the projection matrix because we have to move the origin of the screen
-    projection = glm::translate(projection, glm::vec3(-width/2.0f, -height/2.0f, 0.0f));
+    this->view = glm::lookAt(this->position, this->target, glm::vec3(0, 1, 0));
+    if(this->rotation != glm::vec3(0))
+    {
+        glm::mat4 matrices[3];
+        
+        static const glm::vec3 ROTATION_TABLE[3] = {
+            glm::vec3(1,0,0), // x
+            glm::vec3(0,1,0), // y
+            glm::vec3(0,0,1)  // z
+        };
+        for(unsigned int i = 0; i < 3; i++)
+        {
+            if(this->rotation[i] == 0) continue;
+            this->view = glm::rotate(this->rotation[i], ROTATION_TABLE[i]) * this->view;
+        }
+    }
     Camera::update();
 }

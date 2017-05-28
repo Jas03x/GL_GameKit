@@ -25,7 +25,7 @@ void MeshRenderer::render(const Mesh &mesh)
     this->bind();
     mesh.bind();
     mesh.getTexture().bind(this->texture_id, 0);
-    glm::mat4 matrix = Camera::vp * mesh.model_matrix;
+    glm::mat4 matrix = Camera::getMatrix() * mesh.model_matrix;
     glUniformMatrix4fv(this->camera_matrix, 1, GL_FALSE, &matrix[0][0]);
     glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
     glBindVertexArray(0);

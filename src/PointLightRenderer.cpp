@@ -27,9 +27,9 @@ void PointLightRenderer::render(const PointLight& light)
 	this->framebuffer->bindTexture(this->normal_texture, DSFramebuffer::NORMAL_TEXTURE, 1);
 	this->framebuffer->bindTexture(this->depth_texture, DSFramebuffer::DEPTH_TEXTURE, 2);
 	
-	glm::mat4 inverse_projection = glm::inverse(Camera::projection);
-	glm::mat4 mvp = Camera::vp * glm::translate(light.position) * glm::scale(light.size);
-	glm::vec3 light_pos_eyespace = glm::vec3(Camera::view * glm::vec4(light.position, 1));
+	glm::mat4 inverse_projection = glm::inverse(Camera::getProjectionMatrix());
+    glm::mat4 mvp = Camera::getMatrix() * glm::translate(light.position) * glm::scale(light.size);
+	glm::vec3 light_pos_eyespace = glm::vec3(Camera::getViewMatrix() * glm::vec4(light.position, 1));
     
 	glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &mvp[0][0]);
 	glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);

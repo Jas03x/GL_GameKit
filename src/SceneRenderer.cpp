@@ -30,8 +30,9 @@ void SceneRenderer::render(const Scene& scene)
 
 	glm::mat4 vmatrices[32];
 	glm::mat4 nmatrices[32];
-	glm::mat4 mvp = Camera::vp * scene.model_matrix;
-	glm::mat4 mv = Camera::view * scene.model_matrix;
+	glm::mat4 mvp = Camera::getMatrix() * scene.model_matrix;
+	glm::mat4 mv = Camera::getViewMatrix() * scene.model_matrix;
+    
 	for (unsigned int i = 0; i < scene.getNodeTransforms().size(); i++) {
 		vmatrices[i] = mvp * scene.getNodeTransforms().at(i);
 		nmatrices[i] = glm::inverse(glm::transpose(mv * scene.getNodeTransforms().at(i)));

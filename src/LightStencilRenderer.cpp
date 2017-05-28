@@ -13,7 +13,7 @@ void LightStencilRenderer::render(const PointLight& light)
 {
     this->bind();
     PointLight::_bindVAO();
-    glm::mat4 matrix = Camera::vp * glm::translate(light.position) * glm::scale(light.size);
+    glm::mat4 matrix = Camera::getMatrix() * glm::translate(light.position) * glm::scale(light.size);
     glUniformMatrix4fv(mvp, 1, GL_FALSE, &matrix[0][0]);
     glDrawArrays(GL_TRIANGLES, 0, PointLight::_getArrayVertexCount());
     glBindVertexArray(0);

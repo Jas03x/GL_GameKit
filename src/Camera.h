@@ -11,27 +11,36 @@
 
 #include "GLM.h"
 
-// the camera designed to stay behind the player
-namespace Camera
+class Camera
 {
-    extern glm::mat4 view, projection;
-    extern glm::mat4 vp;
+private:
+    static Camera* _global_camera;
     
-    void perspectiveView(float width, float height, const glm::vec3& position, const glm::vec3& target);
-    void orthographicView(float width, float height);
+public:
+    glm::mat4 view, projection;
+    glm::mat4 vp; // combined view and projection
     
-    inline void update() {
-        vp = projection * view;
-    }
+    inline static const glm::mat4& getViewMatrix() { return _global_camera->view; }
+    inline static const glm::mat4& getProjectionMatrix() { return _global_camera->projection; }
+    inline static const glm::mat4& getMatrix() { return _global_camera->vp; }
     
-    inline void translate(const glm::vec3& translation) {
-        Camera::view = glm::translate(Camera::view, translation);
-    }
+    Camera(){}
+    inline void update(){ this->vp = this->projection * this->view; }
+    inline void bind() { _global_camera = this; }
+};
+
+// The camera designed to stay behind the player:
+class CharacterCamera : public Camera
+{
+public:
+    glm::vec3 target;
+    glm::vec3 position;
+    glm::vec3 rotation;
     
-    inline void rotate(float radians, const glm::vec3& axis) {
-        Camera::view = glm::rotate(Camera::view, radians, axis);
-    }
-}
+    CharacterCamera(){}
+    CharacterCamera(float width, float height, const glm::vec3& _position, const glm::vec3& _target);
+    void update();
+};
 
 
 #endif /* Camera_hpp */
