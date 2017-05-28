@@ -120,7 +120,10 @@ void DSFramebuffer::init(unsigned int width, unsigned int height, Attachment::Ty
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + DIFFUSE_TEXTURE, GL_TEXTURE_2D, this->textures[DIFFUSE_TEXTURE], 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + NORMAL_TEXTURE,  GL_TEXTURE_2D, this->textures[NORMAL_TEXTURE],  0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + LIGHT_TEXTURE,   GL_TEXTURE_2D, this->textures[LIGHT_TEXTURE],   0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->textures[DEPTH_TEXTURE], 0);
+    if(depth_type != Attachment::DEPTH_STENCIL)
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->textures[DEPTH_TEXTURE], 0);
+    else
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this->textures[DEPTH_TEXTURE], 0);
 	this->check(3);
 }
 

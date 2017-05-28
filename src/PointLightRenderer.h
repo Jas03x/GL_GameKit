@@ -2,9 +2,9 @@
 #define POINT_LIGHT_RENDERER_H
 
 #include "GL.h"
-#include "Light.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "PointLight.h"
 #include "Framebuffer.h"
 
 class PointLightRenderer : public Shader
@@ -25,7 +25,7 @@ private:
 public:
 	PointLightRenderer() {}
 	void load(unsigned int width, unsigned int height, const DSFramebuffer& fbo);
-	void render(const Light::PointLight& light);
+	void render(const PointLight& light);
 	void destroy();
 };
 

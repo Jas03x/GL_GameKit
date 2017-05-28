@@ -19,10 +19,10 @@ void PointLightRenderer::load(unsigned int width, unsigned int height, const DSF
 	this->screen_dimensions = glm::vec2(width, height);
 }
 
-void PointLightRenderer::render(const Light::PointLight& light)
+void PointLightRenderer::render(const PointLight& light)
 {
 	this->bind();
-	Light::PointLight::bindVAO();
+	PointLight::_bindVAO();
 
 	this->framebuffer->bindTexture(this->diffuse_texture, DSFramebuffer::DIFFUSE_TEXTURE, 0);
 	this->framebuffer->bindTexture(this->normal_texture, DSFramebuffer::NORMAL_TEXTURE, 1);
@@ -38,7 +38,7 @@ void PointLightRenderer::render(const Light::PointLight& light)
 	glUniform3fv(this->light_color, 1, &light.color[0]);
 	glUniform3fv(this->light_position, 1, &light_pos_eyespace[0]);
 
-	glDrawArrays(GL_TRIANGLES, 0, Light::PointLight::getVertexCount());
+	glDrawArrays(GL_TRIANGLES, 0, PointLight::_getArrayVertexCount());
 	glBindVertexArray(0);
 }
 

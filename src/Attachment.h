@@ -16,6 +16,7 @@ namespace Attachment
 		RGBA_32F,
 		DEPTH_16F,
 		DEPTH_32F,
+        DEPTH_STENCIL,
 		LENGTH
 	}Type;
 

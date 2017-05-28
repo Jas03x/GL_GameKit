@@ -13,7 +13,8 @@ const GLenum Attachment::TABLE[Attachment::LENGTH][3] =
 	{ GL_RGBA32F, GL_RGB, GL_FLOAT }, // RGBA_32F,
 	// DEPTH
 	{GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_FLOAT}, // DEPTH_16F
-	{GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT}  // DEPTH_32F
+	{GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT},  // DEPTH_32F
+    {GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8} // DEPTH_STENCIL
 };
 
 GLuint Attachment::get(Type id, unsigned int width, unsigned int height, GLenum mag_filter, GLenum min_filter)

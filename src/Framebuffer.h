@@ -71,7 +71,7 @@ private:
 
 public:
 	DSFramebuffer() {}
-	void init(unsigned int width, unsigned int height, Attachment::Type texture_type = Attachment::RGB_16F, Attachment::Type normal_type = Attachment::RGB_16F, Attachment::Type depth_type = Attachment::DEPTH_16F);
+	void init(unsigned int width, unsigned int height, Attachment::Type texture_type = Attachment::RGB_16F, Attachment::Type normal_type = Attachment::RGB_16F, Attachment::Type depth_type = Attachment::DEPTH_STENCIL);
 	void destroy();
 
 	inline GLuint getDiffuseTexture() const { return this->textures[DIFFUSE_TEXTURE]; }
