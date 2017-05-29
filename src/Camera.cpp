@@ -25,8 +25,6 @@ void CharacterCamera::update()
     this->view = glm::lookAt(this->position, this->target, glm::vec3(0, 1, 0));
     if(this->rotation != glm::vec3(0))
     {
-        glm::mat4 matrices[3];
-        
         static const glm::vec3 ROTATION_TABLE[3] = {
             glm::vec3(1,0,0), // x
             glm::vec3(0,1,0), // y

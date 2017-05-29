@@ -11,7 +11,7 @@
 void Character::load(const char* path, const char* name)
 {
 	std::string source = std::string(path) + name;
-    ColladaLoader loader = ColladaLoader(source.c_str());
+    	ColladaLoader loader = ColladaLoader(source.c_str());
 	if (loader.getTextures().size() != 1) {
 		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), source.c_str());
 		throw -1;
