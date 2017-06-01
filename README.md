@@ -1,2 +1,2 @@
-# GameKit
-Base game library which contains common code for both 2D and 3D applications for mobile and pc platforms. Note: this project uses/needs the following libraries: Bullet physics, SOIL, Assimp.
+# GL_Engine
+Multi-purpose and extensible game engine: Bullet physics, SOIL, Assimp, GL_Context, and GL_GUI.
