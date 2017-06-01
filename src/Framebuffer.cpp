@@ -110,13 +110,13 @@ void Framebuffer::destroy()
 * DSFramebuffer:
 */
 
-void DSFramebuffer::init(unsigned int width, unsigned int height, Attachment::Type texture_type, Attachment::Type normal_type, Attachment::Type depth_type)
+void DSFramebuffer::init(unsigned int width, unsigned int height, GLenum filter, Attachment::Type texture_type, Attachment::Type normal_type, Attachment::Type depth_type)
 {
 	FBO::init(width, height);
-	this->textures[DIFFUSE_TEXTURE] = Attachment::get(texture_type, width, height);
-	this->textures[NORMAL_TEXTURE] = Attachment::get(normal_type, width, height);
-	this->textures[LIGHT_TEXTURE] = Attachment::get(texture_type, width, height);
-	this->textures[DEPTH_TEXTURE] = Attachment::get(depth_type, width, height);
+	this->textures[DIFFUSE_TEXTURE] = Attachment::get(texture_type, width, height, filter, filter);
+	this->textures[NORMAL_TEXTURE] = Attachment::get(normal_type, width, height, filter, filter);
+	this->textures[LIGHT_TEXTURE] = Attachment::get(texture_type, width, height, filter, filter);
+	this->textures[DEPTH_TEXTURE] = Attachment::get(depth_type, width, height, filter, filter);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + DIFFUSE_TEXTURE, GL_TEXTURE_2D, this->textures[DIFFUSE_TEXTURE], 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + NORMAL_TEXTURE,  GL_TEXTURE_2D, this->textures[NORMAL_TEXTURE],  0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + LIGHT_TEXTURE,   GL_TEXTURE_2D, this->textures[LIGHT_TEXTURE],   0);
