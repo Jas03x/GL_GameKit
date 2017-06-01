@@ -11,9 +11,10 @@
 
 #include <stdio.h>
 
+#include "Mesh.h"
+#include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
-#include "Mesh.h"
 
 class MeshRenderer : public Shader
 {

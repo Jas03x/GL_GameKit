@@ -16,7 +16,7 @@ void PointLight::_genVAO()
 #ifdef _WIN32
     const char* LIGHT_SPHERE_PATH = "C:\\Users\\Jas\\Documents\\GameKit\\src\\Data\\UnitSphere.obj";
 #else
-    const char* LIGHT_SPHERE_PATH = "/Users/Jas/Documents/GameKit/src/Data/UnitSphere.obj";
+    const char* LIGHT_SPHERE_PATH = "/Users/Jas/Documents/Libraries/GL_Engine/src/Data/UnitSphere.obj";
 #endif
     
     OBJ_Loader loader = OBJ_Loader(LIGHT_SPHERE_PATH, OBJ_Loader::VN);

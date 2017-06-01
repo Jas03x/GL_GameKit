@@ -4,7 +4,7 @@
 #ifdef _WIN32
 #define INT_SHDR(x) "C:\\Users\\Jas\\Documents\\Projects\\GameKit\\src\\Shaders\\" x
 #else
-#define INT_SHDR(x) "/Users/Jas/Documents/GameKit/src/Shaders/" x
+#define INT_SHDR(x) "/Users/Jas/Documents/Libraries/GL_Engine/src/Shaders/" x
 #endif
 
 #endif

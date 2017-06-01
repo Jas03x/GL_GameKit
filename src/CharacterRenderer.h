@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+#include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "Character.h"

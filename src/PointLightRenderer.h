@@ -2,6 +2,7 @@
 #define POINT_LIGHT_RENDERER_H
 
 #include "GL.h"
+#include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "PointLight.h"

@@ -2,6 +2,7 @@
 #define LEVEL_RENDERER_H
 
 #include "GL.h"
+#include "Path.h"
 #include "Scene.h"
 #include "Shader.h"
 #include "Camera.h"

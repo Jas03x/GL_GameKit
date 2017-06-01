@@ -3,6 +3,7 @@
 
 #include "GL.h"
 #include "Sun.h"
+#include "Path.h"
 #include "Quad.h"
 #include "Camera.h"
 #include "Shader.h"
