@@ -16,7 +16,7 @@
 #include <vector>
 #include <map>
 
-#include "GLM.h"
+#include "Math3d.h"
 #include "Bone.h"
 
 #define COLLADA_AXIS_SWAP 0x01

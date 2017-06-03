@@ -1,7 +1,7 @@
 #ifndef SUN_H
 #define SUN_H
 
-#include "GLM.h"
+#include "Math3d.h"
 
 namespace Sun
 {

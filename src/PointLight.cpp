@@ -13,13 +13,7 @@ PointLight::PointLight(const glm::vec3& _position, const glm::vec3& _size, const
 
 void PointLight::_genVAO()
 {
-#ifdef _WIN32
-    const char* LIGHT_SPHERE_PATH = "C:\\Users\\Jas\\Documents\\GameKit\\src\\Data\\UnitSphere.obj";
-#else
-    const char* LIGHT_SPHERE_PATH = "/Users/Jas/Documents/Libraries/GL_Engine/src/Data/UnitSphere.obj";
-#endif
-    
-    OBJ_Loader loader = OBJ_Loader(LIGHT_SPHERE_PATH, OBJ_Loader::VN);
+    OBJ_Loader loader = OBJ_Loader("/Users/Jas/Documents/Libraries/GL_Engine/src/Data/UnitSphere.obj", OBJ_Loader::VN);
     std::vector<float> vertex_buffer;
     vertex_buffer.reserve(loader.getIndices().size() * 3);
     for (unsigned int i = 0; i < loader.getIndices().size(); i++)

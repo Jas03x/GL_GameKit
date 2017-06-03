@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "GLM.h"
+#include "Math3d.h"
 #include "Animation.h"
 
 class Bone

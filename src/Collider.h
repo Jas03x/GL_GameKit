@@ -9,7 +9,7 @@
 #ifndef Collider_hpp
 #define Collider_hpp
 
-#include "GLM.h"
+#include "Math3d.h"
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
 class Collider

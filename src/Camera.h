@@ -9,7 +9,7 @@
 #ifndef Camera_hpp
 #define Camera_hpp
 
-#include "GLM.h"
+#include "Math3d.h"
 
 class Camera
 {

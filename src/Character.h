@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "GL.h"
-#include "GLM.h"
+#include "Math3d.h"
 #include "Texture.h"
 #include "ColladaLoader.h"
 

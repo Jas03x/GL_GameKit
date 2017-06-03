@@ -13,7 +13,7 @@
 
 #include <vector>
 
-#include "GLM.h"
+#include "Math3d.h"
 #include "File.h"
 
 class OBJ_Loader
