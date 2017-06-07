@@ -1,14 +1,14 @@
 //
-//  MeshRenderer.cpp
+//  StaticMeshRenderer.cpp
 //  BobosPuzzle
 //
 //  Created by Jas S on 2017-05-09.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "MeshRenderer.h"
+#include "StaticMeshRenderer.h"
 
-void MeshRenderer::load()
+void StaticMeshRenderer::load()
 {
     ShaderSource source = ShaderSource(INT_SHDR("mesh.vert"), INT_SHDR("mesh.frag"));
     this->source(source);
@@ -20,7 +20,7 @@ void MeshRenderer::load()
     this->camera_matrix = this->getUniform("camera_matrix");
 }
 
-void MeshRenderer::render(const Mesh &mesh)
+void StaticMeshRenderer::render(const StaticMesh& mesh)
 {
     this->bind();
     mesh.bind();
@@ -31,7 +31,7 @@ void MeshRenderer::render(const Mesh &mesh)
     glBindVertexArray(0);
 }
 
-void MeshRenderer::destroy()
+void StaticMeshRenderer::destroy()
 {
     Shader::destroy();
 }

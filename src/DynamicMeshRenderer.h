@@ -1,34 +1,34 @@
 //
-//  CharacterRenderer.hpp
+//  DynamicMeshRenderer.h
 //  BobosPuzzle
 //
 //  Created by Jas S on 2017-05-09.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef CharacterRenderer_hpp
-#define CharacterRenderer_hpp
+#ifndef DynamicMeshRenderer_h
+#define DynamicMeshRenderer_h
 
 #include <stdio.h>
 
 #include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
-#include "Character.h"
+#include "DynamicMesh.h"
 #include "Framebuffer.h"
 
-class CharacterRenderer : public Shader
+class DynamicMeshRenderer : public Shader
 {
 private:
-    GLuint texture_id;
+    GLuint textures[DYNAMIC_MESH_MAX_TEXTURE_COUNT];
     GLuint vertex_matrix;
 	GLuint normal_matrix;
 
 public:
-    CharacterRenderer(){}
+    DynamicMeshRenderer(){}
     void load();
-    void render(const Character& character);
+    void render(const DynamicMesh& mesh);
     void destroy();
 };
 
-#endif /* CharacterRenderer_hpp */
+#endif /* DynamicMeshRenderer_h */

@@ -1,13 +1,13 @@
 //
-//  Mesh.hpp
+//  StaticMesh.h
 //  BobosPuzzle
 //
 //  Created by Jas S on 2017-05-09.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef Mesh_hpp
-#define Mesh_hpp
+#ifndef StaticMesh_h
+#define StaticMesh_h
 
 #include <stdio.h>
 
@@ -18,7 +18,7 @@
 #include "Texture.h"
 #include "OBJ_Loader.h"
 
-class Mesh
+class StaticMesh
 {
 private:
     GLuint vao;
@@ -29,8 +29,8 @@ private:
 public:
     glm::mat4 model_matrix;
     
-	Mesh(){}
-	Mesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count);
+	StaticMesh(){}
+	StaticMesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count);
     
     void load(const char* source, const char* texture);
     inline void bind() const { glBindVertexArray(this->vao); }
@@ -39,4 +39,4 @@ public:
     void destroy();
 };
 
-#endif /* Mesh_hpp */
+#endif /* StaticMesh_h */

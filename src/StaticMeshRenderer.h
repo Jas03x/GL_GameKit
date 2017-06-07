@@ -1,32 +1,32 @@
 //
-//  MeshRenderer.hpp
+//  StaticMeshRenderer.hpp
 //  BobosPuzzle
 //
 //  Created by Jas S on 2017-05-09.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef MeshRenderer_hpp
-#define MeshRenderer_hpp
+#ifndef StaticMeshRenderer_hpp
+#define StaticMeshRenderer_hpp
 
 #include <stdio.h>
 
-#include "Mesh.h"
 #include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "StaticMesh.h"
 
-class MeshRenderer : public Shader
+class StaticMeshRenderer : public Shader
 {
 private:
     GLuint texture_id;
     GLuint camera_matrix;
     
 public:
-    MeshRenderer(){}
+    StaticMeshRenderer(){}
     void load();
-    void render(const Mesh& mesh);
+    void render(const StaticMesh& mesh);
     void destroy();
 };
 
-#endif /* MeshRenderer_hpp */
+#endif /* StaticMeshRenderer_hpp */

@@ -6,9 +6,9 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "Mesh.h"
+#include "StaticMesh.h"
 
-Mesh::Mesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count)
+StaticMesh::StaticMesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count)
 {
 	this->vao = _vao;
 	this->vbo = _vbo;
@@ -16,7 +16,7 @@ Mesh::Mesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_
 	this->vertex_count = _vertex_count;
 }
 
-void Mesh::load(const char* source, const char* texture)
+void StaticMesh::load(const char* source, const char* texture)
 {
     OBJ_Loader loader = OBJ_Loader(source);
     this->texture.load(texture);
@@ -54,7 +54,7 @@ void Mesh::load(const char* source, const char* texture)
     this->vertex_count = (unsigned int) loader.getIndices().size();
 }
 
-void Mesh::destroy()
+void StaticMesh::destroy()
 {
     if(glIsVertexArray(this->vao) == GL_TRUE) glDeleteVertexArrays(1, &this->vao);
     if(glIsBuffer(this->vbo) == GL_TRUE) glDeleteBuffers(1, &this->vbo);
