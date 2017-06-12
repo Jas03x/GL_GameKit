@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "Math3d.h"
-#include "World.h"
+#include "PhysicsConfiguration.h"
 #include "Collider.h"
 
 class CylinderCollider : public Collider

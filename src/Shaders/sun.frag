@@ -32,5 +32,5 @@ void main()
     float cosTheta = clamp(dot(normal, sun_direction_cameraspace), 0, 1);
     float cosAlpha = clamp(dot(eye_direction_cameraspace, reflect(-sun_direction_cameraspace, normal)), 0, 1);
     
-    diffuse_out = vec4(diffuse * 0.2 + sun_color * cosTheta * 0.5 + 0.1 * vec3(1) * cosAlpha, 0.1);
+    diffuse_out = vec4(diffuse * 0.2 + sun_color * cosTheta * 0.25 + 0.1 * vec3(1) * cosAlpha, 0.1);
 }

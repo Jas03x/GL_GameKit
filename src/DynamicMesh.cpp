@@ -52,6 +52,7 @@ void DynamicMesh::load(const char* path, const char* file_name)
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
+    this->texture_count = (unsigned int) loader.getTextures().size();
     this->vertex_count = (unsigned int) loader.getVertices().size();
     this->model_matrix = glm::mat4(1.0f);
 }
@@ -60,5 +61,7 @@ void DynamicMesh::destroy()
 {
     if(glIsBuffer(this->vbo) == GL_TRUE) glDeleteBuffers(1, &this->vbo);
     if(glIsVertexArray(this->vao) == GL_TRUE) glDeleteVertexArrays(1, &this->vao);
+    
+    for(unsigned int i = 0; i < this->texture_count; i++) this->textures[i].destroy();
     if(this->textures != NULL) delete[] this->textures;
 }

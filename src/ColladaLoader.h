@@ -85,17 +85,6 @@ public:
     
     const glm::mat4& getInverseRoot() const { return this->inverse_root; }
 	const std::vector<std::string>& getTextures() const { return this->textures; }
-    
-    inline void toBuffer(std::vector<float>& buffer) const
-    {
-        buffer.clear();
-        buffer.reserve(this->vertices.size() * 8);
-        for(unsigned int i = 0; i < this->vertices.size(); i++) {
-            buffer.insert(buffer.end(), &this->vertices.at(i)[0], &this->vertices.at(i)[0] + 3);
-            buffer.insert(buffer.end(), &this->normals.at(i)[0], &this->normals.at(i)[0] + 3);
-            buffer.insert(buffer.end(), &this->uvs.at(i)[0], &this->uvs.at(i)[0] + 2);
-        }
-    }
 };
 
 #endif /* ColladaLoader_hpp */

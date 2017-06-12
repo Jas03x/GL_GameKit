@@ -7,8 +7,8 @@ void SunRenderer::load(const DSFramebuffer& fbo)
     this->bindAttributeLocation(0, "vertex");
     this->link(source);
     
-    this->sun_position = this->getUniform("position");
-    this->sun_color = this->getUniform("color");
+    this->sun_position = this->getUniform("sun_position");
+    this->sun_color = this->getUniform("sun_color");
     this->screen_size = this->getUniform("screen_size");
     this->inv_proj_matrix = this->getUniform("inv_proj_matrix");
     

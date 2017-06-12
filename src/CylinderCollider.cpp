@@ -14,10 +14,10 @@ CylinderCollider::CylinderCollider(const glm::vec3& length, const glm::vec3& sca
     this->motion_state = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,0,0)));
     btRigidBody::btRigidBodyConstructionInfo constructor = btRigidBody::btRigidBodyConstructionInfo(mass, this->motion_state, this->shape, btVector3(0,0,0));
     this->rigid_body = new btRigidBody(constructor);
-    World::addRigidBody(this->rigid_body);
+    PhysicsConfiguration::addRigidBody(this->rigid_body);
 }
 
 CylinderCollider::~CylinderCollider()
 {
-    World::removeRigidBody(this->rigid_body);
+    PhysicsConfiguration::removeRigidBody(this->rigid_body);
 }

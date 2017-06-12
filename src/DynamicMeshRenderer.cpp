@@ -34,7 +34,7 @@ void DynamicMeshRenderer::render(const DynamicMesh& mesh)
     mesh.bind();
     
     for(unsigned int i = 0; i < mesh.getTextureCount(); i++)
-        mesh.getTextures()[i].bind(this->textures[i], 0);
+        mesh.getTextures()[i].bind(this->textures[i], i);
     
     glm::mat4 vmatrix = Camera::getMatrix() * mesh.model_matrix;
 	glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * mesh.model_matrix));

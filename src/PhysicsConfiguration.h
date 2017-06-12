@@ -6,8 +6,8 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef World_hpp
-#define World_hpp
+#ifndef PhysicsConfiguration_h
+#define PhysicsConfiguration_h
 
 #include <stdio.h>
 
@@ -16,7 +16,7 @@
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 #include "DebugDrawer.h"
 
-namespace World
+namespace PhysicsConfiguration
 {
     extern btBroadphaseInterface* broadphase;
     extern btDefaultCollisionConfiguration* collision_configuration;
@@ -34,4 +34,4 @@ namespace World
     void debugDraw();
 }
 
-#endif /* World_hpp */
+#endif /* PhysicsConfiguration_h */
