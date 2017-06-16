@@ -17,7 +17,7 @@
 #include "Quad.h"
 #include "Shader.h"
 
-class GBlurRenderer : public Shader
+class _GaussionBlurRenderer : public Shader
 {
 private:
     GLuint tex;
@@ -25,12 +25,17 @@ private:
     GLuint direction;
     
     glm::vec2 screen_size;
+    
 public:
-    GBlurRenderer(){}
-    void init(float screen_width, float screen_height);
+    _GaussionBlurRenderer(){}
+    
+    void initalize(float screen_width, float screen_height);
+    void bind();
     void horizontal_blur(GLuint texture_id);
     void vertical_blur(GLuint texture_id);
     void destroy();
 };
+
+extern _GaussionBlurRenderer GuassionBlurRenderer;
 
 #endif /* GBlurRenderer_hpp */

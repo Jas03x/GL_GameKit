@@ -1,6 +1,8 @@
 #include "SceneRenderer.h"
 
-void SceneRenderer::load()
+_SceneRenderer SceneRenderer;
+
+void _SceneRenderer::initalize()
 {
 	ShaderSource source = ShaderSource(INT_SHDR("scene.vert"), INT_SHDR("scene.frag"));
 	this->source(source);
@@ -21,7 +23,7 @@ void SceneRenderer::load()
 	this->textures[3] = this->getUniform("textures[3]");
 }
 
-void SceneRenderer::render(const Scene& scene)
+void _SceneRenderer::render(const Scene& scene)
 {
 	this->bind();
 	scene.bind();
@@ -44,7 +46,7 @@ void SceneRenderer::render(const Scene& scene)
 	glBindVertexArray(0);
 }
 
-void SceneRenderer::destroy()
+void _SceneRenderer::destroy()
 {
 	Shader::destroy();
 }

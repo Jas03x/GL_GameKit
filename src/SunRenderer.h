@@ -9,7 +9,7 @@
 #include "Shader.h"
 #include "Framebuffer.h"
 
-class SunRenderer : public Shader
+class _SunRenderer : public Shader
 {
 private:
     GLuint sun_position;
@@ -24,10 +24,12 @@ private:
     const DSFramebuffer* framebuffer;
     
 public:
-    SunRenderer(){}
-    void load(const DSFramebuffer& fbo);
+    _SunRenderer(){}
+    void initalize(const DSFramebuffer& fbo);
     void render();
     void destroy();
 };
+
+extern _SunRenderer SunRenderer;
 
 #endif

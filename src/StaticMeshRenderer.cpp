@@ -8,7 +8,9 @@
 
 #include "StaticMeshRenderer.h"
 
-void StaticMeshRenderer::load()
+_StaticMeshRenderer StaticMeshRenderer;
+
+void _StaticMeshRenderer::initalize()
 {
     ShaderSource source = ShaderSource(INT_SHDR("mesh.vert"), INT_SHDR("mesh.frag"));
     this->source(source);
@@ -20,9 +22,13 @@ void StaticMeshRenderer::load()
     this->camera_matrix = this->getUniform("camera_matrix");
 }
 
-void StaticMeshRenderer::render(const StaticMesh& mesh)
+void _StaticMeshRenderer::bind()
 {
-    this->bind();
+    Shader::bind();
+}
+
+void _StaticMeshRenderer::render(const StaticMesh& mesh)
+{
     mesh.bind();
     mesh.getTexture().bind(this->texture_id, 0);
     glm::mat4 matrix = Camera::getMatrix() * mesh.model_matrix;
@@ -31,7 +37,7 @@ void StaticMeshRenderer::render(const StaticMesh& mesh)
     glBindVertexArray(0);
 }
 
-void StaticMeshRenderer::destroy()
+void _StaticMeshRenderer::destroy()
 {
     Shader::destroy();
 }

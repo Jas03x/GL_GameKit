@@ -6,16 +6,18 @@
 #include "Shader.h"
 #include "PointLight.h"
 
-class LightStencilRenderer : public Shader
+class _LightStencilRenderer : public Shader
 {
 private:
     GLuint mvp;
     
 public:
-    LightStencilRenderer(){}
-    void load();
+    _LightStencilRenderer(){}
+    void initalize();
     void render(const PointLight& light);
     void destroy();
 };
+
+extern _LightStencilRenderer LightStencilRenderer;
 
 #endif

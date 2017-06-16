@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-void Scene::load(const char* path, const char* name)
+Scene::Scene(const char* path, const char* name)
 {
 	std::string source = std::string(path) + name;
 	ColladaLoader loader = ColladaLoader(source.c_str());

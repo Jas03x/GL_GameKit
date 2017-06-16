@@ -8,7 +8,7 @@
 #include "PointLight.h"
 #include "Framebuffer.h"
 
-class PointLightRenderer : public Shader
+class _PointLightRenderer : public Shader
 {
 private:
 	GLuint mvp_matrix;
@@ -23,10 +23,12 @@ private:
     const DSFramebuffer* framebuffer;
     
 public:
-	PointLightRenderer() {}
-	void load(const DSFramebuffer& fbo);
+	_PointLightRenderer() {}
+	void initalize(const DSFramebuffer& fbo);
 	void render(const PointLight& light);
 	void destroy();
 };
+
+extern _PointLightRenderer PointLightRenderer;
 
 #endif

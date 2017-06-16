@@ -28,9 +28,9 @@ public:
 	glm::mat4 model_matrix;
 
 	Scene() { this->textures = NULL; }
+    Scene(const char* path, const char* name);
 	void destroy();
 
-	void load(const char* path, const char* name);
 	inline void bind() const { glBindVertexArray(this->vao); }
 	inline unsigned int getVertexCount() const { return this->vertex_count; }
 	inline unsigned int getTextureCount() const { return this->texture_count; }

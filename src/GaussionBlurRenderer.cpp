@@ -6,9 +6,11 @@
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "GBlurRenderer.h"
+#include "GaussionBlurRenderer.h"
 
-void GBlurRenderer::init(float width, float height)
+_GaussionBlurRenderer GuassionBlurRenderer;
+
+void _GaussionBlurRenderer::initalize(float width, float height)
 {
     ShaderSource source = ShaderSource(INT_SHDR("gblur.vert"), INT_SHDR("gblur.frag"));
     this->source(source);
@@ -21,11 +23,14 @@ void GBlurRenderer::init(float width, float height)
     this->screen_size = glm::vec2(width, height);
 }
 
-void GBlurRenderer::horizontal_blur(GLuint texture_id)
+void _GaussionBlurRenderer::bind()
 {
-    this->bind();
+    Shader::bind();
     Quad::bind();
-    
+}
+
+void _GaussionBlurRenderer::horizontal_blur(GLuint texture_id)
+{
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_id);
     glUniform1i(this->tex, 0);
@@ -37,11 +42,8 @@ void GBlurRenderer::horizontal_blur(GLuint texture_id)
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void GBlurRenderer::vertical_blur(GLuint texture_id)
+void _GaussionBlurRenderer::vertical_blur(GLuint texture_id)
 {
-    this->bind();
-    Quad::bind();
-    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_id);
     glUniform1i(this->tex, 0);
@@ -53,7 +55,7 @@ void GBlurRenderer::vertical_blur(GLuint texture_id)
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void GBlurRenderer::destroy()
+void _GaussionBlurRenderer::destroy()
 {
     Shader::destroy();
 }

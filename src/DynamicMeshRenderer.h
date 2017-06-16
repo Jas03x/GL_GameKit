@@ -17,7 +17,7 @@
 #include "DynamicMesh.h"
 #include "Framebuffer.h"
 
-class DynamicMeshRenderer : public Shader
+class _DynamicMeshRenderer : public Shader
 {
 private:
     GLuint textures[DYNAMIC_MESH_MAX_TEXTURE_COUNT];
@@ -25,10 +25,13 @@ private:
 	GLuint normal_matrix;
 
 public:
-    DynamicMeshRenderer(){}
-    void load();
+    _DynamicMeshRenderer(){}
+    void initalize();
+    void bind();
     void render(const DynamicMesh& mesh);
     void destroy();
 };
+
+extern _DynamicMeshRenderer DynamicMeshRenderer;
 
 #endif /* DynamicMeshRenderer_h */

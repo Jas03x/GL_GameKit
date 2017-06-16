@@ -8,7 +8,7 @@
 #include "Camera.h"
 #include "Framebuffer.h"
 
-class SceneRenderer : public Shader
+class _SceneRenderer : public Shader
 {
 private:
 	GLuint vertex_matrices;
@@ -16,11 +16,13 @@ private:
 	GLuint textures[SCENE_MAX_TEXTURES];
 
 public:
-	SceneRenderer() {}
+	_SceneRenderer() {}
 
-	void load();
+	void initalize();
 	void render(const Scene& scene);
 	void destroy();
 };
+
+extern _SceneRenderer SceneRenderer;
 
 #endif

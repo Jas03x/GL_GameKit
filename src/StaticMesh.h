@@ -31,6 +31,7 @@ public:
     
 	StaticMesh(){}
 	StaticMesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count);
+    StaticMesh(const char* source, const char* texture){ this->load(source, texture); }
     
     void load(const char* source, const char* texture);
     inline void bind() const { glBindVertexArray(this->vao); }

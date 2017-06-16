@@ -1,6 +1,8 @@
 #include "SunRenderer.h"
 
-void SunRenderer::load(const DSFramebuffer& fbo)
+_SunRenderer SunRenderer;
+
+void _SunRenderer::initalize(const DSFramebuffer& fbo)
 {
     ShaderSource source = ShaderSource(INT_SHDR("sun.vert"), INT_SHDR("sun.frag"));
     this->source(source);
@@ -19,7 +21,7 @@ void SunRenderer::load(const DSFramebuffer& fbo)
     this->framebuffer = &fbo;
 }
 
-void SunRenderer::render()
+void _SunRenderer::render()
 {
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
@@ -47,7 +49,7 @@ void SunRenderer::render()
     glBindVertexArray(0);
 }
 
-void SunRenderer::destroy()
+void _SunRenderer::destroy()
 {
     Shader::destroy();
 }

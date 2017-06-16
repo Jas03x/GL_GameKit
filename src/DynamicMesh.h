@@ -35,6 +35,7 @@ public:
     glm::mat4 model_matrix;
     
     DynamicMesh(){}
+    DynamicMesh(const char* path, const char* file_name){ this->load(path, file_name); }
     
     void load(const char* path, const char* file_name);
     inline void bind() const { glBindVertexArray(this->vao); }

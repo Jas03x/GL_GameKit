@@ -1,6 +1,8 @@
 #include "PointLightRenderer.h"
 
-void PointLightRenderer::load(const DSFramebuffer& fbo)
+_PointLightRenderer PointLightRenderer;
+
+void _PointLightRenderer::initalize(const DSFramebuffer& fbo)
 {
 	ShaderSource source = ShaderSource(INT_SHDR("point_light.vert"), INT_SHDR("point_light.frag"));
 	this->source(source);
@@ -18,10 +20,11 @@ void PointLightRenderer::load(const DSFramebuffer& fbo)
 	this->framebuffer = &fbo;
 }
 
-void PointLightRenderer::render(const PointLight& light)
+void _PointLightRenderer::render(const PointLight& light)
 {
 	this->bind();
-	PointLight::_bindVAO();
+    // VAO should already be bound
+	//PointLight::_bindVAO();
 
 	this->framebuffer->bindTexture(this->diffuse_texture, DSFramebuffer::DIFFUSE_TEXTURE, 0);
 	this->framebuffer->bindTexture(this->normal_texture, DSFramebuffer::NORMAL_TEXTURE, 1);
@@ -42,7 +45,7 @@ void PointLightRenderer::render(const PointLight& light)
 	glBindVertexArray(0);
 }
 
-void PointLightRenderer::destroy()
+void _PointLightRenderer::destroy()
 {
 	Shader::destroy();
 }

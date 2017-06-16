@@ -14,8 +14,6 @@
 namespace LightEngine
 {
 	extern std::vector<PointLight> point_lights;
-    extern PointLightRenderer _pointlight_renderer;
-    extern LightStencilRenderer _stencil_renderer;
 
 	void initalize(const DSFramebuffer& fbo);
 	void insert(const PointLight& point_light);

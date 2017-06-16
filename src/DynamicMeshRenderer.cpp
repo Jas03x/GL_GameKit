@@ -8,7 +8,9 @@
 
 #include "DynamicMeshRenderer.h"
 
-void DynamicMeshRenderer::load()
+_DynamicMeshRenderer DynamicMeshRenderer;
+
+void _DynamicMeshRenderer::initalize()
 {
     ShaderSource source = ShaderSource(INT_SHDR("dynamic.vert"), INT_SHDR("dynamic.frag"));
     this->source(source);
@@ -28,9 +30,13 @@ void DynamicMeshRenderer::load()
 	this->normal_matrix = this->getUniform("normal_matrix");
 }
 
-void DynamicMeshRenderer::render(const DynamicMesh& mesh)
+void _DynamicMeshRenderer::bind()
 {
-    this->bind();
+    Shader::bind();
+}
+
+void _DynamicMeshRenderer::render(const DynamicMesh& mesh)
+{
     mesh.bind();
     
     for(unsigned int i = 0; i < mesh.getTextureCount(); i++)
@@ -45,7 +51,7 @@ void DynamicMeshRenderer::render(const DynamicMesh& mesh)
     glBindVertexArray(0); // unbind the character's vao
 }
 
-void DynamicMeshRenderer::destroy()
+void _DynamicMeshRenderer::destroy()
 {
     Shader::destroy();
 }

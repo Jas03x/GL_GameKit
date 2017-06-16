@@ -16,17 +16,20 @@
 #include "Shader.h"
 #include "StaticMesh.h"
 
-class StaticMeshRenderer : public Shader
+class _StaticMeshRenderer : public Shader
 {
 private:
     GLuint texture_id;
     GLuint camera_matrix;
     
 public:
-    StaticMeshRenderer(){}
-    void load();
+    _StaticMeshRenderer(){}
+    void initalize();
+    void bind();
     void render(const StaticMesh& mesh);
     void destroy();
 };
+
+extern _StaticMeshRenderer StaticMeshRenderer;
 
 #endif /* StaticMeshRenderer_hpp */

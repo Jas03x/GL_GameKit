@@ -13,7 +13,7 @@ PointLight::PointLight(const glm::vec3& _position, const glm::vec3& _size, const
 
 void PointLight::_genVAO()
 {
-    OBJ_Loader loader = OBJ_Loader("/Users/Jas/Documents/Libraries/GL_Engine/src/Data/UnitSphere.obj", OBJ_Loader::VN);
+    OBJ_Loader loader = OBJ_Loader("/Users/Jas/Documents/Libraries/GL_3D_Engine/src/Data/UnitSphere.obj", OBJ_Loader::VN);
     std::vector<float> vertex_buffer;
     vertex_buffer.reserve(loader.getIndices().size() * 3);
     for (unsigned int i = 0; i < loader.getIndices().size(); i++)
