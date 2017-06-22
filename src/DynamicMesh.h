@@ -32,12 +32,14 @@ protected:
     unsigned int texture_count;
     
 public:
-    glm::mat4 model_matrix;
+    glm::vec3 scale;
+    glm::vec3 position;
+    glm::quat rotation;
     
     DynamicMesh(){}
-    DynamicMesh(const char* path, const char* file_name){ this->load(path, file_name); }
+    DynamicMesh(const char* path){ this->load(path); }
     
-    void load(const char* path, const char* file_name);
+    void load(const char* path);
     inline void bind() const { glBindVertexArray(this->vao); }
     void destroy();
     

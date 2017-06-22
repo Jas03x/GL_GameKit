@@ -8,19 +8,20 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::load(const char* path, const char* file_name)
+void DynamicMesh::load(const char* path)
 {
-	std::string source = std::string(path) + file_name;
-    ColladaLoader loader = ColladaLoader(source.c_str());
+    ColladaLoader loader = ColladaLoader(path);
 	if (loader.getTextures().size() <= 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
-		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), source.c_str());
+		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), path);
 		throw -1;
 	}
     
     this->textures = new Texture[loader.getTextures().size()];
+    std::string file_path = std::string(path);
+    file_path = file_path.substr(0, file_path.find_last_of("/\\") + 1);
     for(unsigned int i = 0; i < loader.getTextures().size(); i++)
     {
-        std::string t_path = std::string(path) + loader.getTextures()[i];
+        std::string t_path = file_path + loader.getTextures()[i];
         this->textures[i].load(t_path.c_str());
     }
     
@@ -54,7 +55,9 @@ void DynamicMesh::load(const char* path, const char* file_name)
     
     this->texture_count = (unsigned int) loader.getTextures().size();
     this->vertex_count = (unsigned int) loader.getVertices().size();
-    this->model_matrix = glm::mat4(1.0f);
+    this->position = glm::vec3(0);
+    this->scale = glm::vec3(1);
+    this->rotation = glm::quat(0, 0, 0, 1);
 }
 
 void DynamicMesh::destroy()

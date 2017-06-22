@@ -13,7 +13,7 @@ void ParticleBuffer::genVertexArrays(int max_particles)
     glGenVertexArrays(1, &this->VAO);
     glBindVertexArray(this->VAO);
     
-    glBindBuffer(GL_ARRAY_BUFFER, Quad::_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, Quad::getVBO());
     glEnableVertexAttribArray(0); // quad vertices
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     

@@ -10,6 +10,11 @@ namespace Sun
     
     inline void setPosition(const glm::vec3& pos) { position = pos; }
     inline void setColor(const glm::vec3& col) { color = col; }
+    
+    inline void set(const glm::vec3& pos, const glm::vec3& col) {
+        position = pos;
+        color = col;
+    }
 }
 
 #endif

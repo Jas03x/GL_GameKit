@@ -15,5 +15,5 @@ void main()
 	vec4 color = texture(textures[int(_texture_id)], _uv);
     diffuse_out = color;
 	normal_out = _normal;
-	light_out = color * 0.75;
+	light_out = color * 0.5;
 }

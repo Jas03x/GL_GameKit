@@ -27,7 +27,7 @@ void main()
 
     vec3 eye_direction_cameraspace = vec3(0,0,0) - view_space;
     vec3 sun_direction_cameraspace = normalize(sun_position + eye_direction_cameraspace);
-    sun_direction_cameraspace = normalize(eye_direction_cameraspace);
+    eye_direction_cameraspace = normalize(eye_direction_cameraspace);
 
     float cosTheta = clamp(dot(normal, sun_direction_cameraspace), 0, 1);
     float cosAlpha = clamp(dot(eye_direction_cameraspace, reflect(-sun_direction_cameraspace, normal)), 0, 1);

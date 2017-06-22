@@ -43,7 +43,7 @@ bool OBJ_Loader::read_objects(const char* path, OBJ_Format format)
 			switch (format)
 			{
 				case V:
-					fscanf(file, "%u// %u// %u//\n", &v[0][0], &v[1][0], &v[2][0]);
+					fscanf(file, "%u %u %u\n", &v[0][0], &v[1][0], &v[2][0]);
 					break;
 				case VN:
 					fscanf(file, "%u//%u %u//%u %u//%u\n",

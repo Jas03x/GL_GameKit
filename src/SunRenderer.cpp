@@ -24,8 +24,6 @@ void _SunRenderer::initalize(const DSFramebuffer& fbo)
 void _SunRenderer::render()
 {
     glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_ONE, GL_ONE);
     
     this->bind();
     Quad::bind();
@@ -45,7 +43,6 @@ void _SunRenderer::render()
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     
-    glDisable(GL_BLEND);
     glBindVertexArray(0);
 }
 

@@ -21,6 +21,8 @@ void LightEngine::render()
     PointLight::_bindVAO();
     
     glEnable(GL_STENCIL_TEST);
+    glCullFace(GL_FRONT);
+    
     for (unsigned int i = 0; i < LightEngine::point_lights.size(); i++)
     {
         glClear(GL_STENCIL_BUFFER_BIT);
@@ -36,18 +38,14 @@ void LightEngine::render()
         
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
         glDisable(GL_DEPTH_TEST);
         glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
         glDrawBuffer(GL_COLOR_ATTACHMENT0 + DSFramebuffer::LIGHT_TEXTURE);
         PointLightRenderer.render(point_lights[i]);
     }
     
-    glDisable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
+    glCullFace(GL_BACK);
 }
 
 void LightEngine::destroy()

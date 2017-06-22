@@ -42,8 +42,10 @@ void _DynamicMeshRenderer::render(const DynamicMesh& mesh)
     for(unsigned int i = 0; i < mesh.getTextureCount(); i++)
         mesh.getTextures()[i].bind(this->textures[i], i);
     
-    glm::mat4 vmatrix = Camera::getMatrix() * mesh.model_matrix;
-	glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * mesh.model_matrix));
+    //glm::mat4 model_matrix = glm::translate(mesh.position) * glm::toMat4(glm::quat(mesh.rotation)) * glm::scale(mesh.scale);
+    glm::mat4 model_matrix = glm::translate(mesh.position) * glm::toMat4(mesh.rotation) * glm::scale(mesh.scale);
+    glm::mat4 vmatrix = Camera::getMatrix() * model_matrix;
+	glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     glUniformMatrix4fv(this->vertex_matrix, 1, GL_FALSE, &vmatrix[0][0]);
 	glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
     

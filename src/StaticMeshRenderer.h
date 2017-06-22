@@ -15,6 +15,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "StaticMesh.h"
+#include "Framebuffer.h"
 
 class _StaticMeshRenderer : public Shader
 {

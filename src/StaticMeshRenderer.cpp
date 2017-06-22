@@ -17,6 +17,9 @@ void _StaticMeshRenderer::initalize()
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");
     this->bindAttributeLocation(2, "uv");
+    this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
+    this->bindFragDataLocation(DSFramebuffer::NORMAL_TEXTURE, "normal_out");
+    this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
     this->link(source);
     this->texture_id = this->getUniform("texture_id");
     this->camera_matrix = this->getUniform("camera_matrix");
