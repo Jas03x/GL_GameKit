@@ -32,13 +32,11 @@ public:
     {
         glm::mat4 result = glm::mat4(1.0f);
         const Bone* p = this;
-        
         while(p != NULL)
         {
             result = p->animation.interpolate(frame) * result;
             p = p->parent;
         }
-        
         return result;
     }
 };

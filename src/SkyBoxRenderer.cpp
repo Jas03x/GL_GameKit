@@ -28,6 +28,9 @@ void _SkyBoxRenderer::initalize()
     glEnableVertexAttribArray(0); // vertex
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
     this->vertex_count = (unsigned int) vertices.size();
 }
 
@@ -42,6 +45,7 @@ void _SkyBoxRenderer::render(const SkyBox& skybox)
     glUniformMatrix4fv(this->matrix, 1, GL_FALSE, &vp[0][0]);
     skybox.bind(this->skymap, 0);
     glDrawArrays(GL_TRIANGLES, 0, this->vertex_count);
+    glBindVertexArray(0);
     
     glEnable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);

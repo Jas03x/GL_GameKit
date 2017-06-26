@@ -21,7 +21,8 @@ class _DynamicMeshRenderer : public Shader
 {
 private:
     GLuint textures[DYNAMIC_MESH_MAX_TEXTURE_COUNT];
-    GLuint vertex_matrix;
+    GLuint bones;
+    GLuint camera_matrix;
 	GLuint normal_matrix;
 
 public:

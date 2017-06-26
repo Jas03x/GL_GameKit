@@ -21,21 +21,23 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
     std::vector<glm::vec3> _normals;
     std::vector<glm::vec2> _uvs;
     unsigned int material_index = 0;
+    
+    // start by processing/reading the scene's nodes
+    this->process_nodes(scene->mRootNode);
 
     for(unsigned int i = 0; i < scene->mNumMeshes; i++)
     {
         const struct aiMesh* mesh = scene->mMeshes[i];
         std::string name = std::string(mesh->mName.C_Str());
-
-        float node_index = [this, name]() -> float {
-			for (unsigned int i = 0; i < mesh_names.size(); i++) {
-				if (name == mesh_names[i])
-					return i;
-			}
-			// else not found:
-			mesh_names.push_back(name);
-			return mesh_names.size() - 1;
-		}();
+        if(std::find(this->mesh_names.begin(), this->mesh_names.end(), name) == this->mesh_names.end()) this->mesh_names.push_back(name);
+        
+        std::vector<std::string>::const_iterator node_pos = std::find(this->node_names.begin(), this->node_names.end(), name);
+        if(node_pos == this->node_names.end()) {
+            printf("Error: Node [%s] was not found in collada file [%s]!\n", name.c_str(), path);
+            throw -1;
+        }
+        float node_index = node_pos - this->node_names.begin();
+        
         glm::vec3& max = this->max_dimensions[name];
         glm::vec3& min = this->min_dimensions[name];
 
@@ -82,7 +84,6 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
 				_uvs.push_back(vec);
 			}
         }
-        printf("Reading material for %s\n", mesh->mName.C_Str());
         if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
         {
             aiString tex_path;
@@ -92,7 +93,7 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
             }
             //printf("Debug: Read texture %s\n", tex_path.C_Str());
             std::string tex = std::string(tex_path.C_Str());
-            std::vector<std::string>::iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
+            std::vector<std::string>::const_iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
             if (index == this->textures.end()) {
                 material_index = (unsigned int) this->textures.size();
                 this->textures.push_back(tex);
@@ -122,26 +123,26 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
 
     for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
         const aiMesh* mesh = scene->mMeshes[i];
+        glm::vec4* weights = new glm::vec4[mesh->mNumVertices]();
+        glm::vec4* indices = new glm::vec4[mesh->mNumVertices]();
+        unsigned int* counts = new unsigned int[mesh->mNumVertices]();
         if(mesh->HasBones()) {
-            glm::vec4* weights = new glm::vec4[mesh->mNumVertices]();
-            glm::vec4* indices = new glm::vec4[mesh->mNumVertices]();
-            unsigned int* counts = new unsigned int[mesh->mNumVertices]();
             for(unsigned int o = 0; o < mesh->mNumBones; o++) {
                 const aiBone* bone = mesh->mBones[o];
-                unsigned int bone_index = -1;
-                for(unsigned int b = 0; b < this->bone_names.size(); b++) {
-                    if(this->bone_names[b] == std::string(bone->mName.C_Str())) {
-                        bone_index = b;
-                        break;
-                    }
-                }
-                if(bone_index == -1) {
+                std::map<std::string, glm::mat4>::const_iterator offset_it = this->bone_offsets.find(std::string(bone->mName.C_Str()));
+                if(offset_it == this->bone_offsets.end()) {
                     glm::mat4 matrix;
                     memcpy(&matrix[0][0], &bone->mOffsetMatrix[0][0], sizeof(float) * 16);
                     this->bone_offsets[bone->mName.C_Str()] = glm::transpose(matrix);
-                    bone_index = (unsigned int) this->bone_names.size();
-                    this->bone_names.push_back(bone->mName.C_Str());
                 }
+                
+                std::vector<std::string>::const_iterator node_it = std::find(this->node_names.begin(), this->node_names.end(), std::string(bone->mName.C_Str()));
+                if(node_it == this->node_names.end()) {
+                    printf("Error: Bone [%s] from file [%s] not found in scene nodes!\n", bone->mName.C_Str(), path);
+                    throw -1;
+                }
+                unsigned int bone_index = (unsigned int) (node_it - this->node_names.begin());
+                
                 for(unsigned int w = 0; w < bone->mNumWeights; w++) {
                     const struct aiVertexWeight* weight = &bone->mWeights[w];
                     if(counts[weight->mVertexId] < 4) {
@@ -154,12 +155,12 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                     }
                 }
             }
-            this->bone_weights.insert(this->bone_weights.end(), &weights[0][0], &weights[0][0] + mesh->mNumVertices * 4);
-            this->bone_indices.insert(this->bone_indices.end(), &indices[0][0], &indices[0][0] + mesh->mNumVertices * 4);
-            delete[] weights;
-            delete[] indices;
-            delete[] counts;
         }
+        this->bone_weights.insert(this->bone_weights.end(), &weights[0], &weights[0] + mesh->mNumVertices);
+        this->bone_indices.insert(this->bone_indices.end(), &indices[0], &indices[0] + mesh->mNumVertices);
+        delete[] weights;
+        delete[] indices;
+        delete[] counts;
     }
     for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
         const aiAnimation* animation = scene->mAnimations[i];
@@ -179,7 +180,6 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
     }
     memcpy(&this->inverse_root[0][0], &scene->mRootNode->mTransformation[0][0], sizeof(float) * 16);
     this->inverse_root = glm::inverse(this->inverse_root);
-    this->process_nodes(scene->mRootNode);
     delete importer;
 }
 
@@ -195,9 +195,11 @@ glm::mat4 ColladaLoader::calculate_node(const aiNode* root) {
     return ret;
 }
 
-void ColladaLoader::process_nodes(const aiNode* node) {
+void ColladaLoader::process_nodes(const aiNode* node)
+{
     if(node == NULL) return;
-    if(node->mParent != NULL) this->bone_parents[std::string(node->mName.C_Str())] = std::string(node->mParent->mName.C_Str());
+    this->node_names.push_back(std::string(node->mName.C_Str()));
+    if(node->mParent != NULL) this->node_parents[std::string(node->mName.C_Str())] = std::string(node->mParent->mName.C_Str());
     this->node_transforms[std::string(node->mName.C_Str())] = calculate_node(node);
     for(unsigned int i = 0; i < node->mNumChildren; i++) {
         this->process_nodes(node->mChildren[i]);

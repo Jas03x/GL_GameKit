@@ -22,7 +22,8 @@ void _StaticMeshRenderer::initalize()
     this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
     this->link(source);
     this->texture_id = this->getUniform("texture_id");
-    this->camera_matrix = this->getUniform("camera_matrix");
+    this->vertex_matrix = this->getUniform("vertex_matrix");
+    this->normal_matrix = this->getUniform("normal_matrix");
 }
 
 void _StaticMeshRenderer::bind()
@@ -34,8 +35,10 @@ void _StaticMeshRenderer::render(const StaticMesh& mesh)
 {
     mesh.bind();
     mesh.getTexture().bind(this->texture_id, 0);
-    glm::mat4 matrix = Camera::getMatrix() * mesh.model_matrix;
-    glUniformMatrix4fv(this->camera_matrix, 1, GL_FALSE, &matrix[0][0]);
+    glm::mat4 v_matrix = Camera::getMatrix() * mesh.model_matrix;
+    glm::mat4 n_matrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * mesh.model_matrix));
+    glUniformMatrix4fv(this->vertex_matrix, 1, GL_FALSE, &v_matrix[0][0]);
+    glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &n_matrix[0][0]);
     glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
     glBindVertexArray(0);
 }

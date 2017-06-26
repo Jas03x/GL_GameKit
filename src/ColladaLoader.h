@@ -29,17 +29,18 @@ private:
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
 	std::vector<float> texture_indices; // the texture which each mesh uses (for multi-textured models)
-    std::vector<float> bone_weights; // the weights of each bone
-    std::vector<float> bone_indices; // the indices of each bone
+    
+    std::vector<glm::vec4> bone_weights; // the weights of each bone
+    std::vector<glm::vec4> bone_indices; // the indices of each bone
     std::vector<float> node_indices; // the index into the world transform nodes
     
-    // bone data:
+    // model data:
     std::vector<std::string> mesh_names;
-    std::vector<std::string> bone_names;
-    std::map<std::string, std::string> bone_parents;
+    std::vector<std::string> node_names; // the names of the nodes
+    std::map<std::string, std::string> node_parents; // bone hierchy
+    std::map<std::string, glm::mat4> node_transforms; // matrices from the node hierchy
+    std::map<std::string, glm::mat4> bone_offsets; // bone offset matrices
     std::map<std::string, Animation> bone_animations;
-    std::map<std::string, glm::mat4> bone_offsets;
-    std::map<std::string, glm::mat4> node_transforms;
 	glm::mat4 inverse_root;
     
 	// dimensional data
@@ -49,8 +50,8 @@ private:
 
 	std::vector<std::string> textures;
 
-    glm::mat4 calculate_node(const aiNode* root);
     void process_nodes(const aiNode* node);
+    glm::mat4 calculate_node(const aiNode* root);
     
 public:
     ColladaLoader(const char* path, unsigned int parameters = 0);
@@ -59,16 +60,17 @@ public:
     const std::vector<glm::vec3>& getNormals() const { return this->normals; }
     const std::vector<glm::vec2>& getUVs() const { return this->uvs; }
 	const std::vector<float>& getTextureIndices() const { return this->texture_indices; }
-    const std::vector<float>& getBoneWeights() const { return this->bone_weights; }
-    const std::vector<float>& getBoneIndices() const { return this->bone_indices; }
+    
+    const std::vector<glm::vec4>& getBoneWeights() const { return this->bone_weights; }
+    const std::vector<glm::vec4>& getBoneIndices() const { return this->bone_indices; }
     const std::vector<float>& getNodeIndices() const { return this->node_indices; }
     
     const std::vector<std::string>& getMeshNames() const { return this->mesh_names; }
-    const std::vector<std::string>& getBoneNames() const { return this->bone_names; }
-    const std::map<std::string, std::string>& getBoneParents() const { return this->bone_parents; }
-    const std::map<std::string, Animation>& getBoneAnimations() const { return this->bone_animations; }
-    const std::map<std::string, glm::mat4>& getBoneOffsets() const { return this->bone_offsets; }
+    const std::vector<std::string>& getNodeNames() const { return this->node_names; }
+    const std::map<std::string, std::string>& getNodeParents() const { return this->node_parents; }
     const std::map<std::string, glm::mat4>& getNodeTransforms() const { return this->node_transforms; }
+    const std::map<std::string, glm::mat4>& getBoneOffsets() const { return this->bone_offsets; }
+    const std::map<std::string, Animation>& getBoneAnimations() const { return this->bone_animations; }
     
     glm::vec3 getGlobalDimensions() const { return this->global_max - this->global_min; }
     const glm::vec3& getMaxDimensions(const std::string& name) const { return this->max_dimensions.at(name); }

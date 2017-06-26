@@ -1,6 +1,8 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
+#include <stdio.h>
+
 #include "GL.h"
 
 namespace Pipeline
@@ -31,6 +33,8 @@ namespace Pipeline
         glDisable(GL_CULL_FACE);
         glDepthMask(GL_TRUE); // we are done with the depth buffer, unlock it
     }
+    
+    inline void errorCheck(){ int error; if((error = glGetError()) != 0) printf("OpenGL error: %i\n", error); }
 };
 
 #endif

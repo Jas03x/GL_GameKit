@@ -21,7 +21,8 @@ class _StaticMeshRenderer : public Shader
 {
 private:
     GLuint texture_id;
-    GLuint camera_matrix;
+    GLuint vertex_matrix;
+    GLuint normal_matrix;
     
 public:
     _StaticMeshRenderer(){}
