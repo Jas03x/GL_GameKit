@@ -30,7 +30,8 @@ void _DynamicMeshRenderer::initalize()
     this->textures[2] = this->getUniform("textures[2]");
     this->textures[3] = this->getUniform("textures[3]");
     this->bones = this->getUniform("bones");
-    this->camera_matrix = this->getUniform("camera_matrix");
+    this->nodes = this->getUniform("nodes");
+    this->mvp_matrix = this->getUniform("mvp_matrix");
 	this->normal_matrix = this->getUniform("normal_matrix");
 }
 
@@ -46,21 +47,24 @@ void _DynamicMeshRenderer::render(const DynamicMesh& mesh)
     for(unsigned int i = 0; i < mesh.getTextureCount(); i++)
         mesh.getTextures()[i].bind(this->textures[i], i);
     
-    glm::mat4 model_matrix = glm::translate(mesh.position) * glm::toMat4(mesh.rotation) * glm::scale(mesh.scale);
+    glm::mat4 model_matrix = mesh.getMatrix();
     glm::mat4 vmatrix = Camera::getMatrix() * model_matrix;
     glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     
     glm::mat4 bone_buffer[DYNAMIC_MESH_MAX_NODE_COUNT];
+    glm::mat4 node_buffer[DYNAMIC_MESH_MAX_NODE_COUNT];
     
     // FOR MORE INFO, SEE:
     // https://stackoverflow.com/questions/29184311/how-to-rotate-a-skinned-models-bones-in-c-using-assimp
     for(unsigned int i = 0; i < mesh.getBones().size(); i++) {
         // TODO: Add interpolation
         bone_buffer[i] = mesh.getInverseRoot() * mesh.getBones()[i].bind_pose_matrix /* MULTIPLIED BY THE INTERPOLATED ANIMATION */ * mesh.getBones()[i].offset_matrix;
+        node_buffer[i] = mesh.getInverseRoot() * mesh.getBones()[i].bind_pose_matrix;
     }
     
-    glUniformMatrix4fv(this->camera_matrix, 1, GL_FALSE, &vmatrix[0][0]);
+    glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &vmatrix[0][0]);
     glUniformMatrix4fv(this->bones, (unsigned int) mesh.getBones().size(), GL_FALSE, &bone_buffer[0][0][0]);
+    glUniformMatrix4fv(this->nodes, (unsigned int) mesh.getBones().size(), GL_FALSE, &node_buffer[0][0][0]);
 	glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
     
     glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());

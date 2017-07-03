@@ -23,9 +23,11 @@
 #define DYNAMIC_MESH_MAX_TEXTURE_COUNT 4
 #define DYNAMIC_MESH_MAX_NODE_COUNT 16
 
-// TODO: IMPLEMENT BONES
 class DynamicMesh
 {
+private:
+    glm::vec3 scale;
+    
 protected:
     GLuint vao;
     GLuint vbo;
@@ -39,16 +41,16 @@ protected:
     std::map<std::string, Bone*> bone_map;
     
 public:
-    glm::vec3 scale;
     glm::vec3 position;
     glm::quat rotation;
     
     DynamicMesh(){}
-    DynamicMesh(const char* path){ this->load(path); }
-    
-    void load(const char* path);
-    inline void bind() const { glBindVertexArray(this->vao); }
+    DynamicMesh(const char* path, const glm::vec3& _scale = glm::vec3(1.0f)) { this->load(path, _scale); }
+    void load(const char* path, const glm::vec3& _scale = glm::vec3(1.0f));
+    void load(const ColladaLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f));
     void destroy();
+    
+    inline void bind() const { glBindVertexArray(this->vao); }
     
     inline unsigned int getVertexCount() const { return this->vertex_count; }
     inline unsigned int getTextureCount() const { return this->texture_count; }
@@ -57,6 +59,8 @@ public:
     inline const glm::mat4& getInverseRoot() const { return this->inverse_root; }
     inline const std::vector<Bone>& getBones() const { return this->bones; }
     inline Bone* getBone(const std::string& str) const { return bone_map.at(str); }
+    
+    inline glm::mat4 getMatrix() const { return glm::translate(this->position) * glm::toMat4(this->rotation) * glm::scale(this->scale); }
 };
 
 #endif /* DynamicMesh_h */

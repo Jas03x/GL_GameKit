@@ -24,10 +24,13 @@
 class ColladaLoader
 {
 private:
+    std::string path;
+    
 	// vertex data
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
+    std::vector<int> faces;
 	std::vector<float> texture_indices; // the texture which each mesh uses (for multi-textured models)
     
     std::vector<glm::vec4> bone_weights; // the weights of each bone
@@ -53,17 +56,31 @@ private:
     void process_nodes(const aiNode* node);
     glm::mat4 calculate_node(const aiNode* root);
     
+    template<typename T>
+    inline void genArray(const std::vector<T>& source, std::vector<T>& destination) const {
+        destination.clear();
+        destination.reserve(this->faces.size());
+        for(unsigned int i = 0; i < this->faces.size(); i++) destination.push_back(source[i]);
+    }
+    
 public:
-    ColladaLoader(const char* path, unsigned int parameters = 0);
+    ColladaLoader(const char* _path, unsigned int parameters = 0);
+    
+    const std::string& getPath() const { return this->path; }
     
     const std::vector<glm::vec3>& getVertices() const { return this->vertices; }
     const std::vector<glm::vec3>& getNormals() const { return this->normals; }
     const std::vector<glm::vec2>& getUVs() const { return this->uvs; }
+    const std::vector<int> getFaces() const { return this->faces; }
 	const std::vector<float>& getTextureIndices() const { return this->texture_indices; }
     
     const std::vector<glm::vec4>& getBoneWeights() const { return this->bone_weights; }
     const std::vector<glm::vec4>& getBoneIndices() const { return this->bone_indices; }
     const std::vector<float>& getNodeIndices() const { return this->node_indices; }
+    
+    void getVertexArray(std::vector<glm::vec3>& source) const { this->genArray<glm::vec3>(this->vertices, source); }
+    void getNormalArray(std::vector<glm::vec3>& source) const { this->genArray<glm::vec3>(this->normals, source); }
+    void getUvArray(std::vector<glm::vec2>& source) const { this->genArray<glm::vec2>(this->uvs, source); }
     
     const std::vector<std::string>& getMeshNames() const { return this->mesh_names; }
     const std::vector<std::string>& getNodeNames() const { return this->node_names; }

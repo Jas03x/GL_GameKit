@@ -1,47 +1,44 @@
 //
-//  Collider.hpp
-//  Bobo
+//  Collider.h
+//  CarDemo
 //
-//  Created by Jas S on 2017-02-08.
+//  Created by Jas S on 2017-06-30.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef Collider_hpp
-#define Collider_hpp
+#ifndef Collider_h
+#define Collider_h
+
+#include <BulletCollision/btBulletCollisionCommon.h>
+#include <BulletDynamics/btBulletDynamicsCommon.h>
 
 #include "Math3d.h"
-#include <BulletDynamics/btBulletDynamicsCommon.h>
+#include "PhysicsConfiguration.h"
 
 class Collider
 {
 protected:
-    btScalar mass;
-    glm::vec3 scale;
+    btCollisionObject* body;
     
-    btCollisionShape* shape;
-    btDefaultMotionState* motion_state;
-    btRigidBody* rigid_body;
+    virtual void bind() = 0;
+    virtual void unbind() = 0;
     
 public:
-    Collider(const glm::vec3& _scale = glm::vec3(1.0f));
-    ~Collider();
+    enum Type
+    {
+        NULL_COLLIDER = 0,
+        SOFT_BODY = 1,
+        PLANE_COLLIDER = 2
+    };
     
-    inline void getModelMatrix(glm::mat4& matrix) const {
-        btTransform transform;
-        this->rigid_body->getMotionState()->getWorldTransform(transform);
-        float arr[16];
-        transform.getOpenGLMatrix(arr);
-        memcpy(&matrix[0][0], arr, sizeof(float) * 16);
-    }
+    Collider();
+    virtual ~Collider();
     
-    inline const glm::vec3& getScale() const { return this->scale; }
+    inline const btCollisionObject* getCollisionObject() const { return this->body; }
     
-    void update();
+    void rotate(const glm::quat& rotation);
     void translate(const glm::vec3& translation);
-    void setTranslation(const glm::vec3& translation);
-    void rotate(const glm::vec3& rotation);
-    void setRotation(const glm::vec3& rotation);
-    void setModelMatrix(const glm::mat4& matrix);
+    void transform(const glm::vec3& translation, const glm::quat& rotation);
 };
 
-#endif /* Collider_hpp */
+#endif /* Collider_h */

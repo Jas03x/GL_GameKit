@@ -8,19 +8,19 @@
 
 #include "ColladaLoader.h"
 
-ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
+ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
 {
+    this->path = std::string(_path);
+    
     Assimp::Importer* importer = new Assimp::Importer();
-    const struct aiScene* scene = importer->ReadFile(path, aiProcess_Triangulate);
+    const struct aiScene* scene = importer->ReadFile(_path, aiProcess_Triangulate);
 	if (!scene) {
-		printf("Error: Could not open model file %s.\n", path);
+		printf("Error: Could not open model file %s.\n", _path);
 		throw -1;
 	}
 
-    std::vector<glm::vec3> _vertices;
-    std::vector<glm::vec3> _normals;
-    std::vector<glm::vec2> _uvs;
-    unsigned int material_index = 0;
+    unsigned int vertex_count  = 0;
+    unsigned int texture_index = 0;
     
     // start by processing/reading the scene's nodes
     this->process_nodes(scene->mRootNode);
@@ -33,7 +33,7 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
         
         std::vector<std::string>::const_iterator node_pos = std::find(this->node_names.begin(), this->node_names.end(), name);
         if(node_pos == this->node_names.end()) {
-            printf("Error: Node [%s] was not found in collada file [%s]!\n", name.c_str(), path);
+            printf("Error: Node [%s] was not found in collada file [%s]!\n", name.c_str(), _path);
             throw -1;
         }
         float node_index = node_pos - this->node_names.begin();
@@ -71,17 +71,17 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                 if(glm::length(vec) > glm::length(this->global_min)) this->global_min = vec;
                 */
 
-                _vertices.push_back(vec);
+                this->vertices.push_back(vec);
             }
             if(mesh->HasNormals()) {
                 const aiVector3D* v = &mesh->mNormals[o];
                 glm::vec3 vec = glm::vec3(v->x, v->y, v->z);
-                _normals.push_back(vec);
+                this->normals.push_back(vec);
             }
 			if (mesh->HasTextureCoords(0)) { // ONLY SUPPORTS ONE CHANNEL OF UVS (you can't put more than one texture per face)
 				const aiVector3D* v = &mesh->mTextureCoords[0][o];
 				glm::vec2 vec = glm::vec2(v->x, v->y);
-				_uvs.push_back(vec);
+                this->uvs.push_back(vec);
 			}
         }
         if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
@@ -95,10 +95,10 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
             std::string tex = std::string(tex_path.C_Str());
             std::vector<std::string>::const_iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
             if (index == this->textures.end()) {
-                material_index = (unsigned int) this->textures.size();
+                texture_index = (unsigned int) this->textures.size();
                 this->textures.push_back(tex);
             }
-            else material_index = (unsigned int) (index - this->textures.begin());
+            else texture_index = (unsigned int) (index - this->textures.begin());
         }
         if(mesh->HasFaces()) {
             for(unsigned int o = 0; o < mesh->mNumFaces; o++) {
@@ -108,17 +108,13 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                     continue;
                 }
                 for(unsigned int t = 0; t < 3; t++) {
-                    this->vertices.push_back(_vertices.at(face->mIndices[t]));
-                    this->normals.push_back(_normals.at(face->mIndices[t]));
-                    this->uvs.push_back(_uvs.at(face->mIndices[t]));
-					this->texture_indices.push_back(material_index);
+                    this->faces.push_back(vertex_count + face->mIndices[t]);
+					this->texture_indices.push_back(texture_index);
                     this->node_indices.push_back(node_index);
                 }
             }
         }
-        _vertices.clear();
-        _normals.clear();
-        _uvs.clear();
+        vertex_count += mesh->mNumVertices;
     }
 
     for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
@@ -138,7 +134,7 @@ ColladaLoader::ColladaLoader(const char* path, unsigned int parameters)
                 
                 std::vector<std::string>::const_iterator node_it = std::find(this->node_names.begin(), this->node_names.end(), std::string(bone->mName.C_Str()));
                 if(node_it == this->node_names.end()) {
-                    printf("Error: Bone [%s] from file [%s] not found in scene nodes!\n", bone->mName.C_Str(), path);
+                    printf("Error: Bone [%s] from file [%s] not found in scene nodes!\n", bone->mName.C_Str(), _path);
                     throw -1;
                 }
                 unsigned int bone_index = (unsigned int) (node_it - this->node_names.begin());
@@ -200,7 +196,7 @@ void ColladaLoader::process_nodes(const aiNode* node)
     if(node == NULL) return;
     this->node_names.push_back(std::string(node->mName.C_Str()));
     if(node->mParent != NULL) this->node_parents[std::string(node->mName.C_Str())] = std::string(node->mParent->mName.C_Str());
-    this->node_transforms[std::string(node->mName.C_Str())] = calculate_node(node);
+    this->node_transforms[std::string(node->mName.C_Str())] = this->calculate_node(node);
     for(unsigned int i = 0; i < node->mNumChildren; i++) {
         this->process_nodes(node->mChildren[i]);
     }

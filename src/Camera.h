@@ -35,7 +35,7 @@ class CharacterCamera : public Camera
 public:
     glm::vec3 target;
     glm::vec3 position;
-    glm::vec3 rotation;
+    glm::quat rotation;
     
     CharacterCamera(){}
     CharacterCamera(float width, float height, const glm::vec3& _position, const glm::vec3& _target, float z_near = 0.1f, float z_far = 1000.0f);
@@ -48,7 +48,7 @@ public:
     glm::vec3 target;
     glm::vec3 up_vector;
     glm::vec3 position;
-    glm::vec3 rotation;
+    glm::quat rotation;
     
     TargetCamera(){}
     TargetCamera(float width, float height, const glm::vec3& _position, const glm::vec3& _target, float z_near = 0.1f, float z_far = 1000.0f);

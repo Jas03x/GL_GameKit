@@ -10,6 +10,7 @@
 #include "ColladaLoader.h"
 
 #define SCENE_MAX_TEXTURES 4
+#define SCENE_MAX_NODES 32
 
 // TODO: Add node support
 class Scene
@@ -25,16 +26,21 @@ private:
 	std::vector<glm::mat4> node_transforms; // the corresponding matrices to the node
 
 public:
-	glm::mat4 model_matrix;
+    glm::vec3 scale;
+    glm::vec3 position;
+    glm::quat rotation;
 
 	Scene() { this->textures = NULL; }
-    Scene(const char* path, const char* name);
+    Scene(const char* path) { this->load(path); }
+    void load(const char* path);
 	void destroy();
 
 	inline void bind() const { glBindVertexArray(this->vao); }
 	inline unsigned int getVertexCount() const { return this->vertex_count; }
 	inline unsigned int getTextureCount() const { return this->texture_count; }
 	const Texture* getTextures() const { return this->textures; }
+    
+    inline glm::mat4 getMatrix() const { return glm::translate(this->position) * glm::toMat4(this->rotation) * glm::scale(this->scale); }
 
 	inline glm::mat4* getNodeTransform(const std::string& name) { return this->nodes.at(name); } // non-constant version
 	inline const glm::mat4* getNodeTransform(const std::string& name) const { return this->nodes.at(name); } // constant version

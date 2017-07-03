@@ -1,37 +1,35 @@
 //
-//  World.hpp
-//  Bobo
+//  PhysicsConfiguration.h
+//  CarDemo
 //
-//  Created by Jas S on 2017-02-08.
+//  Created by Jas S on 2017-06-30.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
 #ifndef PhysicsConfiguration_h
 #define PhysicsConfiguration_h
 
-#include <stdio.h>
-
-#include <vector>
-
 #include <BulletDynamics/btBulletDynamicsCommon.h>
-#include "DebugDrawer.h"
+#include <BulletCollision/btBulletCollisionCommon.h>
+#include <BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h>
+#include <BulletSoftBody/btSoftRigidDynamicsWorld.h>
 
 namespace PhysicsConfiguration
 {
     extern btBroadphaseInterface* broadphase;
-    extern btDefaultCollisionConfiguration* collision_configuration;
+    extern btSoftBodyRigidBodyCollisionConfiguration* collision_configuration;
     extern btCollisionDispatcher* dispatcher;
     extern btSequentialImpulseConstraintSolver* solver;
-    extern btDiscreteDynamicsWorld* world;
+    extern btSoftRigidDynamicsWorld* dynamics_world;
+    extern btSoftBodyWorldInfo softbody_info;
     
-    void init();
-    void addRigidBody(btRigidBody* body);
-    void removeRigidBody(btRigidBody* body);
+    void initalize();
     void update();
     void destroy();
-    
-    void addDebugDrawer(btIDebugDraw* drawer);
-    void debugDraw();
+    void addRigidBody(btRigidBody* body);
+    void addSoftBody(btSoftBody* body);
+    void removeRigidBody(btRigidBody* body);
+    void removeSoftBody(btSoftBody* body);
 }
 
 #endif /* PhysicsConfiguration_h */

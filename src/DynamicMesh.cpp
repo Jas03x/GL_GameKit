@@ -8,28 +8,32 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::load(const char* path)
+void DynamicMesh::load(const char* path, const glm::vec3& _scale)
+{
+    this->load(ColladaLoader(path));
+}
+
+void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale)
 {
     // open the asset
-    ColladaLoader loader = ColladaLoader(path);
 	if (loader.getTextures().size() <= 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
-		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), path);
+		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), loader.getPath().c_str());
 		throw -1;
 	}
     
     // load the textures
     this->textures = new Texture[loader.getTextures().size()];
-    std::string file_path = std::string(path);
+    std::string file_path = std::string(loader.getPath().c_str());
     file_path = file_path.substr(0, file_path.find_last_of("/\\") + 1);
     for(unsigned int i = 0; i < loader.getTextures().size(); i++)
     {
         std::string t_path = file_path + loader.getTextures()[i];
-        this->textures[i].load(t_path.c_str());
+        this->textures[i] = Texture(t_path.c_str());
     }
     
     // load the bones
     if(loader.getNodeNames().size() > 16) {
-        printf("Node count [%lu] exceeds limit [%i] in collada file [%s].\n", loader.getNodeNames().size(), DYNAMIC_MESH_MAX_NODE_COUNT, path);
+        printf("Node count [%lu] exceeds limit [%i] in collada file [%s].\n", loader.getNodeNames().size(), DYNAMIC_MESH_MAX_NODE_COUNT, loader.getPath().c_str());
         throw -1;
     }
     this->bones.reserve(loader.getNodeNames().size());
@@ -65,22 +69,23 @@ void DynamicMesh::load(const char* path)
             continue;
         }
         
-        //if(parent->second != "")
-        //{
-            // a parent exists, find it
-            std::map<std::string, Bone*>::const_iterator p = this->bone_map.find(parent->second);
-            if(p != this->bone_map.end())
-                this->bones[i].parent = p->second;
-            else
-            {
-                printf("Warning: Parent of bone [%s] not found.\n", name.c_str());
-                this->bones[i].parent = NULL;
-            }
-        //}
-        //else this->bones[i].parent = NULL;
+        std::map<std::string, Bone*>::const_iterator p = this->bone_map.find(parent->second);
+        if(p != this->bone_map.end())
+            this->bones[i].parent = p->second;
+        else {
+            printf("Warning: Parent of bone [%s] not found.\n", name.c_str());
+            this->bones[i].parent = NULL;
+        }
     }
     
-    size_t vc = loader.getVertices().size();
+    size_t vc = loader.getFaces().size();
+    
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> uvs;
+    loader.getVertexArray(vertices);
+    loader.getNormalArray(normals);
+    loader.getUvArray(uvs);
     
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
@@ -88,9 +93,9 @@ void DynamicMesh::load(const char* path)
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vc * 18, NULL, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,                       sizeof(float) * vc * 3, &loader.getVertices()[0][0]);
-    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 3,  sizeof(float) * vc * 3, &loader.getNormals()[0][0]);
-    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 6,  sizeof(float) * vc * 2, &loader.getUVs()[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,                       sizeof(float) * vc * 3, &vertices[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 3,  sizeof(float) * vc * 3, &normals[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 6,  sizeof(float) * vc * 2, &uvs[0][0]);
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 8,  sizeof(float) * vc * 1, &loader.getTextureIndices()[0]);
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 9,  sizeof(float) * vc * 1, &loader.getNodeIndices()[0]);
     glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 10, sizeof(float) * vc * 4, &loader.getBoneWeights()[0][0]);
@@ -115,10 +120,10 @@ void DynamicMesh::load(const char* path)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     this->texture_count = (unsigned int) loader.getTextures().size();
-    this->vertex_count = (unsigned int) loader.getVertices().size();
+    this->vertex_count = (unsigned int) loader.getFaces().size();
     
     this->position = glm::vec3(0);
-    this->scale = glm::vec3(1);
+    this->scale = _scale;
     this->rotation = glm::quat(0, 0, 0, 1);
     this->inverse_root = loader.getInverseRoot();
 }

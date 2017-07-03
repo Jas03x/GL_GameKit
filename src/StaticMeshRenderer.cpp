@@ -35,10 +35,13 @@ void _StaticMeshRenderer::render(const StaticMesh& mesh)
 {
     mesh.bind();
     mesh.getTexture().bind(this->texture_id, 0);
-    glm::mat4 v_matrix = Camera::getMatrix() * mesh.model_matrix;
-    glm::mat4 n_matrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * mesh.model_matrix));
+    
+    glm::mat4 model_matrix = mesh.getMatrix();
+    glm::mat4 v_matrix = Camera::getMatrix() * model_matrix;
+    glm::mat4 n_matrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     glUniformMatrix4fv(this->vertex_matrix, 1, GL_FALSE, &v_matrix[0][0]);
     glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &n_matrix[0][0]);
+    
     glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
     glBindVertexArray(0);
 }
