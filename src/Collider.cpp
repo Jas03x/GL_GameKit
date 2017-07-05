@@ -8,9 +8,10 @@
 
 #include "Collider.h"
 
-Collider::Collider()
+Collider::Collider(Transform* _transformation)
 {
     this->body = NULL;
+    this->transformation = _transformation;
 }
 
 Collider::~Collider()

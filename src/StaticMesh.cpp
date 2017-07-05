@@ -54,8 +54,7 @@ void StaticMesh::load(const char* source, const char* texture)
     this->vertex_count = (unsigned int) loader.getIndices().size();
     
     this->scale = glm::vec3(1);
-    this->position = glm::vec3(0);
-    this->rotation = glm::quat(0, 0, 0, 1);
+    this->transformation = Transform();
 }
 
 void StaticMesh::destroy()

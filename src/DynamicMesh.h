@@ -18,6 +18,7 @@
 #include "Bone.h"
 #include "Math3d.h"
 #include "Texture.h"
+#include "Transform.h"
 #include "ColladaLoader.h"
 
 #define DYNAMIC_MESH_MAX_TEXTURE_COUNT 4
@@ -36,18 +37,17 @@ protected:
     unsigned int vertex_count;
     unsigned int texture_count;
     
+    Transform transformation;
+    
     glm::mat4 inverse_root;
     std::vector<Bone> bones;
     std::map<std::string, Bone*> bone_map;
     
 public:
-    glm::vec3 position;
-    glm::quat rotation;
-    
     DynamicMesh(){}
-    DynamicMesh(const char* path, const glm::vec3& _scale = glm::vec3(1.0f)) { this->load(path, _scale); }
-    void load(const char* path, const glm::vec3& _scale = glm::vec3(1.0f));
-    void load(const ColladaLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f));
+    DynamicMesh(const char* path, const glm::vec3& _scale = glm::vec3(1.0f), GLenum draw_mode = GL_STATIC_DRAW) { this->load(path, _scale, draw_mode); }
+    void load(const char* path, const glm::vec3& _scale = glm::vec3(1.0f), GLenum draw_mode = GL_STATIC_DRAW);
+    void load(const ColladaLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f), GLenum draw_mode = GL_STATIC_DRAW);
     void destroy();
     
     inline void bind() const { glBindVertexArray(this->vao); }
@@ -60,7 +60,7 @@ public:
     inline const std::vector<Bone>& getBones() const { return this->bones; }
     inline Bone* getBone(const std::string& str) const { return bone_map.at(str); }
     
-    inline glm::mat4 getMatrix() const { return glm::translate(this->position) * glm::toMat4(this->rotation) * glm::scale(this->scale); }
+    inline glm::mat4 getMatrix() const { return transformation.toMatrix() * glm::scale(this->scale); }
 };
 
 #endif /* DynamicMesh_h */

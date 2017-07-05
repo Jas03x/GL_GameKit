@@ -23,7 +23,6 @@ public:
     DynamicObject();
     void destroy();
     
-    void update_transform();
     inline void rotate(const glm::quat& rotation){ this->collider->rotate(rotation); }
     inline void translate(const glm::vec3& translation){ this->collider->translate(translation); }
     inline void transform(const glm::vec3& translation, const glm::quat& rotation) { this->collider->transform(translation, rotation); }

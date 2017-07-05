@@ -8,7 +8,7 @@
 
 #include "RigidBody.h"
 
-RigidBody::RigidBody()
+RigidBody::RigidBody(Transform* _transformation) : Collider(_transformation)
 {
     this->shape = NULL;
     this->motion_state = NULL;
@@ -22,10 +22,10 @@ RigidBody::~RigidBody()
 
 void RigidBody::bind()
 {
-    PhysicsConfiguration::addRigidBody((btRigidBody*) this->body);
+    PhysicsConfiguration::addRigidBody(this);
 }
 
 void RigidBody::unbind()
 {
-    PhysicsConfiguration::removeRigidBody((btRigidBody*) this->body);
+    PhysicsConfiguration::removeRigidBody(this);
 }

@@ -8,31 +8,34 @@
 
 #include "SoftBody.h"
 
-SoftBody::SoftBody(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices)
+SoftBody::SoftBody(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices, Transform* _transformation) : Collider(_transformation)
 {
-    this->vertex_array = vertices;
     this->face_array = indices;
-    this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertex_array[0][0], &face_array[0], (unsigned int) this->face_array.size() / 3);
+    this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertices[0][0], &face_array[0], (unsigned int) this->face_array.size() / 3);
     this->bind();
 }
 
-SoftBody::SoftBody(const ColladaLoader& loader, const std::vector<Bone>& bones, const glm::vec3& scale)
+SoftBody::SoftBody(const SoftBodyData& sbdata, const std::vector<int>& face_data, Transform* _transformation, const glm::vec3& scale) : Collider(_transformation)
 {
-    std::vector<glm::mat4> bone_cache = std::vector<glm::mat4>(bones.size());
-    for(unsigned int i = 0; i < bones.size(); i++)
-        bone_cache[i] = glm::scale(glm::vec3(scale.x, -scale.y, scale.z)) * bones[i].bind_pose_matrix;
+    this->data = &sbdata;
     
-    this->face_array = loader.getFaces();
-    face_array.shrink_to_fit();
-    this->vertex_array.reserve(loader.getFaces().size());
-    for(unsigned int i = 0; i < loader.getFaces().size(); i++)
+    std::vector<glm::mat4> bone_cache = std::vector<glm::mat4>(this->data->getBones()->size());
+    for(unsigned int i = 0; i < this->data->getBones()->size(); i++)
+        bone_cache[i] = glm::inverse(this->data->getBoneInverseCache()[i]);
+    
+    this->face_array = face_data;
+    this->face_array.shrink_to_fit();
+    
+    std::vector<glm::vec3> vertex_array;
+    vertex_array.reserve(face_data.size());
+    for(unsigned int i = 0; i < face_data.size(); i++)
     {
-        const glm::vec3& vertex = loader.getVertices()[face_array[i]];
-        int index = loader.getNodeIndices()[face_array[i]];
-        this->vertex_array.push_back(glm::vec3(bone_cache[index] * glm::vec4(vertex, 1)));
+        const glm::vec3& vertex = this->data->getVertexArray()[face_array[i]];
+        int index = this->data->getNodeIndices()[face_array[i]];
+        vertex_array.push_back(glm::vec3(bone_cache[index] * glm::vec4(vertex, 1)));
     }
     
-    this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &this->vertex_array[0][0], &this->face_array[0], (unsigned int) this->face_array.size() / 3);
+    this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertex_array[0][0], &this->face_array[0], (unsigned int) this->face_array.size() / 3);
     this->bind();
 }
 
@@ -43,10 +46,28 @@ SoftBody::~SoftBody()
 
 void SoftBody::bind()
 {
-    PhysicsConfiguration::addSoftBody((btSoftBody*) this->body);
+    PhysicsConfiguration::addSoftBody(this);
 }
 
 void SoftBody::unbind()
 {
-    PhysicsConfiguration::removeSoftBody((btSoftBody*) this->body);
+    PhysicsConfiguration::removeSoftBody(this);
+}
+
+// THERE IS A BUG IN THIS FUNCTION AS YOU KNOW
+// THIS FUNCTION ONLY ACCOUNTS FOR SINGLE NODE MESHES
+// BUT IT DOESNT WORK FOR MULTI NODE MESHES YET
+// TODO: ADD FUNCTIONALITY FOR MULTI-BONE INDEX/WEIGHT FACTORS
+void SoftBody::getVertexData(std::vector<glm::vec3>& vertex_data)
+{
+    btSoftBody::tNodeArray& nodes = ((btSoftBody*) body)->m_nodes;
+    vertex_data.clear();
+    vertex_data.reserve(this->face_array.size());
+    
+    for(unsigned int i = 0; i < this->face_array.size(); i++) {
+        const btVector3& x = nodes[this->face_array[i]].m_x;
+        glm::vec3 vec = glm::vec3(x.getX(), x.getY(), x.getZ());
+        int index = this->data->getNodeIndices()[this->face_array[i]];
+        vertex_data.push_back(glm::vec3(this->data->getBoneInverseCache()[index] * glm::vec4(vec, 1)));
+    }
 }

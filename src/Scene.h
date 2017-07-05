@@ -1,13 +1,17 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include <stdio.h>
 #include <vector>
+#include <stdio.h>
 
 #include "GL.h"
 #include "Math3d.h"
 #include "Texture.h"
 #include "ColladaLoader.h"
+#include "Collider.h"
+#include "RigidBody.h"
+#include "SoftBody.h"
+#include "Transform.h"
 
 #define SCENE_MAX_TEXTURES 4
 #define SCENE_MAX_NODES 32
@@ -15,24 +19,27 @@
 // TODO: Add node support
 class Scene
 {
-private:
+protected:
 	GLuint vao;
 	GLuint vbo;
-	Texture* textures;
-	unsigned int vertex_count;
+	
+    glm::vec3 scale;
+    unsigned int vertex_count;
 	unsigned int texture_count;
-
-	std::map<std::string, glm::mat4*> nodes; // the names of each node in the map
+    
+    Texture* textures;
+    
+    Transform transformation;
+    std::vector<Collider*> colliders;
+    std::vector<Transform> transformations; // the per mesh transformations for bullet physics
+    
+	std::map<std::string, unsigned int> nodes; // the names of each node in the map
 	std::vector<glm::mat4> node_transforms; // the corresponding matrices to the node
 
 public:
-    glm::vec3 scale;
-    glm::vec3 position;
-    glm::quat rotation;
-
 	Scene() { this->textures = NULL; }
-    Scene(const char* path) { this->load(path); }
-    void load(const char* path);
+    Scene(const char* path, const glm::vec3& _scale = glm::vec3(1.0f)) { this->load(ColladaLoader(path), _scale); }
+    void load(const ColladaLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f));
 	void destroy();
 
 	inline void bind() const { glBindVertexArray(this->vao); }
@@ -40,11 +47,15 @@ public:
 	inline unsigned int getTextureCount() const { return this->texture_count; }
 	const Texture* getTextures() const { return this->textures; }
     
-    inline glm::mat4 getMatrix() const { return glm::translate(this->position) * glm::toMat4(this->rotation) * glm::scale(this->scale); }
+    inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
 
-	inline glm::mat4* getNodeTransform(const std::string& name) { return this->nodes.at(name); } // non-constant version
-	inline const glm::mat4* getNodeTransform(const std::string& name) const { return this->nodes.at(name); } // constant version
+	inline glm::mat4& getNodeTransform(const std::string& name) { return this->node_transforms[this->nodes.at(name)]; } // non-constant version
+	inline const glm::mat4& getNodeTransform(const std::string& name) const { return this->node_transforms[this->nodes.at(name)]; } // constant version
+    inline Transform& getTransformation(const std::string& name) { return this->transformations[this->nodes.at(name)]; }
+    inline const Transform& getTransformation(const std::string& name) const { return this->transformations[this->nodes.at(name)]; }
+
 	inline const std::vector<glm::mat4>& getNodeTransforms() const { return this->node_transforms; }
+    inline const std::vector<Transform>& getTransformations() const { return this->transformations; }
 };
 
 #endif

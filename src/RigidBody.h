@@ -22,7 +22,7 @@ protected:
     void unbind();
     
 public:
-    RigidBody();
+    RigidBody(Transform* _transformation = NULL);
     ~RigidBody();
 };
 

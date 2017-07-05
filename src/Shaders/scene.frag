@@ -2,7 +2,7 @@
 
 in vec2 _uv;
 in vec3 _normal;
-in float _texture_index;
+flat in uint _texture_index;
 
 uniform sampler2D textures[4];
 
@@ -12,7 +12,7 @@ out vec4 light_out;
 
 void main()
 {
-	vec4 color = texture(textures[int(_texture_index)], _uv);
+	vec4 color = texture(textures[_texture_index], _uv);
 	diffuse_out = color;
 	light_out = color * 0.75;
 	normal_out = _normal;

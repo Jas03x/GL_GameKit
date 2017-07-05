@@ -19,7 +19,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
 		throw -1;
 	}
 
-    unsigned int vertex_count  = 0;
+    unsigned int vertex_count  = 0; // store the total vertices passed because each mesh's indices start at 0 (so this is a cumulative sum)
     unsigned int texture_index = 0;
     
     // start by processing/reading the scene's nodes
@@ -29,7 +29,9 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
     {
         const struct aiMesh* mesh = scene->mMeshes[i];
         std::string name = std::string(mesh->mName.C_Str());
+        
         if(std::find(this->mesh_names.begin(), this->mesh_names.end(), name) == this->mesh_names.end()) this->mesh_names.push_back(name);
+        std::vector<int>& mesh_list_pointer = mesh_indices[name];
         
         std::vector<std::string>::const_iterator node_pos = std::find(this->node_names.begin(), this->node_names.end(), name);
         if(node_pos == this->node_names.end()) {
@@ -37,9 +39,6 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
             throw -1;
         }
         float node_index = node_pos - this->node_names.begin();
-        
-        glm::vec3& max = this->max_dimensions[name];
-        glm::vec3& min = this->min_dimensions[name];
 
         for(unsigned int o = 0; o < mesh->mNumVertices; o++)
         {
@@ -50,27 +49,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
                     vec = glm::vec3(v->x, v->z, -v->y);
                 else
                     vec = glm::vec3(v->x, v->y, v->z);
-                if(v->x > max.x) max.x = v->x;
-                if(v->y > max.y) max.y = v->y;
-                if(v->z > max.z) max.z = v->z;
-                if(v->x < min.x) min.x = v->x;
-                if(v->y < min.y) min.y = v->y;
-                if(v->z < min.z) min.z = v->z;
-                if(v->x > this->global_max.x) this->global_max.x = v->x;
-                if(v->y > this->global_max.y) this->global_max.y = v->y;
-                if(v->z > this->global_max.z) this->global_max.z = v->z;
-                if(v->x < this->global_min.x) this->global_min.x = v->x;
-                if(v->y < this->global_min.y) this->global_min.y = v->y;
-                if(v->z < this->global_min.z) this->global_min.z = v->z;
-
-                // OR
-                /*
-                if(glm::length(vec) > glm::length(max)) max = vec;
-                if(glm::length(vec) < glm::length(min)) min = vec;
-                if(glm::length(vec) > glm::length(this->global_max)) this->global_max = vec;
-                if(glm::length(vec) > glm::length(this->global_min)) this->global_min = vec;
-                */
-
+                
                 this->vertices.push_back(vec);
             }
             if(mesh->HasNormals()) {
@@ -108,7 +87,8 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
                     continue;
                 }
                 for(unsigned int t = 0; t < 3; t++) {
-                    this->faces.push_back(vertex_count + face->mIndices[t]);
+                    mesh_list_pointer.push_back(vertex_count + face->mIndices[t]); // copy the index into the mesh indexing list
+                    this->faces.push_back(vertex_count + face->mIndices[t]); // add the triangle vertex for the vbo
 					this->texture_indices.push_back(texture_index);
                     this->node_indices.push_back(node_index);
                 }

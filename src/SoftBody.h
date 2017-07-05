@@ -16,12 +16,13 @@
 #include "Math3d.h"
 #include "Collider.h"
 #include "ColladaLoader.h"
+#include "SoftBodyData.h"
 #include "PhysicsConfiguration.h"
 
 class SoftBody : public Collider
 {
 protected:
-    std::vector<glm::vec3> vertex_array;
+    const SoftBodyData* data;
     std::vector<int> face_array;
     
     void bind();
@@ -29,9 +30,12 @@ protected:
     
 public:
     SoftBody(){}
-    SoftBody(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices);
-    SoftBody(const ColladaLoader& loader, const std::vector<Bone>& bones, const glm::vec3& scale = glm::vec3(1.0f));
+    SoftBody(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices, Transform* _transformation);
+    // Dynamic mesh constructor:
+    SoftBody(const SoftBodyData& sbdata, const std::vector<int>& face_data, Transform* _transformation, const glm::vec3& scale);
     ~SoftBody();
+    
+    void getVertexData(std::vector<glm::vec3>& vertex_data);
 };
 
 #endif /* SoftBody_h */

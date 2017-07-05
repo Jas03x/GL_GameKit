@@ -9,10 +9,14 @@
 #ifndef PhysicsConfiguration_h
 #define PhysicsConfiguration_h
 
+#include <vector>
+
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 #include <BulletCollision/btBulletCollisionCommon.h>
 #include <BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h>
 #include <BulletSoftBody/btSoftRigidDynamicsWorld.h>
+
+#include "Collider.h"
 
 namespace PhysicsConfiguration
 {
@@ -23,13 +27,18 @@ namespace PhysicsConfiguration
     extern btSoftRigidDynamicsWorld* dynamics_world;
     extern btSoftBodyWorldInfo softbody_info;
     
+    extern std::vector<Collider*> colliders;
+    
     void initalize();
     void update();
     void destroy();
-    void addRigidBody(btRigidBody* body);
-    void addSoftBody(btSoftBody* body);
-    void removeRigidBody(btRigidBody* body);
-    void removeSoftBody(btSoftBody* body);
+    
+    void addRigidBody(Collider* collider);
+    void addSoftBody(Collider* collider);
+    void removeRigidBody(Collider* collider);
+    void removeSoftBody(Collider* collider);
+    void addCollider(Collider* collider);
+    void removeCollider(Collider* collider);
 }
 
 #endif /* PhysicsConfiguration_h */

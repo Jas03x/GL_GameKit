@@ -13,15 +13,16 @@
 #include <BulletDynamics/btBulletDynamicsCommon.h>
 
 #include "Math3d.h"
-#include "PhysicsConfiguration.h"
+#include "Transform.h"
 
 class Collider
 {
 protected:
     btCollisionObject* body;
+    Transform* transformation;
     
-    virtual void bind() = 0;
-    virtual void unbind() = 0;
+    virtual void bind();
+    virtual void unbind();
     
 public:
     enum Type
@@ -31,7 +32,7 @@ public:
         PLANE_COLLIDER = 2
     };
     
-    Collider();
+    Collider(Transform* _transformation = NULL);
     virtual ~Collider();
     
     inline const btCollisionObject* getCollisionObject() const { return this->body; }
@@ -39,6 +40,14 @@ public:
     void rotate(const glm::quat& rotation);
     void translate(const glm::vec3& translation);
     void transform(const glm::vec3& translation, const glm::quat& rotation);
+    
+    inline void updateTransformationPointer() {
+        btTransform transform = this->body->getWorldTransform();
+        const btVector3& origin = transform.getOrigin();
+        const btQuaternion& rotation = transform.getRotation();
+        this->transformation->translation = glm::vec3(origin.getX(), origin.getY(), origin.getZ());
+        this->transformation->rotation = glm::quat(rotation.getX(), rotation.getY(), rotation.getZ(), rotation.getW());
+    }
 };
 
 #endif /* Collider_h */

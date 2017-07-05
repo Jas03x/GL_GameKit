@@ -1,11 +1,9 @@
 #include "Scene.h"
 
-void Scene::load(const char* path)
+void Scene::load(const ColladaLoader& loader, const glm::vec3& _scale)
 {
-	ColladaLoader loader = ColladaLoader(path);
-
 	if (loader.getTextures().size() > SCENE_MAX_TEXTURES) {
-		printf("Maximum texture limit %i exceeded in collada file [%s].\n", SCENE_MAX_TEXTURES, path);
+		printf("Maximum texture limit %i exceeded in collada file [%s].\n", SCENE_MAX_TEXTURES, loader.getPath().c_str());
 		throw - 1;
 	}
 
@@ -16,29 +14,33 @@ void Scene::load(const char* path)
 
 	glGenBuffers(1, &this->vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vc * 10, NULL, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0,                      sizeof(float) * vc * 3, &loader.getVertices()[0][0]);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 3, sizeof(float) * vc * 3, &loader.getNormals()[0][0]);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 6, sizeof(float) * vc * 2, &loader.getUVs()[0][0]);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 8, sizeof(float) * vc * 1, &loader.getNodeIndices()[0]);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 9, sizeof(float) * vc * 1, &loader.getTextureIndices()[0]);
+	glBufferData(GL_ARRAY_BUFFER, vc * (sizeof(float) * 8 + sizeof(unsigned char) * 2), NULL, GL_STATIC_DRAW);
+    
+    int offset = 0;
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3, &loader.getVertices()[0][0]);      offset += sizeof(float) * vc * 3;
+	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3, &loader.getNormals()[0][0]);       offset += sizeof(float) * vc * 3;
+	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 2, &loader.getUVs()[0][0]);           offset += sizeof(float) * vc * 2;
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc, &loader.getNodeIndices()[0]);  offset += sizeof(unsigned char) * vc;
+	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc, &loader.getTextureIndices()[0]);
 
 	glEnableVertexAttribArray(0); // vertices
 	glEnableVertexAttribArray(1); // normals
 	glEnableVertexAttribArray(2); // uvs
 	glEnableVertexAttribArray(3); // node indices
 	glEnableVertexAttribArray(4); // texture indices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 3));
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 6));
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 8));
-	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * vc * 9));
+    
+    offset = 0;
+	glVertexAttribPointer (0, 3, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);  offset += sizeof(float) * vc * 3;
+	glVertexAttribPointer (1, 3, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);  offset += sizeof(float) * vc * 3;
+	glVertexAttribPointer (2, 2, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);  offset += sizeof(float) * vc * 2;
+	glVertexAttribIPointer(3, 1, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);  offset += sizeof(unsigned char) * vc;
+	glVertexAttribIPointer(4, 1, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     if(loader.getNodeTransforms().size() > SCENE_MAX_NODES) {
-        printf("Error: Scene [%s] exceeds max scene count [%i]!\n", path, SCENE_MAX_NODES);
+        printf("Error: Scene [%s] exceeds max scene count [%i]!\n", loader.getPath().c_str(), SCENE_MAX_NODES);
         throw -1;
     }
 	this->node_transforms.reserve(loader.getNodeTransforms().size()); // reserve the memory before hand so that the vector doesn't move and leave dangling references
@@ -46,12 +48,13 @@ void Scene::load(const char* path)
 	{
 		const std::string& name = loader.getNodeNames().at(i);
 		this->node_transforms.push_back(loader.getNodeTransforms().at(name));
-		this->nodes[name] = &this->node_transforms.back();
+        this->transformations.push_back(Transform());
+		this->nodes[name] = (unsigned int) this->node_transforms.size();
 	}
 
 	// load the textures
 	this->textures = new Texture[loader.getTextures().size()];
-    std::string file_path = std::string(path);
+    std::string file_path = std::string(loader.getPath().c_str());
     file_path = file_path.substr(0, file_path.find_last_of("/\\") + 1);
     for(unsigned int i = 0; i < loader.getTextures().size(); i++)
     {
@@ -62,9 +65,8 @@ void Scene::load(const char* path)
 	this->vertex_count = (unsigned int) loader.getVertices().size();
 	this->texture_count = (unsigned int) loader.getTextures().size();
     
-    this->scale = glm::vec3(1);
-    this->position = glm::vec3(0);
-    this->rotation = glm::quat(0, 0, 0, 1);
+    this->scale = _scale;
+    this->transformation = Transform();
 }
 
 void Scene::destroy()
@@ -72,4 +74,7 @@ void Scene::destroy()
 	if (this->textures != NULL) delete[] this->textures;
 	if (glIsBuffer(this->vbo) == GL_TRUE) glDeleteBuffers(1, &this->vbo);
 	if (glIsVertexArray(this->vao) == GL_TRUE) glDeleteVertexArrays(1, &this->vao);
+    
+    for(unsigned int i = 0; i < this->colliders.size(); i++) delete this->colliders[i];
+    this->colliders.clear();
 }

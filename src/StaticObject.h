@@ -12,7 +12,7 @@
 #include "Collider.h"
 #include "StaticMesh.h"
 
-class StaticObject : public StaticMesh
+class StaticObject : protected StaticMesh
 {
 protected:
     Collider* collider;

@@ -17,6 +17,7 @@ btSequentialImpulseConstraintSolver*        PhysicsConfiguration::solver;
 btSoftRigidDynamicsWorld*                   PhysicsConfiguration::dynamics_world;
 btSoftBodyWorldInfo                         PhysicsConfiguration::softbody_info;
 
+std::vector<Collider*>                      PhysicsConfiguration::colliders;
 
 void PhysicsConfiguration::initalize()
 {
@@ -26,7 +27,7 @@ void PhysicsConfiguration::initalize()
     PhysicsConfiguration::dispatcher = new btCollisionDispatcher(PhysicsConfiguration::collision_configuration);
     PhysicsConfiguration::solver = new btSequentialImpulseConstraintSolver();
     PhysicsConfiguration::dynamics_world = new btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
-    PhysicsConfiguration::dynamics_world->setGravity(btVector3(0, -10, 0));
+    PhysicsConfiguration::dynamics_world->setGravity(btVector3(0, 10, 0));
     
     // setting up the softbody world information
     PhysicsConfiguration::softbody_info.m_broadphase = broadphase;
@@ -37,7 +38,9 @@ void PhysicsConfiguration::initalize()
 
 void PhysicsConfiguration::update()
 {
-    PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
+    //PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
+    for(unsigned int i = 0; i < colliders.size(); i++)
+        colliders[i]->updateTransformationPointer();
 }
 
 void PhysicsConfiguration::destroy()
@@ -49,7 +52,33 @@ void PhysicsConfiguration::destroy()
     delete PhysicsConfiguration::broadphase;
 }
 
-void PhysicsConfiguration::addRigidBody(btRigidBody* body) { PhysicsConfiguration::dynamics_world->addRigidBody(body); }
-void PhysicsConfiguration::addSoftBody(btSoftBody* body) { PhysicsConfiguration::dynamics_world->addSoftBody(body); }
-void PhysicsConfiguration::removeRigidBody(btRigidBody* body) { PhysicsConfiguration::dynamics_world->removeRigidBody(body); }
-void PhysicsConfiguration::removeSoftBody(btSoftBody* body) { PhysicsConfiguration::dynamics_world->removeSoftBody(body); }
+void PhysicsConfiguration::addCollider(Collider *collider)
+{
+    PhysicsConfiguration::colliders.push_back(collider);
+}
+
+void PhysicsConfiguration::removeCollider(Collider *collider)
+{
+    std::vector<Collider*>::const_iterator it = std::find(colliders.begin(), colliders.end(), collider);
+    if(it != colliders.end()) colliders.erase(it);
+}
+
+void PhysicsConfiguration::addRigidBody(Collider* collider) {
+    PhysicsConfiguration::addCollider(collider);
+    PhysicsConfiguration::dynamics_world->addRigidBody((btRigidBody*) collider->getCollisionObject());
+}
+
+void PhysicsConfiguration::addSoftBody(Collider* collider) {
+    PhysicsConfiguration::addCollider(collider);
+    PhysicsConfiguration::dynamics_world->addSoftBody((btSoftBody*) collider->getCollisionObject());
+}
+
+void PhysicsConfiguration::removeRigidBody(Collider* collider) {
+    PhysicsConfiguration::removeCollider(collider);
+    PhysicsConfiguration::dynamics_world->removeRigidBody((btRigidBody*) collider->getCollisionObject());
+}
+
+void PhysicsConfiguration::removeSoftBody(Collider* collider) {
+    PhysicsConfiguration::removeCollider(collider);
+    PhysicsConfiguration::dynamics_world->removeSoftBody((btSoftBody*) collider->getCollisionObject());
+}
