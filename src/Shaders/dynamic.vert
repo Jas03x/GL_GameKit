@@ -27,8 +27,8 @@ void main()
     bone += bones[bone_indices[1]] * bone_weights[1];
     bone += bones[bone_indices[2]] * bone_weights[2];
     bone += bones[bone_indices[3]] * bone_weights[3];
-
-    // camera * model_matrix * offset * bone
+    
+    // mvp * inverse * offset * bindpose * bone
     vec4 v = bone * vec4(vertex, 1);
     gl_Position = mvp_matrix * vec4(v.xyz, 1);
 	_normal = normalize(vec3(normal_matrix * vec4(vertex, 1)));

@@ -32,31 +32,36 @@ void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLe
     }
     
     // load the bones
-    if(loader.getNodeNames().size() > 16) {
-        printf("Node count [%lu] exceeds limit [%i] in collada file [%s].\n", loader.getNodeNames().size(), DYNAMIC_MESH_MAX_NODE_COUNT, loader.getPath().c_str());
+    if(loader.getNodeNames().size() > DYNAMIC_MESH_MAX_NODE_COUNT || loader.getBoneNames().size() > DYNAMIC_MESH_MAX_BONE_COUNT) {
+        printf("Collada file [%s] exceeds max bone/node limit.\n", loader.getPath().c_str());
         throw -1;
     }
-    this->bones.reserve(loader.getNodeNames().size());
-    // pass 1: set up the bones
+    
     for(unsigned int i = 0; i < loader.getNodeNames().size(); i++)
+        this->nodes.push_back(loader.getInverseRoot() * loader.getNodeTransforms().at(loader.getNodeNames().at(i)));
+    
+    this->bones.reserve(loader.getBoneNames().size());
+    
+    // pass 1: set up the bones
+    for(unsigned int i = 0; i < loader.getBoneNames().size(); i++)
     {
-        const std::string& name = loader.getNodeNames()[i];
+        const std::string& name = loader.getBoneNames()[i];
      
         // initalize the bone
         Bone bone = Bone(name);
         bone.bind_pose_matrix = loader.getNodeTransforms().at(name);
         bone.transformation_matrix = glm::mat4(1.0f);
+        bone.offset_matrix = loader.getBoneOffsets().at(name);
         
-        // find the animation and offset matrix (if any)
-        std::map<std::string, glm::mat4>::const_iterator offset_it = loader.getBoneOffsets().find(name);
+        // load the bone's animation (if any)
         std::map<std::string, Animation>::const_iterator animation_it = loader.getBoneAnimations().find(name);
-        if(offset_it != loader.getBoneOffsets().end()) bone.offset_matrix = offset_it->second;
         if(animation_it != loader.getBoneAnimations().end()) bone.animation = animation_it->second;
         
         // append the bone
         this->bones.push_back(bone);
         this->bone_map[name] = &this->bones.back();
     }
+    
     // pass 2: set up the parents
     for(unsigned int i = 0; i < this->bones.size(); i++)
     {

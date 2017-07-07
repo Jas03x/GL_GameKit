@@ -20,8 +20,10 @@ SoftBody::SoftBody(const SoftBodyData& sbdata, const std::vector<int>& face_data
     this->data = &sbdata;
     
     std::vector<glm::mat4> bone_cache = std::vector<glm::mat4>(this->data->getBones()->size());
-    for(unsigned int i = 0; i < this->data->getBones()->size(); i++)
-        bone_cache[i] = glm::inverse(this->data->getBoneInverseCache()[i]);
+    for(unsigned int i = 0; i < this->data->getBones()->size(); i++) {
+        const Bone& bone = this->data->getBones()[0][i];
+        bone_cache.push_back(glm::scale(glm::vec3(scale.x, -scale.y, scale.z)) * bone.bind_pose_matrix * bone.offset_matrix);
+    }
     
     this->face_array = face_data;
     this->face_array.shrink_to_fit();

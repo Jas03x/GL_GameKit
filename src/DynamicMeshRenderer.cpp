@@ -51,20 +51,18 @@ void _DynamicMeshRenderer::render(const DynamicMesh& mesh)
     glm::mat4 vmatrix = Camera::getMatrix() * model_matrix;
     glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     
-    glm::mat4 bone_buffer[DYNAMIC_MESH_MAX_NODE_COUNT];
-    glm::mat4 node_buffer[DYNAMIC_MESH_MAX_NODE_COUNT];
+    glm::mat4 bone_buffer[DYNAMIC_MESH_MAX_BONE_COUNT];
     
     // FOR MORE INFO, SEE:
     // https://stackoverflow.com/questions/29184311/how-to-rotate-a-skinned-models-bones-in-c-using-assimp
     for(unsigned int i = 0; i < mesh.getBones().size(); i++) {
         // TODO: Add interpolation
         bone_buffer[i] = mesh.getInverseRoot() * mesh.getBones()[i].bind_pose_matrix /* MULTIPLIED BY THE INTERPOLATED ANIMATION */ * mesh.getBones()[i].offset_matrix;
-        node_buffer[i] = mesh.getInverseRoot() * mesh.getBones()[i].bind_pose_matrix;
     }
     
     glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &vmatrix[0][0]);
     glUniformMatrix4fv(this->bones, (unsigned int) mesh.getBones().size(), GL_FALSE, &bone_buffer[0][0][0]);
-    glUniformMatrix4fv(this->nodes, (unsigned int) mesh.getBones().size(), GL_FALSE, &node_buffer[0][0][0]);
+    glUniformMatrix4fv(this->nodes, (unsigned int) mesh.getNodes().size(), GL_FALSE, &mesh.getNodes()[0][0][0]);
 	glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
     
     glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());

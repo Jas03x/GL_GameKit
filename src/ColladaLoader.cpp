@@ -105,19 +105,16 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
         if(mesh->HasBones()) {
             for(unsigned int o = 0; o < mesh->mNumBones; o++) {
                 const aiBone* bone = mesh->mBones[o];
-                std::map<std::string, glm::mat4>::const_iterator offset_it = this->bone_offsets.find(std::string(bone->mName.C_Str()));
-                if(offset_it == this->bone_offsets.end()) {
+                std::vector<std::string>::const_iterator name_it = std::find(this->bone_names.begin(), this->bone_names.end(), std::string(bone->mName.C_Str()));
+                unsigned int bone_index = 0;
+                if(name_it == this->bone_names.end()) {
+                    bone_index = (unsigned int) this->bone_names.size();
+                    this->bone_names.push_back(std::string(bone->mName.C_Str()));
                     glm::mat4 matrix;
                     memcpy(&matrix[0][0], &bone->mOffsetMatrix[0][0], sizeof(float) * 16);
                     this->bone_offsets[bone->mName.C_Str()] = glm::transpose(matrix);
                 }
-                
-                std::vector<std::string>::const_iterator node_it = std::find(this->node_names.begin(), this->node_names.end(), std::string(bone->mName.C_Str()));
-                if(node_it == this->node_names.end()) {
-                    printf("Error: Bone [%s] from file [%s] not found in scene nodes!\n", bone->mName.C_Str(), _path);
-                    throw -1;
-                }
-                unsigned int bone_index = (unsigned int) (node_it - this->node_names.begin());
+                else bone_index = (unsigned int) (name_it - this->bone_names.begin());
                 
                 for(unsigned int w = 0; w < bone->mNumWeights; w++) {
                     const struct aiVertexWeight* weight = &bone->mWeights[w];
@@ -138,6 +135,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
         delete[] indices;
         delete[] counts;
     }
+    
     for(unsigned int i = 0; i < scene->mNumAnimations; i++) {
         const aiAnimation* animation = scene->mAnimations[i];
         for(unsigned int n = 0; n < animation->mNumChannels; n++) {
