@@ -38,7 +38,7 @@ void PhysicsConfiguration::initalize()
 
 void PhysicsConfiguration::update()
 {
-    PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
+    //PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
     for(unsigned int i = 0; i < colliders.size(); i++)
         colliders[i]->updateTransformationPointer();
 }

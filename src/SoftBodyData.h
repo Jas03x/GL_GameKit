@@ -23,19 +23,24 @@ private:
     std::vector<glm::vec3> vertex_array;
     std::vector<unsigned char> node_indices;
     std::vector<glm::uvec4> bone_indices;
+    std::vector<glm::vec4> bone_weights;
     
     // pointer data:
+    glm::mat4 inverse_matrix;
     const std::vector<Bone>* bones;
+    const std::vector<glm::mat4>* nodes;
     std::vector<glm::mat4> bone_inverse_cache;
     
 public:
     SoftBodyData(){}
-    SoftBodyData(const ColladaLoader& loader, const std::vector<Bone>& bones, const glm::vec3& scale = glm::vec3(1));
+    SoftBodyData(const ColladaLoader& loader, const std::vector<glm::mat4>& nodes, const std::vector<Bone>& bones, const glm::vec3& scale = glm::vec3(1));
     
     inline const std::vector<glm::vec3>& getVertexArray() const { return this->vertex_array; }
     inline const std::vector<unsigned char>& getNodeIndices() const { return this->node_indices; }
     inline const std::vector<glm::uvec4>& getBoneIndices() const {  return this->bone_indices; }
+    inline const std::vector<glm::vec4>& getBoneWeights() const { return this->bone_weights; }
     
+    inline const glm::mat4& getInverseMatrix() const { return this->inverse_matrix; }
     inline const std::vector<Bone>* getBones() const { return this->bones; }
     inline const std::vector<glm::mat4> getBoneInverseCache() const { return this->bone_inverse_cache; }
 };

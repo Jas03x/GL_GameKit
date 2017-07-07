@@ -24,6 +24,8 @@ class SoftBody : public Collider
 protected:
     const SoftBodyData* data;
     std::vector<int> face_array;
+    std::vector<glm::mat4> bone_cache;
+    glm::vec3 scale;
     
     void bind();
     void unbind();
@@ -32,7 +34,7 @@ public:
     SoftBody(){}
     SoftBody(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices, Transform* _transformation);
     // Dynamic mesh constructor:
-    SoftBody(const SoftBodyData& sbdata, const std::vector<int>& face_data, Transform* _transformation, const glm::vec3& scale);
+    SoftBody(const SoftBodyData& sbdata, const std::vector<int>& face_data, Transform* _transformation, const glm::vec3& _scale);
     ~SoftBody();
     
     void getVertexData(std::vector<glm::vec3>& vertex_data);
