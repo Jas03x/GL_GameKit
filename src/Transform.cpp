@@ -8,6 +8,12 @@
 
 #include "Transform.h"
 
+Transform::Transform(const glm::vec3& _translation, const glm::vec3& _rotation)
+{
+    this->translation = _translation;
+    this->rotation = glm::quat(_rotation);
+}
+
 Transform::Transform(const glm::vec3& _translation, const glm::quat& _rotation)
 {
     this->translation = _translation;

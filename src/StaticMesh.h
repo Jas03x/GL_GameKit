@@ -14,35 +14,26 @@
 #include <vector>
 
 #include "GL.h"
+#include "Mesh.h"
 #include "Math3d.h"
 #include "Texture.h"
 #include "Transform.h"
 #include "OBJ_Loader.h"
 
-class StaticMesh
+class StaticMesh : public Mesh
 {
 private:
-    GLuint vao;
-    GLuint vbo;
-    
-    glm::vec3 scale;
-    unsigned int vertex_count;
-    
     Texture texture;
-    Transform transformation;
+    
+protected:
+    void load(const char* source, const char* texture);
     
 public:
 	StaticMesh(){}
-	StaticMesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count);
     StaticMesh(const char* source, const char* texture){ this->load(source, texture); }
-    void load(const char* source, const char* texture);
     void destroy();
     
-    inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
-    
-    inline void bind() const { glBindVertexArray(this->vao); }
     inline const Texture& getTexture() const { return this->texture; }
-    inline unsigned int getVertexCount() const { return this->vertex_count; }
 };
 
 #endif /* StaticMesh_h */

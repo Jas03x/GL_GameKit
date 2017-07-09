@@ -74,7 +74,4 @@ void Scene::destroy()
 	if (this->textures != NULL) delete[] this->textures;
 	if (glIsBuffer(this->vbo) == GL_TRUE) glDeleteBuffers(1, &this->vbo);
 	if (glIsVertexArray(this->vao) == GL_TRUE) glDeleteVertexArrays(1, &this->vao);
-    
-    for(unsigned int i = 0; i < this->colliders.size(); i++) delete this->colliders[i];
-    this->colliders.clear();
 }

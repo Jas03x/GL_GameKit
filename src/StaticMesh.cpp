@@ -8,14 +8,6 @@
 
 #include "StaticMesh.h"
 
-StaticMesh::StaticMesh(GLuint _vao, GLuint _vbo, const char* _texture, unsigned int _vertex_count)
-{
-	this->vao = _vao;
-	this->vbo = _vbo;
-	this->texture.load(_texture);
-	this->vertex_count = _vertex_count;
-}
-
 void StaticMesh::load(const char* source, const char* texture)
 {
     OBJ_Loader loader = OBJ_Loader(source);
@@ -61,4 +53,6 @@ void StaticMesh::destroy()
 {
     if(glIsVertexArray(this->vao) == GL_TRUE) glDeleteVertexArrays(1, &this->vao);
     if(glIsBuffer(this->vbo) == GL_TRUE) glDeleteBuffers(1, &this->vbo);
+    
+    Mesh::destroy();
 }

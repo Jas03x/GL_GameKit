@@ -98,6 +98,8 @@ public:
     
     const glm::mat4& getInverseRoot() const { return this->inverse_root; }
 	const std::vector<std::string>& getTextures() const { return this->textures; }
+    
+    void removeVertexBones(const std::vector<int>& mesh_faces);
 };
 
 #endif /* ColladaLoader_hpp */

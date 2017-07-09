@@ -28,13 +28,12 @@ protected:
 	unsigned int texture_count;
     
     Texture* textures;
-    
+
     Transform transformation;
-    std::vector<Collider*> colliders;
-    std::vector<Transform> transformations; // the per mesh transformations for bullet physics
     
 	std::map<std::string, unsigned int> nodes; // the names of each node in the map
 	std::vector<glm::mat4> node_transforms; // the corresponding matrices to the node
+    std::vector<Transform> transformations; // the per mesh transformations for bullet physics
 
 public:
 	Scene() { this->textures = NULL; }
@@ -49,13 +48,15 @@ public:
     
     inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
 
-	inline glm::mat4& getNodeTransform(const std::string& name) { return this->node_transforms[this->nodes.at(name)]; } // non-constant version
-	inline const glm::mat4& getNodeTransform(const std::string& name) const { return this->node_transforms[this->nodes.at(name)]; } // constant version
-    inline Transform& getTransformation(const std::string& name) { return this->transformations[this->nodes.at(name)]; }
-    inline const Transform& getTransformation(const std::string& name) const { return this->transformations[this->nodes.at(name)]; }
-
+    // Node data:
 	inline const std::vector<glm::mat4>& getNodeTransforms() const { return this->node_transforms; }
     inline const std::vector<Transform>& getTransformations() const { return this->transformations; }
+    
+    inline Transform& getTransformation(const std::string& name) { return this->transformations[this->nodes.at(name)]; }
+    inline const Transform& getTransformation(const std::string& name) const { return this->transformations[this->nodes.at(name)]; }
+    
+    inline glm::mat4& getNodeTransform(const std::string& name) { return this->node_transforms[this->nodes.at(name)]; } // non-constant version
+    inline const glm::mat4& getNodeTransform(const std::string& name) const { return this->node_transforms[this->nodes.at(name)]; } // constant version
 };
 
 #endif

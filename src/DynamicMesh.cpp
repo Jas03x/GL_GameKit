@@ -8,11 +8,6 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::load(const char* path, const glm::vec3& _scale, GLenum draw_mode)
-{
-    this->load(ColladaLoader(path), _scale, draw_mode);
-}
-
 void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
 {
     // open the asset
@@ -38,7 +33,7 @@ void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLe
     }
     
     for(unsigned int i = 0; i < loader.getNodeNames().size(); i++)
-        this->nodes.push_back(loader.getInverseRoot() * loader.getNodeTransforms().at(loader.getNodeNames().at(i)));
+        this->nodes.push_back(loader.getNodeTransforms().at(loader.getNodeNames().at(i)));
     
     this->bones.reserve(loader.getBoneNames().size());
     
@@ -143,4 +138,6 @@ void DynamicMesh::destroy()
     
     for(unsigned int i = 0; i < this->texture_count; i++) this->textures[i].destroy();
     if(this->textures != NULL) delete[] this->textures;
+    
+    Mesh::destroy();
 }

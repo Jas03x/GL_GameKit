@@ -179,3 +179,11 @@ void ColladaLoader::process_nodes(const aiNode* node)
         this->process_nodes(node->mChildren[i]);
     }
 }
+
+void ColladaLoader::removeVertexBones(const std::vector<int>& mesh_faces)
+{
+    for(unsigned int i = 0; i < mesh_faces.size(); i++) {
+        this->bone_weights.at(mesh_faces[i]) = glm::vec4(0);
+        this->bone_indices.at(mesh_faces[i]) = glm::uvec4(0);
+    }
+}
