@@ -8,7 +8,7 @@
 
 #include "CompoundCollider.h"
 
-CompoundCollider::CompoundCollider(Transform& transform, const float mass, const glm::vec3& inertia) : RigidBody(&transform)
+CompoundCollider::CompoundCollider(const Transform& transform, Transform* ptr, const float mass, const glm::vec3& inertia) : RigidBody(ptr)
 {
     this->shape = new btCompoundShape();
     this->motion_state = new btDefaultMotionState(transform.toBulletTransform());

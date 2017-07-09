@@ -36,6 +36,7 @@ public:
     virtual ~Collider();
     
     inline const btCollisionObject* getCollisionObject() const { return this->body; }
+    inline bool hasTransformationPointer() const { return this->transformation != NULL; }
     
     void rotate(const glm::quat& rotation);
     void translate(const glm::vec3& translation);

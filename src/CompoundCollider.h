@@ -26,7 +26,7 @@ private:
     void unbind();
     
 public:
-    CompoundCollider(Transform& transform, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
+    CompoundCollider(const Transform& transform, Transform* ptr = NULL, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
     ~CompoundCollider();
     
     void addCollisionShape(const Transform& local_transform, btCollisionShape* shape);
