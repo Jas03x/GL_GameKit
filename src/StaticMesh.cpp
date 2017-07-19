@@ -8,7 +8,7 @@
 
 #include "StaticMesh.h"
 
-void StaticMesh::load(const char* source, const char* texture)
+void StaticMesh::load(const char* source, const char* texture, const glm::vec3& _scale)
 {
     OBJ_Loader loader = OBJ_Loader(source);
     this->texture.load(texture);
@@ -45,7 +45,7 @@ void StaticMesh::load(const char* source, const char* texture)
     
     this->vertex_count = (unsigned int) loader.getIndices().size();
     
-    this->scale = glm::vec3(1);
+    this->scale = _scale;
     this->transformation = Transform();
 }
 

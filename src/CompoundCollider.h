@@ -16,6 +16,7 @@
 #include "Collider.h"
 #include "RigidBody.h"
 #include "PhysicsConfiguration.h"
+#include "ColliderConfiguration.h"
 
 class CompoundCollider : public RigidBody
 {
@@ -26,7 +27,7 @@ private:
     void unbind();
     
 public:
-    CompoundCollider(const Transform& transform, Transform* ptr = NULL, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
+    CompoundCollider(const ColliderConfiguration& collider_configuration, const Transform& transform, Transform* ptr = NULL, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
     ~CompoundCollider();
     
     void addCollisionShape(const Transform& local_transform, btCollisionShape* shape);

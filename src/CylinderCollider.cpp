@@ -8,7 +8,7 @@
 
 #include "CylinderCollider.h"
 
-btCylinderShape* CylinderCollider::getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale)
+ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale)
 {
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(data.getBoneNames().size());
@@ -18,10 +18,11 @@ btCylinderShape* CylinderCollider::getShape(const ColladaLoader& data, const std
         const glm::mat4& offset = data.getBoneOffsets().at(name);
         bone_cache.push_back(bindpose * offset);
     }
-    const glm::mat4 scale_matrix = glm::scale(glm::vec3(scale.x, -scale.y, scale.z));
+    const glm::mat4 scale_matrix = glm::scale(glm::vec3(scale.x, scale.y, scale.z));
     
-    glm::vec3 min = glm::vec3(0);
-    glm::vec3 max = glm::vec3(0);
+    // start the vectors at extreme values
+    glm::vec3 m = glm::vec3(1000);
+    glm::vec3 M = glm::vec3(-1000);
     
     for(unsigned int i = 0; i < faces.size(); i++) {
         const glm::vec3&  vertex = data.getVertices()[faces[i]];
@@ -34,16 +35,25 @@ btCylinderShape* CylinderCollider::getShape(const ColladaLoader& data, const std
             weight.w * bone_cache[index.w];
         
         glm::vec3 vec = glm::vec3(scale_matrix * joint * glm::vec4(vertex, 1));
-        #define MAX_COMPARISON(x, v) if(x > v) v = x;
-        #define MIN_COMPARISON(x, v) if(x < v) v = x;
-        MAX_COMPARISON(vec.x, max.x);
-        MAX_COMPARISON(vec.y, max.y);
-        MAX_COMPARISON(vec.z, max.z);
-        MIN_COMPARISON(vec.x, min.x);
-        MIN_COMPARISON(vec.y, min.y);
-        MIN_COMPARISON(vec.z, min.z);
+        #define MAX_COMPARISON(x, v) if((x) > (v)) (v) = (x);
+        #define MIN_COMPARISON(x, v) if((x) < (v)) (v) = (x);
+        MAX_COMPARISON(vec.x, M.x);
+        MAX_COMPARISON(vec.y, M.y);
+        MAX_COMPARISON(vec.z, M.z);
+        MIN_COMPARISON(vec.x, m.x);
+        MIN_COMPARISON(vec.y, m.y);
+        MIN_COMPARISON(vec.z, m.z);
     }
     
-    glm::vec3 half_extents = (max - min) * 0.5f;
-    return new btCylinderShape(btVector3(half_extents.x, half_extents.y, half_extents.z));
+    glm::vec3 half_extents = glm::abs(M - m) * 0.5f;
+    
+    ColliderData cd;
+    // TODO: YOU MIGHT NEED TO ADD AN ENUM SYSTEM TO MARK WHICH ORDER THE CYLINDER SHOULD BE CREATED WITH
+    // THIS ORDER ISSUE IS THE REASON WHY YOU HAD TO CREATE THIS CYLINDER IN YXZ FORMAT (because the cylinder was rotated!!!)
+    cd.shape = new btCylinderShape(btVector3(half_extents.y, half_extents.x, half_extents.z));
+    cd.position = m + ((M - m) * 0.5f);
+    cd.position = glm::vec3(cd.position.x, cd.position.z, -cd.position.y);
+    //cd.position *= -1;
+    //cd.position.z *= -1;
+    return cd;
 }

@@ -16,13 +16,19 @@
 #include "RigidBody.h"
 #include "ColladaLoader.h"
 
+typedef struct ColliderData
+{
+    btCollisionShape* shape;
+    glm::vec3 position;
+}ColliderData;
+
 class CylinderCollider : public RigidBody
 {
 public:
     CylinderCollider();
     ~CylinderCollider();
     
-    static btCylinderShape* getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale = glm::vec3(1));
+    static ColliderData getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale = glm::vec3(1));
 };
 
 #endif /* CylinderCollider_h */

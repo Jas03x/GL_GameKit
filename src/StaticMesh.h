@@ -26,11 +26,11 @@ private:
     Texture texture;
     
 protected:
-    void load(const char* source, const char* texture);
+    void load(const char* source, const char* texture, const glm::vec3& _scale = glm::vec3(1.0f));
     
 public:
 	StaticMesh(){}
-    StaticMesh(const char* source, const char* texture){ this->load(source, texture); }
+    StaticMesh(const char* source, const char* texture, const glm::vec3& _scale = glm::vec3(1.0f)){ this->load(source, texture, _scale); }
     void destroy();
     
     inline const Texture& getTexture() const { return this->texture; }
