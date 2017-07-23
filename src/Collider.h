@@ -48,7 +48,7 @@ public:
         const btVector3& origin = transform.getOrigin();
         const btQuaternion& rotation = transform.getRotation();
         this->transformation->translation = glm::vec3(origin.getX(), origin.getY(), origin.getZ());
-        this->transformation->rotation = glm::quat(rotation.getX(), rotation.getY(), rotation.getZ(), rotation.getW());
+        this->transformation->rotation = glm::quat(rotation.getW(), rotation.getX(), rotation.getY(), rotation.getZ());
     }
 };
 

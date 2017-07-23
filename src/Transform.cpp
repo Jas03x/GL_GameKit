@@ -17,5 +17,5 @@ Transform::Transform(const glm::vec3& _translation, const glm::vec3& _rotation)
 Transform::Transform(const glm::vec3& _translation, const glm::quat& _rotation)
 {
     this->translation = _translation;
-    this->rotation = _rotation;
+    this->rotation = glm::quat(_rotation.w, _rotation.x, _rotation.y, _rotation.z);
 }

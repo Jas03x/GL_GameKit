@@ -30,6 +30,7 @@ public:
     
     void bind() const { glBindVertexArray(this->vao); }
     inline unsigned int getVertexCount() const { return this->vertex_count; }
+    inline const glm::vec3& getScale() const { return this->scale; }
     inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
 };
 

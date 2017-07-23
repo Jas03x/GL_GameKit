@@ -52,7 +52,7 @@ ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::ve
     // THIS ORDER ISSUE IS THE REASON WHY YOU HAD TO CREATE THIS CYLINDER IN YXZ FORMAT (because the cylinder was rotated!!!)
     cd.shape = new btCylinderShape(btVector3(half_extents.y, half_extents.x, half_extents.z));
     cd.position = m + ((M - m) * 0.5f);
-    cd.position = glm::vec3(cd.position.x, cd.position.z, -cd.position.y);
+    //cd.position = glm::vec3(cd.position.x, cd.position.z, -cd.position.y);
     //cd.position *= -1;
     //cd.position.z *= -1;
     return cd;

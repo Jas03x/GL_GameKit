@@ -12,17 +12,22 @@
 #include <string>
 #include <vector>
 
+#include "Node.h"
 #include "Math3d.h"
 #include "Animation.h"
+#include "Transform.h"
 
 class Bone
 {
 public:
-    Bone* parent;
     std::string name;
+    
+    Bone* parent;
+    Node* node;
+    
     glm::mat4 offset_matrix; // the bone offset matrix
-    glm::mat4 bind_pose_matrix; // the bind pose matrix from the node heirchy
-    glm::mat4 transformation_matrix; // a custom transformation
+    Transform transform; // a custom transformation
+    
     Animation animation; // the animation for this bone
     
     Bone(){}

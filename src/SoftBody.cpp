@@ -16,9 +16,9 @@ SoftBody::SoftBody(const ColliderConfiguration& collider_configuration, ColladaL
         const std::string& name = loader.getBoneNames()[i];
         const glm::mat4& bindpose = loader.getNodeTransforms().at(name);
         const glm::mat4& offset = loader.getBoneOffsets().at(name);
-        bone_cache.push_back(loader.getInverseRoot() * bindpose * offset);
+        bone_cache.push_back(bindpose * offset);
     }
-    const glm::mat4 scale_matrix = glm::scale(glm::vec3(_scale.x, _scale.y, -_scale.z));
+    const glm::mat4 scale_matrix = glm::scale(glm::vec3(_scale.x, _scale.y, _scale.z));
     
     this->face_array = face_data;
     this->face_array.shrink_to_fit();
@@ -39,7 +39,7 @@ SoftBody::SoftBody(const ColliderConfiguration& collider_configuration, ColladaL
         vertex_array.push_back(v);
     }
     
-    this->scale = glm::vec3(1.0f / _scale.x, 1.0f / _scale.y, -1.0f / _scale.z);
+    this->scale = glm::vec3(1.0f / _scale.x, 1.0f / _scale.y, 1.0f / _scale.z);
     this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertex_array[0][0], &this->face_array[0], (unsigned int) this->face_array.size() / 3);
     this->bind();
     
@@ -71,7 +71,7 @@ void SoftBody::getVertexData(std::vector<glm::vec3>& vertex_data)
     for(unsigned int i = 0; i < this->face_array.size(); i++)
     {
         const btVector3& x = nodes[this->face_array[i]].m_x;
-        glm::vec3 vec = glm::vec3(x.getX(), x.getY(), x.getZ());
+        glm::vec3 vec = glm::vec3(x.getX(), -x.getZ(), x.getY());
         vertex_data.push_back(glm::vec3(glm::scale(this->scale) * glm::vec4(vec, 1)));
     }
 }

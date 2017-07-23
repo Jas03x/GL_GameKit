@@ -30,8 +30,8 @@ void main()
     
     // mvp * inverse * offset * bindpose * bone
     vec4 v = bone * vec4(vertex, 1);
-    //gl_Position = mvp_matrix * vec4(v.xyz, 1);
-    gl_Position = mvp_matrix * vec4(v.x, -v.z, v.y, 1);
+    gl_Position = mvp_matrix * vec4(v.xyz, 1);
+    //gl_Position = mvp_matrix * vec4(v.x, v.z, -v.y, 1);
 	_normal = normalize(vec3(normal_matrix * vec4(vertex, 1)));
     _uv = uv;
     _texture_id = texture_id;

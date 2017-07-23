@@ -38,10 +38,12 @@ void PhysicsConfiguration::initalize()
 
 void PhysicsConfiguration::update()
 {
-    PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
+    //PhysicsConfiguration::dynamics_world->stepSimulation(1 / 60.f, 10);
     for(unsigned int i = 0; i < colliders.size(); i++) {
-        if(colliders[i]->hasTransformationPointer())
+        if(colliders[i]->hasTransformationPointer()) {
+            // printf("Update %i of %i\n", i, (int) colliders.size());
             colliders[i]->updateTransformationPointer();
+        }
     }
 }
 

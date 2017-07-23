@@ -40,7 +40,9 @@ private:
     
     // model data:
     std::vector<std::string> mesh_names;
-    std::map<std::string, std::vector<int>> mesh_indices; // which mesh each face belongs to
+    std::map<std::string, int> mesh_map;
+    std::vector<unsigned char> mesh_indices;
+    std::map<std::string, std::vector<int>> mesh_faces;
     
     // node data:
     std::vector<std::string> node_names; // the names of the nodes
@@ -86,7 +88,7 @@ public:
     const std::vector<glm::uvec4>& getBoneIndices() const { return this->bone_indices; }
     
     const std::vector<std::string>& getMeshNames() const { return this->mesh_names; }
-    const std::vector<int>& getMeshFaces(const std::string& name) const { return this->mesh_indices.at(name); }
+    const std::vector<int>& getMeshFaces(const std::string& name) const { return this->mesh_faces.at(name); }
     
     const std::vector<std::string>& getBoneNames() const { return this->bone_names; }
     const std::map<std::string, glm::mat4>& getBoneOffsets() const { return this->bone_offsets; }

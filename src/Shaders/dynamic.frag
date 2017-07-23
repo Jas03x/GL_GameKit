@@ -10,6 +10,8 @@ out vec4 diffuse_out;
 out vec3 normal_out;
 out vec4 light_out;
 
+in vec3 debug;
+
 void main()
 {
 	vec4 color = texture(textures[_texture_id], _uv);

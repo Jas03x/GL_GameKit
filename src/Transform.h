@@ -19,7 +19,7 @@ public:
     glm::quat rotation;
     
     Transform(const glm::vec3& _translation, const glm::vec3& _rotation);
-    Transform(const glm::vec3& _translation = glm::vec3(0), const glm::quat& _rotation = glm::quat(0, 0, 0, 1));
+    Transform(const glm::vec3& _translation = glm::vec3(0), const glm::quat& _rotation = glm::quat(1, 0, 0, 0));
     
     inline glm::mat4 toMatrix() const { return glm::translate(this->translation) * glm::toMat4(this->rotation); }
     inline btTransform toBulletTransform() const {

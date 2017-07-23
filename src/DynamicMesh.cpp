@@ -8,13 +8,15 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
+void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
 {
     // open the asset
 	if (loader.getTextures().size() <= 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
 		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), loader.getPath().c_str());
 		throw -1;
 	}
+    
+    if(this->nodes.size() == 0 && this->bones.size() == 0) this->generateNodes(loader);
     
     // load the textures
     this->textures = new Texture[loader.getTextures().size()];
@@ -24,58 +26,6 @@ void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLe
     {
         std::string t_path = file_path + loader.getTextures()[i];
         this->textures[i] = Texture(t_path.c_str());
-    }
-    
-    // load the bones
-    if(loader.getNodeNames().size() > DYNAMIC_MESH_MAX_NODE_COUNT || loader.getBoneNames().size() > DYNAMIC_MESH_MAX_BONE_COUNT) {
-        printf("Collada file [%s] exceeds max bone/node limit.\n", loader.getPath().c_str());
-        throw -1;
-    }
-    
-    for(unsigned int i = 0; i < loader.getNodeNames().size(); i++)
-        this->nodes.push_back(loader.getNodeTransforms().at(loader.getNodeNames().at(i)));
-    
-    this->bones.reserve(loader.getBoneNames().size());
-    
-    // pass 1: set up the bones
-    for(unsigned int i = 0; i < loader.getBoneNames().size(); i++)
-    {
-        const std::string& name = loader.getBoneNames()[i];
-     
-        // initalize the bone
-        Bone bone = Bone(name);
-        bone.bind_pose_matrix = loader.getNodeTransforms().at(name);
-        bone.transformation_matrix = glm::mat4(1.0f);
-        bone.offset_matrix = loader.getBoneOffsets().at(name);
-        
-        // load the bone's animation (if any)
-        std::map<std::string, Animation>::const_iterator animation_it = loader.getBoneAnimations().find(name);
-        if(animation_it != loader.getBoneAnimations().end()) bone.animation = animation_it->second;
-        
-        // append the bone
-        this->bones.push_back(bone);
-        this->bone_map[name] = &this->bones.back();
-    }
-    
-    // pass 2: set up the parents
-    for(unsigned int i = 0; i < this->bones.size(); i++)
-    {
-        const std::string& name = this->bones[i].name;
-        
-        // try to get the parent bone
-        std::map<std::string, std::string>::const_iterator parent = loader.getNodeParents().find(name);
-        if(parent == loader.getNodeParents().end()) {
-            this->bones[i].parent = NULL;
-            continue;
-        }
-        
-        std::map<std::string, Bone*>::const_iterator p = this->bone_map.find(parent->second);
-        if(p != this->bone_map.end())
-            this->bones[i].parent = p->second;
-        else {
-            printf("Warning: Parent of bone [%s] not found.\n", name.c_str());
-            this->bones[i].parent = NULL;
-        }
     }
     
     size_t vc = loader.getFaces().size();
@@ -129,6 +79,66 @@ void DynamicMesh::load(const ColladaLoader& loader, const glm::vec3& _scale, GLe
     this->scale = _scale;
     this->transformation = Transform();
     this->inverse_root = loader.getInverseRoot();
+}
+
+void DynamicMesh::generateNodes(const ColladaLoader& loader)
+{
+    // load the bones
+    if(loader.getNodeNames().size() > DYNAMIC_MESH_MAX_NODE_COUNT || loader.getBoneNames().size() > DYNAMIC_MESH_MAX_BONE_COUNT) {
+        printf("Collada file [%s] exceeds max bone/node limit.\n", loader.getPath().c_str());
+        throw -1;
+    }
+    
+    this->nodes.reserve(loader.getNodeNames().size());
+    for(unsigned int i = 0; i < loader.getNodeNames().size(); i++) {
+        const std::string& name = loader.getNodeNames().at(i);
+        const glm::mat4& mat = loader.getNodeTransforms().at(name);
+        this->nodes.push_back(Node(name, mat, Transform()));
+        this->node_map[name] = &this->nodes.back();
+    }
+    
+    this->bones.reserve(loader.getBoneNames().size());
+    
+    // pass 1: set up the bones
+    for(unsigned int i = 0; i < loader.getBoneNames().size(); i++)
+    {
+        const std::string& name = loader.getBoneNames()[i];
+        
+        // initalize the bone
+        Bone bone = Bone(name);
+        bone.node = this->node_map.at(name);
+        bone.transform = Transform();
+        bone.offset_matrix = loader.getBoneOffsets().at(name);
+        
+        // load the bone's animation (if any)
+        std::map<std::string, Animation>::const_iterator animation_it = loader.getBoneAnimations().find(name);
+        if(animation_it != loader.getBoneAnimations().end()) bone.animation = animation_it->second;
+        
+        // append the bone
+        this->bones.push_back(bone);
+        this->bone_map[name] = &this->bones.back();
+    }
+    
+    // pass 2: set up the parents
+    for(unsigned int i = 0; i < this->bones.size(); i++)
+    {
+        const std::string& name = this->bones[i].name;
+        
+        // try to get the parent bone
+        std::map<std::string, std::string>::const_iterator parent = loader.getNodeParents().find(name);
+        if(parent == loader.getNodeParents().end()) {
+            this->bones[i].parent = NULL;
+            continue;
+        }
+        
+        std::map<std::string, Bone*>::const_iterator p = this->bone_map.find(parent->second);
+        if(p != this->bone_map.end())
+            this->bones[i].parent = p->second;
+        else {
+            printf("Warning: Parent of bone [%s] not found.\n", name.c_str());
+            this->bones[i].parent = NULL;
+        }
+    }
 }
 
 void DynamicMesh::destroy()
