@@ -10,17 +10,18 @@
 #define ColliderConfiguration_h
 
 #include "Math3d.h"
+#include "Transform.h"
 
 class ColliderConfiguration
 {
 private:
-    bool invert_axis;
+    Transform local_transform;
     glm::vec3 scale;
     
 public:
-    ColliderConfiguration(const bool _invert_axis = false, const glm::vec3& _scale = glm::vec3(1.0f));
-    inline bool axisIsInverted() const { return this->invert_axis; }
+    ColliderConfiguration(const Transform& _local_transform = Transform(), const glm::vec3& _scale = glm::vec3(1.0f));
     inline const glm::vec3& getScale() const { return this->scale; }
+    inline glm::mat4 getLocalTransformMatrix() const { return this->local_transform.toMatrix(); }
 };
 
 #endif /* ColliderConfiguration_h */

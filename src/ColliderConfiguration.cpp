@@ -8,8 +8,8 @@
 
 #include "ColliderConfiguration.h"
 
-ColliderConfiguration::ColliderConfiguration(const bool _invert_axis, const glm::vec3& _scale)
+ColliderConfiguration::ColliderConfiguration(const Transform& _local_transform, const glm::vec3& _scale)
 {
     this->scale = _scale;
-    this->invert_axis = _invert_axis;
+    this->local_transform = _local_transform;
 }

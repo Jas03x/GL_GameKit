@@ -8,7 +8,7 @@
 
 #include "CylinderCollider.h"
 
-ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale)
+ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc)
 {
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(data.getBoneNames().size());
@@ -18,7 +18,7 @@ ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::ve
         const glm::mat4& offset = data.getBoneOffsets().at(name);
         bone_cache.push_back(bindpose * offset);
     }
-    const glm::mat4 scale_matrix = glm::scale(glm::vec3(scale.x, scale.y, scale.z));
+    const glm::mat4 local_transform = cc.getLocalTransformMatrix() * glm::scale(glm::vec3(cc.getScale()));
     
     // start the vectors at extreme values
     glm::vec3 m = glm::vec3(1000);
@@ -34,7 +34,7 @@ ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::ve
             weight.z * bone_cache[index.z] +
             weight.w * bone_cache[index.w];
         
-        glm::vec3 vec = glm::vec3(scale_matrix * joint * glm::vec4(vertex, 1));
+        glm::vec3 vec = glm::vec3(local_transform * joint * glm::vec4(vertex, 1));
         #define MAX_COMPARISON(x, v) if((x) > (v)) (v) = (x);
         #define MIN_COMPARISON(x, v) if((x) < (v)) (v) = (x);
         MAX_COMPARISON(vec.x, M.x);

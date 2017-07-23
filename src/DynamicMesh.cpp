@@ -16,8 +16,6 @@ void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale
 		throw -1;
 	}
     
-    if(this->nodes.size() == 0 && this->bones.size() == 0) this->generateNodes(loader);
-    
     // load the textures
     this->textures = new Texture[loader.getTextures().size()];
     std::string file_path = std::string(loader.getPath().c_str());

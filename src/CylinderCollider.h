@@ -15,6 +15,7 @@
 #include "Collider.h"
 #include "RigidBody.h"
 #include "ColladaLoader.h"
+#include "ColliderConfiguration.h"
 
 typedef struct ColliderData
 {
@@ -28,7 +29,7 @@ public:
     CylinderCollider();
     ~CylinderCollider();
     
-    static ColliderData getShape(const ColladaLoader& data, const std::vector<int>& faces, const glm::vec3& scale = glm::vec3(1));
+    static ColliderData getShape(const ColladaLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc);
 };
 
 #endif /* CylinderCollider_h */

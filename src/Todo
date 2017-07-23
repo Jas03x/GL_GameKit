@@ -1,0 +1,2 @@
+- Perhaps make the node structure more like the bone structure so that the node hierchy is recalculated every iteration
+    - this will be done if the dynamic mesh has issues
