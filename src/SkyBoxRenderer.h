@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "GL.h"
+#include "Path.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "SkyBox.h"

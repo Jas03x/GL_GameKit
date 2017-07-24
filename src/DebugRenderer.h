@@ -10,6 +10,7 @@
 #define DebugRenderer_h
 
 #include "GL.h"
+#include "Path.h"
 #include "Math3d.h"
 #include "Shader.h"
 #include "Camera.h"

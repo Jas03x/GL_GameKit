@@ -4,7 +4,7 @@ _SkyBoxRenderer SkyBoxRenderer;
 
 void _SkyBoxRenderer::initalize()
 {
-    ShaderSource source = ShaderSource("/Users/jass/Documents/Libraries/GL_3D_Engine/src/Shaders/skybox.vert", "/Users/jass/Documents/Libraries/GL_3D_Engine/src/Shaders/skybox.frag");
+    ShaderSource source = ShaderSource(INT_SHDR("skybox.vert"), INT_SHDR("skybox.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "diffuse_out");
@@ -12,7 +12,7 @@ void _SkyBoxRenderer::initalize()
     this->matrix = this->getUniform("matrix");
     this->skymap = this->getUniform("skymap");
     
-    OBJ_Loader loader = OBJ_Loader("/Users/jass/Documents/Libraries/GL_3D_Engine/src/Data/UnitCube.obj", OBJ_Loader::V);
+    OBJ_Loader loader = OBJ_Loader(INT_DATA("UnitCube.obj"), OBJ_Loader::V);
     std::vector<glm::vec3> vertices;
     vertices.reserve(loader.getIndices().size());
     for(unsigned int i = 0; i < loader.getIndices().size(); i++)

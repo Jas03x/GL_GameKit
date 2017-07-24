@@ -12,7 +12,7 @@ _DebugRenderer DebugRenderer;
 
 void _DebugRenderer::initalize(const DebugDrawer *_drawer)
 {
-    ShaderSource source = ShaderSource("/Users/jass/Documents/Libraries/GL_3D_Engine/src/Shaders/debug.vert", "/Users/jass/Documents/Libraries/GL_3D_Engine/src/Shaders/debug.frag");
+    ShaderSource source = ShaderSource(INT_SHDR("debug.vert"), INT_SHDR("debug.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
     this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");

@@ -10,6 +10,7 @@
 #define Animation_h
 
 #include <vector>
+#include <algorithm>
 
 #include "Math3d.h"
 #include "Clock.h"

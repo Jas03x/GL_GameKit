@@ -1,0 +1,18 @@
+﻿  DebugRenderer.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  SunRenderer.cpp
+  StaticMeshRenderer.cpp
+  SkyBoxRenderer.cpp
+  SceneRenderer.cpp
+  PointLightRenderer.cpp
+  LightStencilRenderer.cpp
+  LightEngine.cpp
+  GaussionBlurRenderer.cpp
+  DynamicMeshRenderer.cpp
+StaticObject.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+Particle.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+NullCollider.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+Node.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+DynamicBody.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+  GL_3D_Engine.vcxproj -> C:\Users\Jas\Documents\Projects\GL_Context\x64\Debug\GL_3D_Engine.lib
