@@ -16,6 +16,7 @@
 #include "Mesh.h"
 #include "Math3d.h"
 #include "Collider.h"
+#include "VectorTree.h"
 #include "ColladaLoader.h"
 #include "PhysicsConfiguration.h"
 #include "ColliderConfiguration.h"

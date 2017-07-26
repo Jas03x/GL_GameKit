@@ -22,9 +22,6 @@ protected:
     btCollisionObject* body;
     Transform* transformation;
     
-    virtual void bind();
-    virtual void unbind();
-    
 public:
     enum Type
     {
@@ -35,6 +32,9 @@ public:
     
     Collider(Transform* _transformation = NULL);
     virtual ~Collider();
+    
+    virtual void bind();
+    virtual void unbind();
     
     inline const btCollisionObject* getCollisionObject() const { return this->body; }
     inline bool hasTransformationPointer() const { return this->transformation != NULL; }
