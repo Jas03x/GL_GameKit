@@ -21,7 +21,6 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
 
     unsigned int vertex_count  = 0; // store the total vertices passed because each mesh's indices start at 0 (so this is a cumulative sum)
     unsigned int texture_index = 0;
-    unsigned int mesh_index = 0;
     
     // start by processing/reading the scene's nodes
     this->process_nodes(scene->mRootNode);
@@ -29,14 +28,10 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
     for(unsigned int i = 0; i < scene->mNumMeshes; i++)
     {
         const struct aiMesh* mesh = scene->mMeshes[i];
-        std::string name = std::string(mesh->mName.C_Str());
+        const std::string name = std::string(mesh->mName.C_Str());
         
-        std::vector<std::string>::const_iterator name_pos = std::find(this->mesh_names.begin(), this->mesh_names.end(), name);
-        if(name_pos == this->mesh_names.end()) {
-            this->mesh_map[name] = (int) this->mesh_names.size();
-            mesh_index = (unsigned int) this->mesh_names.size();
+        if(std::find(this->mesh_names.begin(), this->mesh_names.end(), name) == this->mesh_names.end())
             this->mesh_names.push_back(name);
-        } else mesh_index = (unsigned int) (name_pos - this->mesh_names.begin());
         std::vector<int>& mesh_list_pointer = this->mesh_faces[name];
         
         std::vector<std::string>::const_iterator node_pos = std::find(this->node_names.begin(), this->node_names.end(), name);
@@ -94,7 +89,6 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
                 }
                 for(unsigned int t = 0; t < 3; t++) {
                     mesh_list_pointer.push_back(vertex_count + face->mIndices[t]); // copy the index into the mesh indexing list
-                    this->mesh_indices.push_back(mesh_index);
                     this->faces.push_back(vertex_count + face->mIndices[t]); // add the triangle vertex for the vbo
 					this->texture_indices.push_back(texture_index);
                     this->node_indices.push_back(node_index);
@@ -159,6 +153,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
             this->bone_animations[std::string(node_animation->mNodeName.C_Str())] = animation;
         }
     }
+    
     memcpy(&this->inverse_root[0][0], &scene->mRootNode->mTransformation[0][0], sizeof(float) * 16);
     this->inverse_root = glm::inverse(this->inverse_root);
     delete importer;

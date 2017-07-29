@@ -26,7 +26,6 @@ public:
     Node* node;
     
     glm::mat4 offset_matrix; // the bone offset matrix
-    Transform transform; // a custom transformation
     
     Animation animation; // the animation for this bone
     

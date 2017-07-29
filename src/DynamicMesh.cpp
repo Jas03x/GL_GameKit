@@ -26,6 +26,8 @@ void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale
         this->textures[i] = Texture(t_path.c_str());
     }
     
+    if(this->bones.size() == 0 && this->nodes.size() == 0) this->generateNodes(loader);
+    
     size_t vc = loader.getFaces().size();
     
     std::vector<glm::vec3> vertices;
@@ -76,7 +78,6 @@ void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale
     
     this->scale = _scale;
     this->transformation = Transform();
-    this->inverse_root = loader.getInverseRoot();
 }
 
 void DynamicMesh::generateNodes(const ColladaLoader& loader)
@@ -105,7 +106,6 @@ void DynamicMesh::generateNodes(const ColladaLoader& loader)
         // initalize the bone
         Bone bone = Bone(name);
         bone.node = this->node_map.at(name);
-        bone.transform = Transform();
         bone.offset_matrix = loader.getBoneOffsets().at(name);
         
         // load the bone's animation (if any)
@@ -137,6 +137,8 @@ void DynamicMesh::generateNodes(const ColladaLoader& loader)
             this->bones[i].parent = NULL;
         }
     }
+    
+    this->inverse_root = loader.getInverseRoot();
 }
 
 void DynamicMesh::destroy()

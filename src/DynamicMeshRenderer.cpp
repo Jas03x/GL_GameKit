@@ -62,7 +62,7 @@ void _DynamicMeshRenderer::render(const DynamicMesh& mesh)
     // https://stackoverflow.com/questions/29184311/how-to-rotate-a-skinned-models-bones-in-c-using-assimp
     for(unsigned int i = 0; i < mesh.getBones().size(); i++) {
         // TODO: Add interpolation
-        bone_buffer[i] = mesh.getBones()[i].node->matrix * mesh.getBones()[i].node->transform.toMatrix() /* MULTIPLIED BY THE INTERPOLATED ANIMATION */ * mesh.getBones()[i].offset_matrix;
+        bone_buffer[i] = mesh.getInverseRoot() * mesh.getBones()[i].node->matrix * mesh.getBones()[i].node->transform.toMatrix() /* MULTIPLIED BY THE INTERPOLATED ANIMATION */ * mesh.getBones()[i].offset_matrix;
     }
     
     glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &vmatrix[0][0]);
