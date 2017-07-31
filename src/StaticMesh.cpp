@@ -8,43 +8,45 @@
 
 #include "StaticMesh.h"
 
-void StaticMesh::load(const char* source, const char* texture, const glm::vec3& _scale)
+void StaticMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, const GLenum draw_mode)
 {
-    OBJ_Loader loader = OBJ_Loader(source);
-    this->texture.load(texture);
-    
-    std::vector<float> vertex_buffer;
-    vertex_buffer.reserve(loader.getIndices().size() * 8);
-    for(unsigned int i = 0; i < loader.getIndices().size(); i++)
-    {
-        const glm::uvec3 &index = loader.getIndices().at(i);
-        const float* vertex = &loader.getVertices().at(index.x - 1)[0];
-        const float* normal = &loader.getNormals().at(index.z - 1)[0];
-        const float* uv = &loader.getUVs().at(index.y - 1)[0];
-        vertex_buffer.insert(vertex_buffer.end(), vertex, vertex + 3);
-        vertex_buffer.insert(vertex_buffer.end(), normal, normal + 3);
-        vertex_buffer.insert(vertex_buffer.end(), uv, uv + 2);
+    if(loader.getTextures().size() == 0 || loader.getTextures().size() > STATIC_MESH_MAX_TEXTURE_COUNT) {
+        printf("Invalid texture count [%lu] in file %s\n", loader.getTextures().size(), loader.getPath().c_str());
     }
+    
+    this->texture = Texture(loader.getDirectory() + loader.getTextures()[0]);
+    
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> uvs;
+    loader.getVertexArray(vertices);
+    loader.getNormalArray(normals);
+    loader.getUvArray(uvs);
+    size_t vc = loader.getFaces().size();
     
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
     
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertex_buffer.size() * sizeof(float), &vertex_buffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vc * 8, NULL, draw_mode);
+    
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 0, sizeof(float) * vc * 3, &vertices[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 3, sizeof(float) * vc * 3, &normals[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * vc * 6, sizeof(float) * vc * 2, &uvs[0][0]);
     
     glEnableVertexAttribArray(0); // vertex
     glEnableVertexAttribArray(1); // normal
     glEnableVertexAttribArray(2); // uv
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*) 0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*) (sizeof(float) * 3));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*) (sizeof(float) * 6));
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) (sizeof(float) * vc * 0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*) (sizeof(float) * vc * 3));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*) (sizeof(float) * vc * 6));
     
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
-    this->vertex_count = (unsigned int) loader.getIndices().size();
-    
+    this->vertex_count = (unsigned int) loader.getFaces().size();
     this->scale = _scale;
     this->transformation = Transform();
 }

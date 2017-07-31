@@ -1,16 +1,16 @@
 //
-//  ColladaLoader.cpp
-//  Bobo
+//  MeshLoader.cpp
 //
 //  Created by Jas S on 2017-02-04.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#include "ColladaLoader.h"
+#include "MeshLoader.h"
 
-ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
+MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
 {
     this->path = std::string(_path);
+    this->directory = this->path.substr(0, this->path.find_last_of("/\\") + 1);
     
     Assimp::Importer* importer = new Assimp::Importer();
     const struct aiScene* scene = importer->ReadFile(_path, aiProcess_Triangulate);
@@ -63,6 +63,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
 				glm::vec2 vec = glm::vec2(v->x, v->y);
                 this->uvs.push_back(vec);
 			}
+            else { this->uvs.push_back(glm::vec2(0)); }
         }
         if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
         {
@@ -84,7 +85,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
             for(unsigned int o = 0; o < mesh->mNumFaces; o++) {
                 const aiFace* face = &mesh->mFaces[o];
                 if(face->mNumIndices != 3) {
-                    printf("Warning: Unsupported face index count of %i. Only 3 indices per face are supported. Skipping face.\n", face->mNumIndices);
+                    //printf("Warning: Unsupported face index count of %i. Only 3 indices per face are supported. Skipping face.\n", face->mNumIndices);
                     continue;
                 }
                 for(unsigned int t = 0; t < 3; t++) {
@@ -92,6 +93,10 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
                     this->faces.push_back(vertex_count + face->mIndices[t]); // add the triangle vertex for the vbo
 					this->texture_indices.push_back(texture_index);
                     this->node_indices.push_back(node_index);
+                    
+                    //const aiVector3D& vd = mesh->mVertices[face->mIndices[t]];
+                    //const glm::vec3& v = this->vertices[vertex_count + face->mIndices[t]];
+                    //printf("%f %f %f vs %f %f %f\n", vd.x, vd.y, vd.z, v.x, v.y, v.z);
                 }
             }
         }
@@ -159,7 +164,7 @@ ColladaLoader::ColladaLoader(const char* _path, unsigned int parameters)
     delete importer;
 }
 
-glm::mat4 ColladaLoader::calculate_node(const aiNode* root) {
+glm::mat4 MeshLoader::calculate_node(const aiNode* root) {
     glm::mat4 ret = glm::mat4(1.0f);
     const aiNode* node = root;
     while(node != NULL) {
@@ -171,7 +176,7 @@ glm::mat4 ColladaLoader::calculate_node(const aiNode* root) {
     return ret;
 }
 
-void ColladaLoader::process_nodes(const aiNode* node)
+void MeshLoader::process_nodes(const aiNode* node)
 {
     if(node == NULL) return;
     this->node_names.push_back(std::string(node->mName.C_Str()));
@@ -182,10 +187,42 @@ void ColladaLoader::process_nodes(const aiNode* node)
     }
 }
 
-void ColladaLoader::removeVertexBones(const std::vector<int>& mesh_faces)
+void MeshLoader::removeVertexBones(const std::vector<int>& mesh_faces)
 {
     for(unsigned int i = 0; i < mesh_faces.size(); i++) {
         this->bone_weights.at(mesh_faces[i]) = glm::vec4(0);
         this->bone_indices.at(mesh_faces[i]) = glm::uvec4(0);
     }
+}
+
+void MeshLoader::getVertexArray(std::vector<glm::vec3>& source) const
+{
+    source.clear();
+    source.reserve(this->faces.size());
+    
+    for(unsigned int i = 0; i < this->faces.size(); i++)
+        source.push_back(glm::vec3(glm::vec4(this->vertices[this->faces[i]], 1)));
+}
+
+void MeshLoader::getNormalArray(std::vector<glm::vec3>& source) const
+{
+    source.clear();
+    source.reserve(this->faces.size());
+    for(unsigned int i = 0; i < this->faces.size(); i++)
+        source.push_back(this->normals[this->faces[i]]);
+}
+
+void MeshLoader::getUvArray(std::vector<glm::vec2>& source) const
+{
+    source.clear();
+    source.reserve(this->faces.size());
+    for(unsigned int i = 0; i < this->faces.size(); i++)
+        source.push_back(this->uvs[this->faces[i]]);
+}
+
+void MeshLoader::genTextures(Texture** array) const {
+    Texture* src = new Texture[this->textures.size()];
+    for(unsigned int i = 0; i < this->textures.size(); i++)
+        src[i] = Texture(this->directory + this->textures[i]);
+    *array = src;
 }

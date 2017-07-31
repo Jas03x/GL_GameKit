@@ -18,7 +18,10 @@
 #include "Math3d.h"
 #include "Texture.h"
 #include "Transform.h"
-#include "OBJ_Loader.h"
+#include "MeshLoader.h"
+#include "MeshDescriptor.h"
+
+#define STATIC_MESH_MAX_TEXTURE_COUNT 1
 
 class StaticMesh : public Mesh
 {
@@ -26,12 +29,14 @@ private:
     Texture texture;
     
 protected:
-    void load(const char* source, const char* texture, const glm::vec3& _scale = glm::vec3(1.0f));
+    void construct(const MeshLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f), const GLenum draw_mode = GL_STATIC_DRAW);
     
 public:
 	StaticMesh(){}
-    StaticMesh(const char* source, const char* texture, const glm::vec3& _scale = glm::vec3(1.0f)){ this->load(source, texture, _scale); }
     void destroy();
+    
+    StaticMesh(const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getDrawMode()); }
+    void operator = (const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getDrawMode()); }
     
     inline const Texture& getTexture() const { return this->texture; }
 };

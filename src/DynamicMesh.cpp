@@ -8,23 +8,15 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
+void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
 {
     // open the asset
-	if (loader.getTextures().size() <= 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
+	if (loader.getTextures().size() == 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
 		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), loader.getPath().c_str());
 		throw -1;
 	}
     
-    // load the textures
-    this->textures = new Texture[loader.getTextures().size()];
-    std::string file_path = std::string(loader.getPath().c_str());
-    file_path = file_path.substr(0, file_path.find_last_of("/\\") + 1);
-    for(unsigned int i = 0; i < loader.getTextures().size(); i++)
-    {
-        std::string t_path = file_path + loader.getTextures()[i];
-        this->textures[i] = Texture(t_path.c_str());
-    }
+    loader.genTextures(&this->textures);
     
     if(this->bones.size() == 0 && this->nodes.size() == 0) this->generateNodes(loader);
     
@@ -80,7 +72,7 @@ void DynamicMesh::construct(const ColladaLoader& loader, const glm::vec3& _scale
     this->transformation = Transform();
 }
 
-void DynamicMesh::generateNodes(const ColladaLoader& loader)
+void DynamicMesh::generateNodes(const MeshLoader& loader)
 {
     // load the bones
     if(loader.getNodeNames().size() > DYNAMIC_MESH_MAX_NODE_COUNT || loader.getBoneNames().size() > DYNAMIC_MESH_MAX_BONE_COUNT) {

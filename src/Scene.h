@@ -7,11 +7,11 @@
 #include "GL.h"
 #include "Math3d.h"
 #include "Texture.h"
-#include "ColladaLoader.h"
 #include "Collider.h"
 #include "RigidBody.h"
 #include "SoftBody.h"
 #include "Transform.h"
+#include "MeshLoader.h"
 
 #define SCENE_MAX_TEXTURES 4
 #define SCENE_MAX_NODES 32
@@ -37,8 +37,8 @@ protected:
 
 public:
 	Scene() { this->textures = NULL; }
-    Scene(const char* path, const glm::vec3& _scale = glm::vec3(1.0f)) { this->load(ColladaLoader(path), _scale); }
-    void load(const ColladaLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f));
+    Scene(const char* path, const glm::vec3& _scale = glm::vec3(1.0f)) { this->load(MeshLoader(path), _scale); }
+    void load(const MeshLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f));
 	void destroy();
 
 	inline void bind() const { glBindVertexArray(this->vao); }

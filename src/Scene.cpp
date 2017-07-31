@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-void Scene::load(const ColladaLoader& loader, const glm::vec3& _scale)
+void Scene::load(const MeshLoader& loader, const glm::vec3& _scale)
 {
 	if (loader.getTextures().size() > SCENE_MAX_TEXTURES) {
 		printf("Maximum texture limit %i exceeded in collada file [%s].\n", SCENE_MAX_TEXTURES, loader.getPath().c_str());

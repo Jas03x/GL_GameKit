@@ -14,7 +14,7 @@
 #include "Math3d.h"
 #include "Collider.h"
 #include "RigidBody.h"
-#include "ColladaLoader.h"
+#include "MeshLoader.h"
 #include "ColliderConfiguration.h"
 
 typedef struct ColliderData
@@ -29,7 +29,7 @@ public:
     CylinderCollider();
     ~CylinderCollider();
     
-    static ColliderData getShape(const ColladaLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc);
+    static ColliderData getShape(const MeshLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc);
 };
 
 #endif /* CylinderCollider_h */

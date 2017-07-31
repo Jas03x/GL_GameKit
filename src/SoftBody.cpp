@@ -8,7 +8,7 @@
 
 #include "SoftBody.h"
 
-SoftBody::SoftBody(const ColliderConfiguration& collider_configuration, ColladaLoader& loader, const std::vector<int>& face_data, const Transform& transform, Transform* ptr) : Collider(ptr)
+SoftBody::SoftBody(const ColliderConfiguration& collider_configuration, MeshLoader& loader, const std::vector<int>& face_data, const Transform& transform, Transform* ptr) : Collider(ptr)
 {
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(loader.getBoneNames().size());

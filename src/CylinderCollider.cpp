@@ -8,7 +8,7 @@
 
 #include "CylinderCollider.h"
 
-ColliderData CylinderCollider::getShape(const ColladaLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc)
+ColliderData CylinderCollider::getShape(const MeshLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc)
 {
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(data.getBoneNames().size());

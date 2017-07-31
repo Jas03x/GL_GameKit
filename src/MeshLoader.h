@@ -1,13 +1,12 @@
 //
-//  ColladaLoader.hpp
-//  Bobo
+//  MeshLoader.h
 //
 //  Created by Jas S on 2017-02-04.
 //  Copyright © 2017 Jas S. All rights reserved.
 //
 
-#ifndef ColladaLoader_hpp
-#define ColladaLoader_hpp
+#ifndef MeshLoader_hpp
+#define MeshLoader_hpp
 
 #include <stdio.h>
 #include <assimp/Importer.hpp>
@@ -16,14 +15,16 @@
 #include <vector>
 #include <map>
 
-#include "Math3d.h"
 #include "Bone.h"
+#include "Math3d.h"
+#include "Texture.h"
 
 #define COLLADA_AXIS_SWAP 0x01
 
-class ColladaLoader
+class MeshLoader
 {
 private:
+    std::string directory; // // the directory of this model
     std::string path; // the path of this model
     
 	// vertex data
@@ -62,27 +63,23 @@ private:
     void process_nodes(const aiNode* node);
     glm::mat4 calculate_node(const aiNode* root);
     
-    template<typename T>
-    inline void genArray(const std::vector<T>& source, std::vector<T>& destination) const {
-        destination.clear();
-        destination.reserve(this->faces.size());
-        for(unsigned int i = 0; i < this->faces.size(); i++) destination.push_back(source[i]);
-    }
-    
 public:
-    ColladaLoader(const char* _path, unsigned int parameters = 0);
+    MeshLoader(const char* _path, unsigned int parameters = 0);
     
     const std::string& getPath() const { return this->path; }
+    const std::string& getDirectory() const { return this->directory; }
     
     const std::vector<glm::vec3>& getVertices() const { return this->vertices; }
     const std::vector<glm::vec3>& getNormals() const { return this->normals; }
     const std::vector<glm::vec2>& getUVs() const { return this->uvs; }
-    void getVertexArray(std::vector<glm::vec3>& source) const { this->genArray<glm::vec3>(this->vertices, source); }
-    void getNormalArray(std::vector<glm::vec3>& source) const { this->genArray<glm::vec3>(this->normals, source); }
-    void getUvArray(std::vector<glm::vec2>& source) const { this->genArray<glm::vec2>(this->uvs, source); }
     const std::vector<int> getFaces() const { return this->faces; }
     
+    void getVertexArray(std::vector<glm::vec3>& source) const;
+    void getNormalArray(std::vector<glm::vec3>& source) const;
+    void getUvArray(std::vector<glm::vec2>& source) const;
+    
     const std::vector<std::string>& getTextures() const { return this->textures; }
+    void genTextures(Texture** array) const;
     const std::vector<unsigned char>& getTextureIndices() const { return this->texture_indices; }
     
     const std::vector<unsigned char>& getNodeIndices() const { return this->node_indices; }
@@ -105,4 +102,4 @@ public:
     void removeVertexBones(const std::vector<int>& mesh_faces);
 };
 
-#endif /* ColladaLoader_hpp */
+#endif /* MeshLoader_hpp */
