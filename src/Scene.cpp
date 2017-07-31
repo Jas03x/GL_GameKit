@@ -47,7 +47,7 @@ void Scene::load(const MeshLoader& loader, const glm::vec3& _scale)
 	for (unsigned int i = 0; i < loader.getNodeTransforms().size(); i++)
 	{
 		const std::string& name = loader.getNodeNames().at(i);
-		this->node_transforms.push_back(loader.getNodeTransforms().at(name));
+        this->node_transforms.push_back(loader.getNodeTransforms()[i]);
         this->transformations.push_back(Transform());
 		this->nodes[name] = (unsigned int) this->node_transforms.size();
 	}

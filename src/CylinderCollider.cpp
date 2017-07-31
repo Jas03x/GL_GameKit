@@ -13,9 +13,8 @@ ColliderData CylinderCollider::getShape(const MeshLoader& data, const std::vecto
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(data.getBoneNames().size());
     for(unsigned int i = 0; i < data.getBoneNames().size(); i++) {
-        const std::string& name = data.getBoneNames()[i];
-        const glm::mat4& bindpose = data.getNodeTransforms().at(name);
-        const glm::mat4& offset = data.getBoneOffsets().at(name);
+        const glm::mat4& bindpose = data.getNodeTransforms()[i];
+        const glm::mat4& offset = data.getBoneOffsets()[i];
         bone_cache.push_back(bindpose * offset);
     }
     const glm::mat4 local_transform = cc.getLocalTransformMatrix() * glm::scale(glm::vec3(cc.getScale()));

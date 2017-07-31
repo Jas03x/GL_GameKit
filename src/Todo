@@ -1,2 +1,5 @@
-- Perhaps make the node structure more like the bone structure so that the node hierchy is recalculated every iteration
-    - this will be done if the dynamic mesh has issues
+* Add a seperate shader for instanced rendering of static objects maybe
+    - Probably shouldnt do this for dynamic objects because bones take a lot of memory
+
+* Perhaps add texture compression
+    - The DXT stuff, etc.

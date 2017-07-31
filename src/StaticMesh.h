@@ -23,12 +23,28 @@
 
 #define STATIC_MESH_MAX_TEXTURE_COUNT 1
 
-class StaticMesh : public Mesh
+typedef struct StaticMeshInstance
+{
+private:
+    glm::vec3 scale;
+    
+public:
+    Transform transformation;
+    
+    StaticMeshInstance(){}
+    StaticMeshInstance(const glm::vec3& _scale) : scale(_scale) {}
+    
+    inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
+}StaticMeshInstance;
+
+typedef struct StaticMesh : public Mesh
 {
 private:
     Texture texture;
     
 protected:
+    StaticMeshInstance default_instance;
+    
     void construct(const MeshLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f), const GLenum draw_mode = GL_STATIC_DRAW);
     
 public:
@@ -39,6 +55,9 @@ public:
     void operator = (const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getDrawMode()); }
     
     inline const Texture& getTexture() const { return this->texture; }
-};
+    
+    inline StaticMeshInstance& getDefaultInstance() { return this->default_instance; }
+    inline const StaticMeshInstance& getDefaultInstance() const { return this->default_instance; }
+}StaticMesh;
 
 #endif /* StaticMesh_h */

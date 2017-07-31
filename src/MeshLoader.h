@@ -48,12 +48,12 @@ private:
     
     // node data:
     std::vector<std::string> node_names; // the names of the nodes
+    std::vector<glm::mat4> node_transforms; // matrices from the node hierchy
     std::map<std::string, std::string> node_parents; // bone hierchy
-    std::map<std::string, glm::mat4> node_transforms; // matrices from the node hierchy
     
     // bone data:
     std::vector<std::string> bone_names;
-    std::map<std::string, glm::mat4> bone_offsets; // bone offset matrices
+    std::vector<glm::mat4> bone_offsets; // bone offset matrices
     std::map<std::string, Animation> bone_animations;
     
     // misc:
@@ -74,7 +74,8 @@ public:
     const std::vector<glm::vec2>& getUVs() const { return this->uvs; }
     const std::vector<int> getFaces() const { return this->faces; }
     
-    void getVertexArray(std::vector<glm::vec3>& source) const;
+    void getStaticVertexArray(std::vector<glm::vec3>& source) const; // creates a vertex array with the nodes baked into the vertex data
+    void getDynamicVertexArray(std::vector<glm::vec3>& source) const; // creates a vertex array without the nodes baked into the vertex data
     void getNormalArray(std::vector<glm::vec3>& source) const;
     void getUvArray(std::vector<glm::vec2>& source) const;
     
@@ -90,11 +91,11 @@ public:
     const std::vector<int>& getMeshFaces(const std::string& name) const { return this->mesh_faces.at(name); }
     
     const std::vector<std::string>& getNodeNames() const { return this->node_names; }
+    const std::vector<glm::mat4>& getNodeTransforms() const { return this->node_transforms; }
     const std::map<std::string, std::string>& getNodeParents() const { return this->node_parents; }
-    const std::map<std::string, glm::mat4>& getNodeTransforms() const { return this->node_transforms; }
     
     const std::vector<std::string>& getBoneNames() const { return this->bone_names; }
-    const std::map<std::string, glm::mat4>& getBoneOffsets() const { return this->bone_offsets; }
+    const std::vector<glm::mat4>& getBoneOffsets() const { return this->bone_offsets; }
     const std::map<std::string, Animation>& getBoneAnimations() const { return this->bone_animations; }
     
     const glm::mat4& getInverseRoot() const { return this->inverse_root; }

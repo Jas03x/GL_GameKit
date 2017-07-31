@@ -118,7 +118,7 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
                     this->bone_names.push_back(std::string(bone->mName.C_Str()));
                     glm::mat4 matrix;
                     memcpy(&matrix[0][0], &bone->mOffsetMatrix[0][0], sizeof(float) * 16);
-                    this->bone_offsets[bone->mName.C_Str()] = glm::transpose(matrix);
+                    this->bone_offsets.push_back(glm::transpose(matrix));
                 }
                 else bone_index = (unsigned int) (name_it - this->bone_names.begin());
                 
@@ -180,8 +180,8 @@ void MeshLoader::process_nodes(const aiNode* node)
 {
     if(node == NULL) return;
     this->node_names.push_back(std::string(node->mName.C_Str()));
+    this->node_transforms.push_back(this->calculate_node(node));
     if(node->mParent != NULL) this->node_parents[std::string(node->mName.C_Str())] = std::string(node->mParent->mName.C_Str());
-    this->node_transforms[std::string(node->mName.C_Str())] = this->calculate_node(node);
     for(unsigned int i = 0; i < node->mNumChildren; i++) {
         this->process_nodes(node->mChildren[i]);
     }
@@ -195,13 +195,20 @@ void MeshLoader::removeVertexBones(const std::vector<int>& mesh_faces)
     }
 }
 
-void MeshLoader::getVertexArray(std::vector<glm::vec3>& source) const
+void MeshLoader::getDynamicVertexArray(std::vector<glm::vec3>& source) const
 {
     source.clear();
     source.reserve(this->faces.size());
-    
     for(unsigned int i = 0; i < this->faces.size(); i++)
-        source.push_back(glm::vec3(glm::vec4(this->vertices[this->faces[i]], 1)));
+        source.push_back(glm::vec3(this->vertices[this->faces[i]]));
+}
+
+void MeshLoader::getStaticVertexArray(std::vector<glm::vec3>& source) const
+{
+    source.clear();
+    source.reserve(this->faces.size());
+    for(unsigned int i = 0; i < this->faces.size(); i++)
+        source.push_back(glm::vec3(this->node_transforms[this->node_indices[this->faces[i]]] * glm::vec4(this->vertices[this->faces[i]], 1)));
 }
 
 void MeshLoader::getNormalArray(std::vector<glm::vec3>& source) const

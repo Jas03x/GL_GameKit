@@ -13,9 +13,8 @@ SoftBody::SoftBody(const ColliderConfiguration& collider_configuration, MeshLoad
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(loader.getBoneNames().size());
     for(unsigned int i = 0; i < loader.getBoneNames().size(); i++) {
-        const std::string& name = loader.getBoneNames()[i];
-        const glm::mat4& bindpose = loader.getNodeTransforms().at(name);
-        const glm::mat4& offset = loader.getBoneOffsets().at(name);
+        const glm::mat4& bindpose = loader.getNodeTransforms()[i];
+        const glm::mat4& offset = loader.getBoneOffsets()[i];
         bone_cache.push_back(bindpose * offset);
     }
     const glm::mat4 local_transform = transform.toMatrix() * collider_configuration.getLocalTransformMatrix() * glm::scale(collider_configuration.getScale());

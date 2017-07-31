@@ -19,7 +19,7 @@ void StaticMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, co
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
-    loader.getVertexArray(vertices);
+    loader.getStaticVertexArray(vertices);
     loader.getNormalArray(normals);
     loader.getUvArray(uvs);
     size_t vc = loader.getFaces().size();
@@ -47,8 +47,9 @@ void StaticMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, co
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
     this->vertex_count = (unsigned int) loader.getFaces().size();
-    this->scale = _scale;
-    this->transformation = Transform();
+    
+    this->default_instance = StaticMeshInstance(_scale);
+    this->default_instance.transformation = Transform();
 }
 
 void StaticMesh::destroy()

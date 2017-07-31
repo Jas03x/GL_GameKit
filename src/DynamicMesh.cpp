@@ -18,14 +18,15 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     
     loader.genTextures(&this->textures);
     
-    if(this->bones.size() == 0 && this->nodes.size() == 0) this->generateNodes(loader);
+    this->default_instance = DynamicMeshInstance(_scale);
+    this->generateNodes(loader);
     
     size_t vc = loader.getFaces().size();
     
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
-    loader.getVertexArray(vertices);
+    loader.getDynamicVertexArray(vertices);
     loader.getNormalArray(normals);
     loader.getUvArray(uvs);
     
@@ -67,9 +68,6 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     
     this->texture_count = (unsigned int) loader.getTextures().size();
     this->vertex_count = (unsigned int) loader.getFaces().size();
-    
-    this->scale = _scale;
-    this->transformation = Transform();
 }
 
 void DynamicMesh::generateNodes(const MeshLoader& loader)
@@ -80,15 +78,15 @@ void DynamicMesh::generateNodes(const MeshLoader& loader)
         throw -1;
     }
     
-    this->nodes.reserve(loader.getNodeNames().size());
+    this->default_instance.nodes.reserve(loader.getNodeNames().size());
     for(unsigned int i = 0; i < loader.getNodeNames().size(); i++) {
-        const std::string& name = loader.getNodeNames().at(i);
-        const glm::mat4& mat = loader.getNodeTransforms().at(name);
-        this->nodes.push_back(Node(name, mat, Transform()));
-        this->node_map[name] = &this->nodes.back();
+        const std::string& name = loader.getNodeNames()[i];
+        const glm::mat4& mat = loader.getNodeTransforms()[i];
+        this->default_instance.nodes.push_back(Node(name, mat, Transform()));
+        this->default_instance.node_map[name] = (unsigned int) this->default_instance.nodes.size() - 1;
     }
     
-    this->bones.reserve(loader.getBoneNames().size());
+    this->default_instance.bones.reserve(loader.getBoneNames().size());
     
     // pass 1: set up the bones
     for(unsigned int i = 0; i < loader.getBoneNames().size(); i++)
@@ -97,36 +95,36 @@ void DynamicMesh::generateNodes(const MeshLoader& loader)
         
         // initalize the bone
         Bone bone = Bone(name);
-        bone.node = this->node_map.at(name);
-        bone.offset_matrix = loader.getBoneOffsets().at(name);
+        bone.node = &this->default_instance.nodes[default_instance.node_map.at(name)];
+        bone.offset_matrix = loader.getBoneOffsets()[i];
         
         // load the bone's animation (if any)
         std::map<std::string, Animation>::const_iterator animation_it = loader.getBoneAnimations().find(name);
         if(animation_it != loader.getBoneAnimations().end()) bone.animation = animation_it->second;
         
         // append the bone
-        this->bones.push_back(bone);
-        this->bone_map[name] = &this->bones.back();
+        this->default_instance.bones.push_back(bone);
+        this->default_instance.bone_map[name] = (unsigned int) this->default_instance.bones.size() - 1;
     }
     
     // pass 2: set up the parents
-    for(unsigned int i = 0; i < this->bones.size(); i++)
+    for(unsigned int i = 0; i < this->default_instance.bones.size(); i++)
     {
-        const std::string& name = this->bones[i].name;
+        const std::string& name = this->default_instance.bones[i].name;
         
         // try to get the parent bone
         std::map<std::string, std::string>::const_iterator parent = loader.getNodeParents().find(name);
         if(parent == loader.getNodeParents().end()) {
-            this->bones[i].parent = NULL;
+            this->default_instance.bones[i].parent = NULL;
             continue;
         }
         
-        std::map<std::string, Bone*>::const_iterator p = this->bone_map.find(parent->second);
-        if(p != this->bone_map.end())
-            this->bones[i].parent = p->second;
+        std::map<std::string, unsigned int>::const_iterator p = this->default_instance.bone_map.find(parent->second);
+        if(p != this->default_instance.bone_map.end())
+            this->default_instance.bones[i].parent = &this->default_instance.bones[p->second];
         else {
             printf("Warning: Parent of bone [%s] not found.\n", name.c_str());
-            this->bones[i].parent = NULL;
+            this->default_instance.bones[i].parent = NULL;
         }
     }
     

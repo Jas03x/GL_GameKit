@@ -24,11 +24,13 @@ private:
     GLuint vertex_matrix;
     GLuint normal_matrix;
     
+    void bindMeshInstance(const StaticMeshInstance& instance);
+    
 public:
     _StaticMeshRenderer(){}
     void initalize();
     void bind();
-    void render(const StaticMesh& mesh);
+    void render(const StaticMesh& mesh, const std::vector<StaticMeshInstance>* instances = NULL);
     void destroy();
 };
 

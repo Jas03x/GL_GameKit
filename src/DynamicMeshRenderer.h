@@ -25,12 +25,14 @@ private:
     GLuint nodes;
     GLuint mvp_matrix;
 	GLuint normal_matrix;
+    
+    void bindMeshInstance(const glm::mat4& inverse_root, const DynamicMeshInstance& instance);
 
 public:
     _DynamicMeshRenderer(){}
     void initalize();
     void bind();
-    void render(const DynamicMesh& mesh);
+    void render(const DynamicMesh& mesh, const std::vector<DynamicMeshInstance>* instances = NULL);
     void destroy();
 };
 

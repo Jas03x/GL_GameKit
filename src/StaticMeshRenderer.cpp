@@ -31,18 +31,30 @@ void _StaticMeshRenderer::bind()
     Shader::bind();
 }
 
-void _StaticMeshRenderer::render(const StaticMesh& mesh)
+void _StaticMeshRenderer::bindMeshInstance(const StaticMeshInstance& instance)
 {
-    mesh.bind();
-    mesh.getTexture().bind(this->texture_id, 0);
-    
-    glm::mat4 model_matrix = mesh.getMatrix();
+    glm::mat4 model_matrix = instance.getMatrix();
     glm::mat4 v_matrix = Camera::getMatrix() * model_matrix;
     glm::mat4 n_matrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     glUniformMatrix4fv(this->vertex_matrix, 1, GL_FALSE, &v_matrix[0][0]);
     glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &n_matrix[0][0]);
+}
+
+void _StaticMeshRenderer::render(const StaticMesh& mesh, const std::vector<StaticMeshInstance>* instances)
+{
+    mesh.bind();
+    mesh.getTexture().bind(this->texture_id, 0);
     
-    glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+    if(instances) {
+        for(unsigned int i = 0; i < instances->size(); i++) {
+            this->bindMeshInstance((*instances)[i]);
+            glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+        }
+    } else {
+        this->bindMeshInstance(mesh.getDefaultInstance());
+        glDrawArrays(GL_TRIANGLES, 0, mesh.getVertexCount());
+    }
+    
     glBindVertexArray(0);
 }
 
