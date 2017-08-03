@@ -44,13 +44,12 @@ void _DynamicMeshRenderer::bindMeshInstance(const glm::mat4& inverse_root, const
 {
     static glm::mat4 node_buffer[DYNAMIC_MESH_MAX_NODE_COUNT];
     static glm::mat4 bone_buffer[DYNAMIC_MESH_MAX_BONE_COUNT];
-    
     glm::mat4 model_matrix = instance.getMatrix();
     glm::mat4 vmatrix = Camera::getMatrix() * model_matrix;
     glm::mat4 nmatrix = glm::inverse(glm::transpose(Camera::getViewMatrix() * model_matrix));
     
     for(unsigned int i = 0; i < instance.nodes.size(); i++) {
-        node_buffer[i] = instance.nodes[i].matrix * instance.nodes[i].transform.toMatrix();
+        node_buffer[i] = inverse_root * instance.nodes[i].matrix * instance.nodes[i].transform.toMatrix();
     }
     
     // FOR MORE INFO, SEE:

@@ -25,8 +25,8 @@
 #include "MeshDescriptor.h"
 
 #define DYNAMIC_MESH_MAX_TEXTURE_COUNT 4
-#define DYNAMIC_MESH_MAX_BONE_COUNT 16
-#define DYNAMIC_MESH_MAX_NODE_COUNT 16
+#define DYNAMIC_MESH_MAX_BONE_COUNT 20
+#define DYNAMIC_MESH_MAX_NODE_COUNT 20
 
 typedef struct DynamicMeshInstance
 {
@@ -42,6 +42,30 @@ public:
     
     DynamicMeshInstance(){}
     DynamicMeshInstance(const glm::vec3& _scale) : scale(_scale) {}
+    
+    DynamicMeshInstance(const DynamicMeshInstance& other) {
+        this->scale = other.scale;
+        this->transformation = other.transformation;
+        this->nodes = other.nodes;
+        this->bone_map = other.bone_map;
+        this->node_map = other.node_map;
+        
+        this->bones.reserve(other.bones.size());
+        for(unsigned int i = 0; i < other.bones.size(); i++) {
+            Bone bone = Bone(other.bones[i].name);
+            bone.parent = NULL;
+            bone.node = &this->nodes[this->node_map.at(other.bones[i].node->name)];
+            bone.offset_matrix = other.bones[i].offset_matrix;
+            bone.animation = other.bones[i].animation;
+            this->bones.push_back(bone);
+        }
+        
+        for(unsigned int i = 0; i < other.bones.size(); i++) {
+            const Bone& bone = other.bones[i];
+            if(bone.parent)
+                this->bones[i].parent = &this->bones[this->bone_map.at(bone.parent->name)];
+        }
+    }
     
     inline const glm::vec3& getScale() const { return this->scale; }
     inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }

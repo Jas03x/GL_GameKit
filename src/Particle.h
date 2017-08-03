@@ -16,13 +16,13 @@
 class Particle
 {
 public:
-    glm::vec2 position;
-    glm::vec2 direction; // the direction in units
+    glm::vec3 position;
+    glm::vec3 direction; // the direction in units
     int life_time;
     
     Particle(){}
     
-    Particle(const glm::vec2& pos, const glm::vec2& dir, int life)
+    Particle(const glm::vec3& pos, const glm::vec3& dir, int life)
     {
         this->position = pos;
         this->direction = dir;
