@@ -17,6 +17,7 @@ void _SunRenderer::initalize(const DSFramebuffer& fbo)
     this->diffuse_texture = this->getUniform("diffuse_texture");
     this->normal_texture = this->getUniform("normal_texture");
     this->depth_texture = this->getUniform("depth_texture");
+    this->specular_texture = this->getUniform("specular_texture");
     
     this->framebuffer = &fbo;
 }
@@ -39,7 +40,8 @@ void _SunRenderer::render()
     
     this->framebuffer->bindTexture(this->diffuse_texture, DSFramebuffer::DIFFUSE_TEXTURE, 0);
     this->framebuffer->bindTexture(this->normal_texture, DSFramebuffer::NORMAL_TEXTURE, 1);
-    this->framebuffer->bindTexture(this->depth_texture, DSFramebuffer::DEPTH_TEXTURE, 2);
+    this->framebuffer->bindTexture(this->specular_texture, DSFramebuffer::SPECULAR_TEXTURE, 2);
+    this->framebuffer->bindTexture(this->depth_texture, DSFramebuffer::DEPTH_TEXTURE, 3);
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     

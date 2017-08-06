@@ -26,6 +26,8 @@ public:
     void destroy();
     
     inline unsigned int getVertexCount() const { return this->vertex_count; }
+    
+    // TODO: Perhaps add an operator to construct a mesh with a mesh desciptor
 }Mesh;
 
 #endif /* Mesh_h */

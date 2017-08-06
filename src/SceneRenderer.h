@@ -6,7 +6,7 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _SceneRenderer : public Shader
 {

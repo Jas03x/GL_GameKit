@@ -15,7 +15,7 @@ void _DebugRenderer::initalize(const DebugDrawer *_drawer)
     ShaderSource source = ShaderSource(INT_SHDR("debug.vert"), INT_SHDR("debug.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
-    this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
+    this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_color");
     this->link(source);
     this->vp_matrix = this->getUniform("vp_matrix");
     this->drawer = _drawer;
@@ -27,7 +27,7 @@ void _DebugRenderer::render()
     this->drawer->bind();
     glUniformMatrix4fv(this->vp_matrix, 1, GL_FALSE, &Camera::getMatrix()[0][0]);
     glDisable(GL_DEPTH_TEST);
-    //printf("Draw %i\n", this->drawer->getElementCount());
+    printf("Draw %i\n", this->drawer->getElementCount());
     glDrawArrays(GL_LINES, 0, this->drawer->getElementCount());
     glEnable(GL_DEPTH_TEST);
     glBindVertexArray(0);

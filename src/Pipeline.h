@@ -21,6 +21,7 @@ namespace Pipeline
     
     inline void lightMode()
     {
+        glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);
         glBlendFunc(GL_ONE, GL_ONE);
         glDepthMask(GL_FALSE); // lock the depth buffer because we will now be sampling from it

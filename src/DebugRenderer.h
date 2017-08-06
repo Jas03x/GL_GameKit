@@ -15,7 +15,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "DebugDrawer.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _DebugRenderer : public Shader
 {

@@ -9,7 +9,7 @@
 #include "Shader.h"
 #include "SkyBox.h"
 #include "OBJ_Loader.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _SkyBoxRenderer : public Shader
 {

@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "PointLight.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _PointLightRenderer : public Shader
 {

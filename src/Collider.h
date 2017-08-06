@@ -14,7 +14,6 @@
 
 #include "Math3d.h"
 #include "Transform.h"
-#include "ColliderConfiguration.h"
 
 class Collider
 {

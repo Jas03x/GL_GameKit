@@ -7,7 +7,7 @@
 #include "Math3d.h"
 #include "OBJ_Loader.h"
 #include "PointLight.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 #include "PointLightRenderer.h"
 #include "LightStencilRenderer.h"
 

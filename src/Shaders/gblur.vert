@@ -5,7 +5,7 @@ in vec2 vertex;
 uniform vec2 direction;
 uniform float width;
 
-out vec2 uv_coords[5];
+out vec2 uv_coords[11];
 
 void main()
 {
@@ -13,8 +13,8 @@ void main()
     
     vec2 center = (vertex + vec2(1)) * 0.5;
     float size = 1.0 / width;
-    for(int i = -2; i <= 2; i++)
+    for(int i = -5; i <= 5; i++)
     {
-        uv_coords[i+2] = center + vec2(size * i * direction.x, size * i * direction.y);
+        uv_coords[i+5] = center + vec2(size * i * direction.x, size * i * direction.y);
     }
 }

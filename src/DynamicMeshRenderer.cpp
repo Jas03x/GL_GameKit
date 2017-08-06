@@ -17,13 +17,13 @@ void _DynamicMeshRenderer::initalize()
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");
     this->bindAttributeLocation(2, "uv");
-    this->bindAttributeLocation(3, "texture_id");
-    this->bindAttributeLocation(4, "node_index");
-    this->bindAttributeLocation(5, "bone_weights");
-    this->bindAttributeLocation(6, "bone_indices");
+    this->bindAttributeLocation(4, "texture_id");
+    this->bindAttributeLocation(5, "node_index");
+    this->bindAttributeLocation(6, "bone_weights");
+    this->bindAttributeLocation(7, "bone_indices");
 	this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
 	this->bindFragDataLocation(DSFramebuffer::NORMAL_TEXTURE, "normal_out");
-	this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
+	//this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
     this->link(source);
     this->textures[0] = this->getUniform("textures[0]");
     this->textures[1] = this->getUniform("textures[1]");

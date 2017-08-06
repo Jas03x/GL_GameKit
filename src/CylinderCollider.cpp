@@ -8,8 +8,9 @@
 
 #include "CylinderCollider.h"
 
-ColliderData CylinderCollider::getShape(const MeshLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc)
+ColliderData CylinderCollider::getShape(const MeshDescriptor& descriptor, const std::vector<int>& faces)
 {
+    const MeshLoader& data = descriptor.getMeshLoader();
     std::vector<glm::mat4> bone_cache;
     bone_cache.reserve(data.getBoneNames().size());
     for(unsigned int i = 0; i < data.getBoneNames().size(); i++) {
@@ -17,7 +18,7 @@ ColliderData CylinderCollider::getShape(const MeshLoader& data, const std::vecto
         const glm::mat4& offset = data.getBoneOffsets()[i];
         bone_cache.push_back(bindpose * offset);
     }
-    const glm::mat4 local_transform = cc.getLocalTransformMatrix() * glm::scale(glm::vec3(cc.getScale()));
+    const glm::mat4 local_transform = glm::scale(glm::vec3(descriptor.getScale()));
     
     // start the vectors at extreme values
     glm::vec3 m = glm::vec3(1000);
@@ -25,13 +26,13 @@ ColliderData CylinderCollider::getShape(const MeshLoader& data, const std::vecto
     
     for(unsigned int i = 0; i < faces.size(); i++) {
         const glm::vec3&  vertex = data.getVertices()[faces[i]];
-        const glm::uvec4& index  = data.getBoneIndices()[faces[i]];
+        const MeshLoader::BoneIndex& index  = data.getBoneIndices()[faces[i]];
         const glm::vec4&  weight = data.getBoneWeights()[faces[i]];
         glm::mat4 joint =
-            weight.x * bone_cache[index.x] +
-            weight.y * bone_cache[index.y] +
-            weight.z * bone_cache[index.z] +
-            weight.w * bone_cache[index.w];
+            weight.x * bone_cache[index.b0] +
+            weight.y * bone_cache[index.b1] +
+            weight.z * bone_cache[index.b2] +
+            weight.w * bone_cache[index.b3];
         
         glm::vec3 vec = glm::vec3(local_transform * joint * glm::vec4(vertex, 1));
         #define MAX_COMPARISON(x, v) if((x) > (v)) (v) = (x);

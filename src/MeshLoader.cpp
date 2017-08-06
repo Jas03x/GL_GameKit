@@ -21,6 +21,7 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
 
     unsigned int vertex_count  = 0; // store the total vertices passed because each mesh's indices start at 0 (so this is a cumulative sum)
     unsigned int texture_index = 0;
+    unsigned int material_index = 0;
     
     // start by processing/reading the scene's nodes
     this->process_nodes(scene->mRootNode);
@@ -41,6 +42,34 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
         }
         float node_index = node_pos - this->node_names.begin();
 
+        if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+        {
+            aiString tex_path;
+            if (scene->mMaterials[mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &tex_path, NULL, NULL, NULL, NULL, NULL) != AI_SUCCESS) {
+                puts("Assimp texture path could not be read.");
+                throw - 1;
+            }
+            //printf("Debug: Read texture %s\n", tex_path.C_Str());
+            std::string tex = std::string(tex_path.C_Str());
+            std::vector<std::string>::const_iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
+            if (index == this->textures.end()) {
+                texture_index = (unsigned int) this->textures.size();
+                this->textures.push_back(tex);
+            }
+            else texture_index = (unsigned int) (index - this->textures.begin());
+        }
+        
+        float shininess = 0;
+        if(scene->mMaterials[mesh->mMaterialIndex]->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) {
+            shininess = 1.0f - shininess / 100.0f;
+            printf("Shineness of mesh %s: %f\n", mesh->mName.C_Str(), shininess);
+        }
+        const std::vector<float>::const_iterator m_it = std::find(this->materials.begin(), this->materials.end(), shininess);
+        if(m_it == this->materials.end()) {
+            material_index = (unsigned int) this->materials.size();
+            this->materials.push_back(shininess);
+        } else material_index = (unsigned int) (m_it - this->materials.begin());
+        
         for(unsigned int o = 0; o < mesh->mNumVertices; o++)
         {
             if(mesh->HasPositions()) {
@@ -65,22 +94,6 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
 			}
             else { this->uvs.push_back(glm::vec2(0)); }
         }
-        if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
-        {
-            aiString tex_path;
-            if (scene->mMaterials[mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &tex_path, NULL, NULL, NULL, NULL, NULL) != AI_SUCCESS) {
-                puts("Assimp texture path could not be read.");
-                throw - 1;
-            }
-            //printf("Debug: Read texture %s\n", tex_path.C_Str());
-            std::string tex = std::string(tex_path.C_Str());
-            std::vector<std::string>::const_iterator index = std::find(this->textures.begin(), this->textures.end(), tex);
-            if (index == this->textures.end()) {
-                texture_index = (unsigned int) this->textures.size();
-                this->textures.push_back(tex);
-            }
-            else texture_index = (unsigned int) (index - this->textures.begin());
-        }
         if(mesh->HasFaces()) {
             for(unsigned int o = 0; o < mesh->mNumFaces; o++) {
                 const aiFace* face = &mesh->mFaces[o];
@@ -93,6 +106,7 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
                     this->faces.push_back(vertex_count + face->mIndices[t]); // add the triangle vertex for the vbo
 					this->texture_indices.push_back(texture_index);
                     this->node_indices.push_back(node_index);
+                    this->material_indices.push_back(material_index);
                     
                     //const aiVector3D& vd = mesh->mVertices[face->mIndices[t]];
                     //const glm::vec3& v = this->vertices[vertex_count + face->mIndices[t]];
@@ -106,7 +120,7 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
     for(unsigned int i = 0; i < scene->mNumMeshes; i++) {
         const aiMesh* mesh = scene->mMeshes[i];
         glm::vec4* weights = new glm::vec4[mesh->mNumVertices]();
-        glm::vec4* indices = new glm::vec4[mesh->mNumVertices]();
+        BoneIndex* indices = new BoneIndex[mesh->mNumVertices]();
         unsigned int* counts = new unsigned int[mesh->mNumVertices]();
         if(mesh->HasBones()) {
             for(unsigned int o = 0; o < mesh->mNumBones; o++) {
@@ -191,7 +205,7 @@ void MeshLoader::removeVertexBones(const std::vector<int>& mesh_faces)
 {
     for(unsigned int i = 0; i < mesh_faces.size(); i++) {
         this->bone_weights.at(mesh_faces[i]) = glm::vec4(0);
-        this->bone_indices.at(mesh_faces[i]) = glm::uvec4(0);
+        this->bone_indices.at(mesh_faces[i]) = BoneIndex();
     }
 }
 
@@ -225,6 +239,14 @@ void MeshLoader::getUvArray(std::vector<glm::vec2>& source) const
     source.reserve(this->faces.size());
     for(unsigned int i = 0; i < this->faces.size(); i++)
         source.push_back(this->uvs[this->faces[i]]);
+}
+
+void MeshLoader::getMaterialArray(std::vector<unsigned char>& source) const
+{
+    source.clear();
+    source.reserve(this->faces.size());
+    for(unsigned int i = 0; i < this->faces.size(); i++)
+        source.push_back(this->material_indices[this->faces[i]]);
 }
 
 void MeshLoader::genTextures(Texture** array) const {

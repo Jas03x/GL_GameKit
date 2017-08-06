@@ -9,13 +9,13 @@
 #include "PhysicsConfiguration.h"
 
 btBroadphaseInterface*                      PhysicsConfiguration::broadphase;
-//btDefaultCollisionConfiguration*          PhysicsConfiguration::collision_configuration;
-btSoftBodyRigidBodyCollisionConfiguration*  PhysicsConfiguration::collision_configuration;
+btDefaultCollisionConfiguration*            PhysicsConfiguration::collision_configuration;
+//btSoftBodyRigidBodyCollisionConfiguration*  PhysicsConfiguration::collision_configuration;
 btCollisionDispatcher*                      PhysicsConfiguration::dispatcher;
 btSequentialImpulseConstraintSolver*        PhysicsConfiguration::solver;
-//btDiscreteDynamicsWorld*                  PhysicsConfiguration::dynamics_world;
-btSoftRigidDynamicsWorld*                   PhysicsConfiguration::dynamics_world;
-btSoftBodyWorldInfo                         PhysicsConfiguration::softbody_info;
+btDiscreteDynamicsWorld*                    PhysicsConfiguration::dynamics_world;
+//btSoftRigidDynamicsWorld*                   PhysicsConfiguration::dynamics_world;
+//btSoftBodyWorldInfo                         PhysicsConfiguration::softbody_info;
 
 std::vector<Collider*>                      PhysicsConfiguration::colliders;
 
@@ -23,17 +23,21 @@ void PhysicsConfiguration::initalize()
 {
     // setting up the bullet physics dynamics world
     PhysicsConfiguration::broadphase = new btDbvtBroadphase();
-    PhysicsConfiguration::collision_configuration = new btSoftBodyRigidBodyCollisionConfiguration();
+    //PhysicsConfiguration::collision_configuration = new btSoftBodyRigidBodyCollisionConfiguration();
+    PhysicsConfiguration::collision_configuration = new btDefaultCollisionConfiguration();
     PhysicsConfiguration::dispatcher = new btCollisionDispatcher(PhysicsConfiguration::collision_configuration);
     PhysicsConfiguration::solver = new btSequentialImpulseConstraintSolver();
-    PhysicsConfiguration::dynamics_world = new btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
+    PhysicsConfiguration::dynamics_world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
+    //PhysicsConfiguration::dynamics_world = new btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
     PhysicsConfiguration::dynamics_world->setGravity(btVector3(0, 10, 0));
     
     // setting up the softbody world information
+    /*
     PhysicsConfiguration::softbody_info.m_broadphase = broadphase;
     PhysicsConfiguration::softbody_info.m_dispatcher = dispatcher;
     PhysicsConfiguration::softbody_info.m_gravity = dynamics_world->getGravity();
     PhysicsConfiguration::softbody_info.m_sparsesdf.Initialize();
+     */
 }
 
 void PhysicsConfiguration::update()
@@ -72,17 +76,19 @@ void PhysicsConfiguration::addRigidBody(Collider* collider) {
     PhysicsConfiguration::dynamics_world->addRigidBody((btRigidBody*) collider->getCollisionObject());
 }
 
-void PhysicsConfiguration::addSoftBody(Collider* collider) {
-    PhysicsConfiguration::addCollider(collider);
-    PhysicsConfiguration::dynamics_world->addSoftBody((btSoftBody*) collider->getCollisionObject());
-}
-
 void PhysicsConfiguration::removeRigidBody(Collider* collider) {
     PhysicsConfiguration::removeCollider(collider);
     PhysicsConfiguration::dynamics_world->removeRigidBody((btRigidBody*) collider->getCollisionObject());
+}
+
+/*
+void PhysicsConfiguration::addSoftBody(Collider* collider) {
+    PhysicsConfiguration::addCollider(collider);
+    PhysicsConfiguration::dynamics_world->addSoftBody((btSoftBody*) collider->getCollisionObject());
 }
 
 void PhysicsConfiguration::removeSoftBody(Collider* collider) {
     PhysicsConfiguration::removeCollider(collider);
     PhysicsConfiguration::dynamics_world->removeSoftBody((btSoftBody*) collider->getCollisionObject());
 }
+ */

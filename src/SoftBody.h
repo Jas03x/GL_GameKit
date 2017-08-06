@@ -19,7 +19,7 @@
 #include "MeshLoader.h"
 #include "VectorTree.h"
 #include "PhysicsConfiguration.h"
-#include "ColliderConfiguration.h"
+#include "MeshDescriptor.h"
 
 class SoftBody : public Collider
 {
@@ -33,7 +33,7 @@ protected:
 public:
     SoftBody(){}
     // Dynamic mesh constructor:
-    SoftBody(const ColliderConfiguration& collider_configuration, MeshLoader& loader, const std::vector<int>& face_data, const Transform& transform, Transform* ptr = NULL);
+    SoftBody(MeshDescriptor& descriptor, const std::vector<int>& face_data, const Transform& transform, Transform* ptr = NULL);
     ~SoftBody();
     
     void getVertexData(std::vector<glm::vec3>& vertex_data);

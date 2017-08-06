@@ -7,7 +7,7 @@ void _SkyBoxRenderer::initalize()
     ShaderSource source = ShaderSource(INT_SHDR("skybox.vert"), INT_SHDR("skybox.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
-    this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "diffuse_out");
+    this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
     this->link(source);
     this->matrix = this->getUniform("matrix");
     this->skymap = this->getUniform("skymap");

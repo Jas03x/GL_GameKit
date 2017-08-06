@@ -16,7 +16,13 @@
 #include "Texture.h"
 #include "Particle.h"
 
-class ParticleBuffer
+// TODO:
+// Change constructors so that you can either use a quad or a mesh
+// The VBO will simply be created based off the quad or mesh
+// So you only need to 2 types of buffers: Textured and solid colored
+
+// base particle class
+class TParticleBuffer
 {
 protected:
     GLuint VAO;
@@ -29,7 +35,7 @@ protected:
     void genVertexArrays(int max_particles);
     
 public:
-    ParticleBuffer(){}
+    TParticleBuffer(){}
     
     inline void bindVAO() const { glBindVertexArray(this->VAO); }
     inline const Texture& getTexture() const { return this->texture; }
@@ -38,6 +44,12 @@ public:
     inline unsigned int getInstanceCount() const { return this->instance_count; }
     
     void destroy();
+};
+
+
+class CParticleBuffer
+{
+    
 };
 
 #endif /* ParticleBuffer_hpp */

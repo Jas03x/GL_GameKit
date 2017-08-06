@@ -8,7 +8,7 @@
 
 #include "ParticleBuffer.h"
 
-void ParticleBuffer::genVertexArrays(int max_particles)
+void TParticleBuffer::genVertexArrays(int max_particles)
 {
     glGenVertexArrays(1, &this->VAO);
     glBindVertexArray(this->VAO);
@@ -30,7 +30,7 @@ void ParticleBuffer::genVertexArrays(int max_particles)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ParticleBuffer::destroy()
+void TParticleBuffer::destroy()
 {
     if(glIsBuffer(this->VBO) == GL_TRUE) glDeleteBuffers(1, &this->VBO);
     if(glIsVertexArray(this->VAO) == GL_TRUE) glDeleteVertexArrays(1, &this->VAO);

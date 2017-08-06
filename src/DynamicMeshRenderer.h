@@ -15,7 +15,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "DynamicMesh.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _DynamicMeshRenderer : public Shader
 {

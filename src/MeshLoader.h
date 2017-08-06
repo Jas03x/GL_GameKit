@@ -23,6 +23,17 @@
 
 class MeshLoader
 {
+public:
+    typedef struct BoneIndex {
+        union {
+            struct { unsigned char b0, b1, b2, b3; };
+            unsigned char array[4];
+        };
+        BoneIndex() { b0 = b1 = b2 = b3 = 0; }
+        unsigned char& operator[](int i) { return array[i]; }
+        const unsigned char& operator[](int i) const { return array[i]; }
+    }BoneIndex;
+    
 private:
     std::string directory; // // the directory of this model
     std::string path; // the path of this model
@@ -36,10 +47,15 @@ private:
     // texture data:
     std::vector<std::string> textures;
     std::vector<unsigned char> texture_indices; // the texture which each mesh uses (for multi-textured models)
+
+    // material data:
+    // NOTE: only supports specular atm
+    std::vector<float> materials;
+    std::vector<unsigned char> material_indices; // the specular color index
     
     // index data:
     std::vector<unsigned char> node_indices; // the index into the world transform nodes
-    std::vector<glm::uvec4> bone_indices; // the indices of each bone
+    std::vector<BoneIndex> bone_indices; // the indices of each bone
     std::vector<glm::vec4> bone_weights; // the weights of each bone
     
     // mesh information:
@@ -78,14 +94,18 @@ public:
     void getDynamicVertexArray(std::vector<glm::vec3>& source) const; // creates a vertex array without the nodes baked into the vertex data
     void getNormalArray(std::vector<glm::vec3>& source) const;
     void getUvArray(std::vector<glm::vec2>& source) const;
+    void getMaterialArray(std::vector<unsigned char>& source) const;
     
     const std::vector<std::string>& getTextures() const { return this->textures; }
     void genTextures(Texture** array) const;
     const std::vector<unsigned char>& getTextureIndices() const { return this->texture_indices; }
     
+    const std::vector<float>& getMaterials() const { return this->materials; }
+    const std::vector<unsigned char> getMatrialIndices() const { return this->material_indices; }
+    
     const std::vector<unsigned char>& getNodeIndices() const { return this->node_indices; }
     const std::vector<glm::vec4>& getBoneWeights() const { return this->bone_weights; }
-    const std::vector<glm::uvec4>& getBoneIndices() const { return this->bone_indices; }
+    const std::vector<BoneIndex>& getBoneIndices() const { return this->bone_indices; }
     
     const std::vector<std::string>& getMeshNames() const { return this->mesh_names; }
     const std::vector<int>& getMeshFaces(const std::string& name) const { return this->mesh_faces.at(name); }

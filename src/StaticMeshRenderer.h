@@ -15,7 +15,7 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "StaticMesh.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _StaticMeshRenderer : public Shader
 {
@@ -23,6 +23,7 @@ private:
     GLuint texture_id;
     GLuint vertex_matrix;
     GLuint normal_matrix;
+    GLuint materials;
     
     void bindMeshInstance(const StaticMeshInstance& instance);
     

@@ -17,6 +17,7 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
 	}
     
     loader.genTextures(&this->textures);
+    this->materials = loader.getMaterials();
     
     this->default_instance = DynamicMeshInstance(_scale);
     this->generateNodes(loader);
@@ -26,33 +27,37 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec2> uvs;
+    std::vector<unsigned char> m_indices;
     loader.getDynamicVertexArray(vertices);
     loader.getNormalArray(normals);
     loader.getUvArray(uvs);
+    loader.getMaterialArray(m_indices);
     
     glGenVertexArrays(1, &this->vao);
     glBindVertexArray(this->vao);
     
     glGenBuffers(1, &this->vbo);
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-    glBufferData(GL_ARRAY_BUFFER, vc * (sizeof(float) * 12 + sizeof(unsigned char) * 2 + sizeof(unsigned int) * 4), NULL, draw_mode);
+    glBufferData(GL_ARRAY_BUFFER, vc * (sizeof(float) * 12 + sizeof(unsigned char) * 7), NULL, draw_mode);
     
     int offset = 0;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3,        &vertices[0][0]);                   offset += sizeof(float) * vc * 3;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3,        &normals[0][0]);                    offset += sizeof(float) * vc * 3;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 2,        &uvs[0][0]);                        offset += sizeof(float) * vc * 2;
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc,    &m_indices[0]);                     offset += sizeof(unsigned char) * vc;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc,    &loader.getTextureIndices()[0]);    offset += sizeof(unsigned char) * vc;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc,    &loader.getNodeIndices()[0]);       offset += sizeof(unsigned char) * vc;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 4,        &loader.getBoneWeights()[0][0]);    offset += sizeof(float) * vc * 4;
-    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned int) * vc * 4, &loader.getBoneIndices()[0][0]);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(unsigned char) * vc * 4, &loader.getBoneIndices()[0][0]);   offset += sizeof(unsigned char) * vc * 4;
     
     glEnableVertexAttribArray(0); // vertices
     glEnableVertexAttribArray(1); // normals
     glEnableVertexAttribArray(2); // uvs
-    glEnableVertexAttribArray(3); // texture ids
-    glEnableVertexAttribArray(4); // node ids
-    glEnableVertexAttribArray(5); // bone weights
-    glEnableVertexAttribArray(6); // bone indices
+    glEnableVertexAttribArray(3); // material ids
+    glEnableVertexAttribArray(4); // texture ids
+    glEnableVertexAttribArray(5); // node ids
+    glEnableVertexAttribArray(6); // bone weights
+    glEnableVertexAttribArray(7); // bone indices
     
     offset = 0;
     glVertexAttribPointer (0, 3, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);   offset += sizeof(float) * vc * 3;
@@ -60,8 +65,9 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     glVertexAttribPointer (2, 2, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);   offset += sizeof(float) * vc * 2;
     glVertexAttribIPointer(3, 1, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);   offset += sizeof(unsigned char) * vc;
     glVertexAttribIPointer(4, 1, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);   offset += sizeof(unsigned char) * vc;
-    glVertexAttribPointer (5, 4, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);   offset += sizeof(float) * vc * 4;
-    glVertexAttribIPointer(6, 4, GL_UNSIGNED_INT,              0, (char*) NULL + offset);
+    glVertexAttribIPointer(5, 1, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);   offset += sizeof(unsigned char) * vc;
+    glVertexAttribPointer (6, 4, GL_FLOAT,           GL_FALSE, 0, (char*) NULL + offset);   offset += sizeof(float) * vc * 4;
+    glVertexAttribIPointer(7, 4, GL_UNSIGNED_BYTE,             0, (char*) NULL + offset);   offset += sizeof(unsigned char) * vc * 4;
     
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

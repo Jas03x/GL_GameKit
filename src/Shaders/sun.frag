@@ -8,6 +8,7 @@ uniform mat4 inv_proj_matrix;
 uniform sampler2D diffuse_texture;
 uniform sampler2D normal_texture;
 uniform sampler2D depth_texture;
+uniform sampler2D specular_texture;
 
 out vec4 diffuse_out;
 
@@ -24,6 +25,7 @@ void main()
     
     vec3 diffuse = texture(diffuse_texture, texcoord).rgb;
     vec3 normal = texture(normal_texture, texcoord).rgb;
+    vec3 specular = texture(specular_texture, texcoord).rgb;
 
     vec3 eye_direction_cameraspace = vec3(0,0,0) - view_space;
     vec3 sun_direction_cameraspace = normalize(sun_position + eye_direction_cameraspace);
@@ -32,5 +34,5 @@ void main()
     float cosTheta = clamp(dot(normal, sun_direction_cameraspace), 0, 1);
     float cosAlpha = clamp(dot(eye_direction_cameraspace, reflect(-sun_direction_cameraspace, normal)), 0, 1);
     
-    diffuse_out = vec4(diffuse * 0.2 + sun_color * cosTheta * 0.25 + 0.1 * vec3(1) * cosAlpha, 0.1);
+    diffuse_out = vec4(/*diffuse * 0.2 +*/ sun_color * cosTheta * 0.1f + specular * cosAlpha, 0.5);
 }

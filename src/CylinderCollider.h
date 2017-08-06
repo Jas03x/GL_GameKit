@@ -15,13 +15,8 @@
 #include "Collider.h"
 #include "RigidBody.h"
 #include "MeshLoader.h"
-#include "ColliderConfiguration.h"
-
-typedef struct ColliderData
-{
-    btCollisionShape* shape;
-    glm::vec3 position;
-}ColliderData;
+#include "ColliderData.h"
+#include "MeshDescriptor.h"
 
 class CylinderCollider : public RigidBody
 {
@@ -29,7 +24,7 @@ public:
     CylinderCollider();
     ~CylinderCollider();
     
-    static ColliderData getShape(const MeshLoader& data, const std::vector<int>& faces, const ColliderConfiguration& cc);
+    static ColliderData getShape(const MeshDescriptor& descriptor, const std::vector<int>& faces);
 };
 
 #endif /* CylinderCollider_h */

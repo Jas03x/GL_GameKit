@@ -7,7 +7,7 @@
 #include "Quad.h"
 #include "Camera.h"
 #include "Shader.h"
-#include "Framebuffer.h"
+#include "DSFramebuffer.h"
 
 class _SunRenderer : public Shader
 {
@@ -20,6 +20,7 @@ private:
     GLuint diffuse_texture;
     GLuint normal_texture;
     GLuint depth_texture;
+    GLuint specular_texture;
     
     const DSFramebuffer* framebuffer;
     

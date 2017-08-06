@@ -76,6 +76,7 @@ typedef struct DynamicMesh : public Mesh
 protected:
     Texture* textures;
     unsigned int texture_count;
+    std::vector<float> materials;
     
     glm::mat4 inverse_root;
     

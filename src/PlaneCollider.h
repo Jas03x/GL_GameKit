@@ -18,7 +18,7 @@ class PlaneCollider : public RigidBody
 private:
     
 public:
-    PlaneCollider(Transform& transform, const glm::vec3& normal = glm::vec3(0, 1, 0), const float plane_constant = 0, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
+    PlaneCollider(Transform* transform = NULL, const glm::vec3& normal = glm::vec3(0, 1, 0), const float plane_constant = 0, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
     ~PlaneCollider();
 };
 

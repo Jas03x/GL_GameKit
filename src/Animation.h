@@ -37,9 +37,9 @@ public:
         glm::quat start = glm::quat(this->rotations.at(frame).w, this->rotations.at(frame).x, this->rotations.at(frame).y, this->rotations.at(frame).z);
         glm::quat end = glm::quat(this->rotations.at(next_frame).w, this->rotations.at(next_frame).x, this->rotations.at(next_frame).y, this->rotations.at(next_frame).z);
         
-        glm::quat quaternion = glm::slerp(start, end, std::min(Clock::getDelta(), 1.0f));
+        glm::quat quaternion = glm::slerp(start, end, std::min(GlobalClock.getDelta(), 1.0f));
         glm::vec3 difference = this->translations.at(next_frame) - this->translations.at(frame);
-        glm::vec3 translation = this->translations.at(frame) + difference * std::min(Clock::getDelta(), 1.0f);
+        glm::vec3 translation = this->translations.at(frame) + difference * std::min(GlobalClock.getDelta(), 1.0f);
         
         return glm::translate(glm::mat4(1.0f), translation) * glm::toMat4(quaternion);
     }

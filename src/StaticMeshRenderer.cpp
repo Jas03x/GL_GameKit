@@ -17,13 +17,16 @@ void _StaticMeshRenderer::initalize()
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");
     this->bindAttributeLocation(2, "uv");
+    this->bindAttributeLocation(3, "m_index");
     this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
     this->bindFragDataLocation(DSFramebuffer::NORMAL_TEXTURE, "normal_out");
-    this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
+    //this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
+    this->bindFragDataLocation(DSFramebuffer::SPECULAR_TEXTURE, "specular_out");
     this->link(source);
     this->texture_id = this->getUniform("texture_id");
     this->vertex_matrix = this->getUniform("vertex_matrix");
     this->normal_matrix = this->getUniform("normal_matrix");
+    this->materials = this->getUniform("materials");
 }
 
 void _StaticMeshRenderer::bind()
@@ -44,6 +47,8 @@ void _StaticMeshRenderer::render(const StaticMesh& mesh, const std::vector<Stati
 {
     mesh.bind();
     mesh.getTexture().bind(this->texture_id, 0);
+    
+    glUniform1fv(this->materials, (unsigned int) mesh.getMaterials().size(), &mesh.getMaterials()[0]);
     
     if(instances) {
         for(unsigned int i = 0; i < instances->size(); i++) {

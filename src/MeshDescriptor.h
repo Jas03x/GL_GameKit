@@ -18,21 +18,25 @@ class MeshDescriptor
 private:
     MeshLoader loader;
     glm::vec3 scale;
+    Transform transform;
     GLenum draw_mode;
     
 public:
-    MeshDescriptor(const char* path, unsigned int parameters, const glm::vec3& _scale = glm::vec3(1.0f), const GLenum _draw_mode = GL_STATIC_DRAW) : loader(path, parameters) {
+    MeshDescriptor(const char* path, unsigned int parameters, const glm::vec3& _scale = glm::vec3(1.0f), const Transform& _transform = Transform(), const GLenum _draw_mode = GL_STATIC_DRAW) : loader(path, parameters) {
         this->scale = _scale;
         this->draw_mode = _draw_mode;
+        this->transform = _transform;
     }
     
-    MeshDescriptor(const char* path, const glm::vec3& _scale = glm::vec3(1.0f), const GLenum _draw_mode = GL_STATIC_DRAW) : loader(path) {
+    MeshDescriptor(const char* path, const glm::vec3& _scale = glm::vec3(1.0f), const Transform& _transform = Transform(), const GLenum _draw_mode = GL_STATIC_DRAW) : loader(path) {
         this->scale = _scale;
         this->draw_mode = _draw_mode;
+        this->transform = _transform;
     }
     
     inline GLenum getDrawMode() const { return this->draw_mode; }
     inline const glm::vec3& getScale() const { return this->scale; }
+    inline const Transform& getTransform() const { return this->transform; }
     
     inline MeshLoader& getMeshLoader() { return this->loader; }
     inline const MeshLoader& getMeshLoader() const { return this->loader; }

@@ -1,5 +1,11 @@
 * Add a seperate shader for instanced rendering of static objects maybe
     - Probably shouldnt do this for dynamic objects because bones take a lot of memory
 
-* Perhaps add texture compression
-    - The DXT stuff, etc.
+* ADD TEXTURE COMPRESSION!!!!!!
+    - DXT1, DX3, AND DXT5 VERY CRITICAL!!!
+
+* Add material (float array) cap to the static, dynamic, scene, etc. renderers
+
+* Perhaps turn the blending addition of the light and diffuse texture into a texture combine filter
+
+* Make the physics configuration namespace into a class so that you can have different models for softbody and dynamics worlds!!!
