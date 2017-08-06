@@ -27,7 +27,7 @@ void _DebugRenderer::render()
     this->drawer->bind();
     glUniformMatrix4fv(this->vp_matrix, 1, GL_FALSE, &Camera::getMatrix()[0][0]);
     glDisable(GL_DEPTH_TEST);
-    printf("Draw %i\n", this->drawer->getElementCount());
+    //printf("Draw %i\n", this->drawer->getElementCount());
     glDrawArrays(GL_LINES, 0, this->drawer->getElementCount());
     glEnable(GL_DEPTH_TEST);
     glBindVertexArray(0);

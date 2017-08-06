@@ -40,7 +40,7 @@ MeshLoader::MeshLoader(const char* _path, unsigned int parameters)
             printf("Error: Node [%s] was not found in collada file [%s]!\n", name.c_str(), _path);
             throw -1;
         }
-        float node_index = node_pos - this->node_names.begin();
+        const unsigned char node_index = (unsigned char) (node_pos - this->node_names.begin());
 
         if(scene->mMaterials[mesh->mMaterialIndex]->GetTextureCount(aiTextureType_DIFFUSE) > 0)
         {

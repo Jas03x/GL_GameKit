@@ -34,7 +34,7 @@ void _SunRenderer::render()
     
     glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);
     
-    glUniform2f(this->screen_size, this->framebuffer->getDimensions().x, this->framebuffer->getDimensions().y);
+    glUniform2f(this->screen_size, (float) this->framebuffer->getDimensions().x, (float) this->framebuffer->getDimensions().y);
     glUniform3fv(this->sun_position, 1, &sun_position_cameraspace[0]);
     glUniform3fv(this->sun_color, 1, &Sun::color[0]);
     

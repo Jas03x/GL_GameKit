@@ -37,7 +37,7 @@ void _PointLightRenderer::render(const PointLight& light)
 	glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &mvp[0][0]);
 	glUniformMatrix4fv(this->inv_proj_matrix, 1, GL_FALSE, &inverse_projection[0][0]);
 	
-	glUniform2f(this->screen_size, this->framebuffer->getDimensions().x, this->framebuffer->getDimensions().y);
+	glUniform2f(this->screen_size, (float) this->framebuffer->getDimensions().x, (float) this->framebuffer->getDimensions().y);
 	glUniform3fv(this->light_color, 1, &light.color[0]);
 	glUniform3fv(this->light_position, 1, &light_pos_eyespace[0]);
 

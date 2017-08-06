@@ -16,7 +16,7 @@ void Scene::load(const MeshLoader& loader, const glm::vec3& _scale)
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	glBufferData(GL_ARRAY_BUFFER, vc * (sizeof(float) * 8 + sizeof(unsigned char) * 2), NULL, GL_STATIC_DRAW);
     
-    int offset = 0;
+    size_t offset = 0;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3, &loader.getVertices()[0][0]);      offset += sizeof(float) * vc * 3;
 	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3, &loader.getNormals()[0][0]);       offset += sizeof(float) * vc * 3;
 	glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 2, &loader.getUVs()[0][0]);           offset += sizeof(float) * vc * 2;

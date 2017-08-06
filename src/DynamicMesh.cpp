@@ -12,7 +12,7 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
 {
     // open the asset
 	if (loader.getTextures().size() == 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
-		printf("Invalid texture count [%lu] in collada file [%s].\n", loader.getTextures().size(), loader.getPath().c_str());
+		printf("Invalid texture count [%zu] in collada file [%s].\n", loader.getTextures().size(), loader.getPath().c_str());
 		throw -1;
 	}
     
@@ -40,7 +40,7 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
     glBufferData(GL_ARRAY_BUFFER, vc * (sizeof(float) * 12 + sizeof(unsigned char) * 7), NULL, draw_mode);
     
-    int offset = 0;
+    size_t offset = 0;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3,        &vertices[0][0]);                   offset += sizeof(float) * vc * 3;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 3,        &normals[0][0]);                    offset += sizeof(float) * vc * 3;
     glBufferSubData(GL_ARRAY_BUFFER, offset, sizeof(float) * vc * 2,        &uvs[0][0]);                        offset += sizeof(float) * vc * 2;
