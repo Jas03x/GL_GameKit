@@ -26,6 +26,7 @@ void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, con
         source.push_back(glm::vec3(this->node_transforms[this->node_indices[this->faces[i]]] * glm::vec4(this->vertices[this->faces[i]], 1)));
      }
      */
+
     const MeshLoader& data = descriptor.getMeshLoader();
     this->faces.reserve(descriptor.getMeshLoader().getFaces().size());
     VectorTree vertex_tree;
@@ -33,12 +34,12 @@ void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, con
     for(unsigned int i = 0; i < data.getFaces().size(); i++) {
         unsigned int face = data.getFaces()[i];
         glm::vec3 vertex = glm::vec3(OFFSET * data.getNodeTransforms()[data.getNodeIndices()[face]] * glm::vec4(data.getVertices()[face], 1));
-        //printf("Add %f %f %f\n", vertex.x, vertex.y, vertex.z);
         this->faces.push_back(vertex_tree.insert(vertex));
     }
     vertex_tree.toArray(this->vertices);
-    this->triangle_iv_array = new btTriangleIndexVertexArray((unsigned int) faces.size() / 3, &faces[0], 0, (unsigned int) vertices.size(), &vertices[0][0], 0);
-    this->shape = new btBvhTriangleMeshShape(triangle_iv_array, true);
+
+	this->triangle_iv_array = new btTriangleIndexVertexArray((int) faces.size() / 3, &faces[0], sizeof(int) * 3, (unsigned int) vertices.size(), &vertices[0][0], sizeof(glm::vec3));
+	this->shape = new btBvhTriangleMeshShape(triangle_iv_array, true);
     
     this->motion_state = new btDefaultMotionState(descriptor.getTransform().toBulletTransform());
     btRigidBody::btRigidBodyConstructionInfo construction_info(mass, this->motion_state, this->shape, btVector3(inertia.x, inertia.y, inertia.z));
