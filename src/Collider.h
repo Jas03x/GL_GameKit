@@ -36,6 +36,7 @@ public:
     virtual void unbind();
     
     inline const btCollisionObject* getCollisionObject() const { return this->body; }
+	inline void setTransformationPointer(Transform* ptr) { this->transformation = ptr; }
     inline bool hasTransformationPointer() const { return this->transformation != NULL; }
     
     void rotate(const glm::quat& rotation);

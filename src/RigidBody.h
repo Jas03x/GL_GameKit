@@ -18,11 +18,13 @@ protected:
     btCollisionShape* shape;
     btDefaultMotionState* motion_state;
     
+	void construct(btCollisionShape* shape, const Transform& transform, const float mass, const glm::vec3& inertia);
     void bind();
     void unbind();
     
 public:
     RigidBody(Transform* _transformation = NULL);
+	RigidBody(btCollisionShape* shape, const Transform& transform, const float mass, const glm::vec3& inertia);
     ~RigidBody();
 };
 

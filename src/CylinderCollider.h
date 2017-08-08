@@ -17,14 +17,16 @@
 #include "MeshLoader.h"
 #include "ColliderData.h"
 #include "MeshDescriptor.h"
+#include "ColliderUtilities.h"
 
 class CylinderCollider : public RigidBody
 {
 public:
-    CylinderCollider();
+    CylinderCollider(const MeshDescriptor& descriptor, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
+	CylinderCollider(const MeshDescriptor& descriptor, const std::vector<int>& faces, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
     ~CylinderCollider();
     
-    static ColliderData getShape(const MeshDescriptor& descriptor, const std::vector<int>& faces);
+    static ColliderData getShape(const MeshDescriptor& descriptor, const std::vector<int>* faces = NULL);
 };
 
 #endif /* CylinderCollider_h */

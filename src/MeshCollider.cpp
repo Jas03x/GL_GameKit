@@ -39,12 +39,7 @@ void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, con
     vertex_tree.toArray(this->vertices);
 
 	this->triangle_iv_array = new btTriangleIndexVertexArray((int) faces.size() / 3, &faces[0], sizeof(int) * 3, (unsigned int) vertices.size(), &vertices[0][0], sizeof(glm::vec3));
-	this->shape = new btBvhTriangleMeshShape(triangle_iv_array, true);
-    
-    this->motion_state = new btDefaultMotionState(descriptor.getTransform().toBulletTransform());
-    btRigidBody::btRigidBodyConstructionInfo construction_info(mass, this->motion_state, this->shape, btVector3(inertia.x, inertia.y, inertia.z));
-    this->body = new btRigidBody(construction_info);
-    RigidBody::bind();
+	this->construct(new btBvhTriangleMeshShape(triangle_iv_array, true), descriptor.getTransform(), mass, inertia);
 }
 
 void MeshCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
