@@ -30,10 +30,11 @@ void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, con
     const MeshLoader& data = descriptor.getMeshLoader();
     this->faces.reserve(descriptor.getMeshLoader().getFaces().size());
     VectorTree vertex_tree;
-    const glm::mat4 OFFSET = descriptor.getTransform().toMatrix() * glm::scale(descriptor.getScale());
+    //const glm::mat4 local_transform = descriptor.getTransform().toMatrix() * glm::scale(descriptor.getScale());
+	const glm::mat4 local_transform = glm::scale(descriptor.getScale());
     for(unsigned int i = 0; i < data.getFaces().size(); i++) {
-        unsigned int face = data.getFaces()[i];
-        glm::vec3 vertex = glm::vec3(OFFSET * data.getNodeTransforms()[data.getNodeIndices()[face]] * glm::vec4(data.getVertices()[face], 1));
+        const unsigned int face = data.getFaces()[i];
+        glm::vec3 vertex = glm::vec3(local_transform * data.getNodeTransforms()[data.getNodeIndices()[face]] * glm::vec4(data.getVertices()[face], 1));
         this->faces.push_back(vertex_tree.insert(vertex));
     }
     vertex_tree.toArray(this->vertices);
@@ -52,6 +53,6 @@ void MeshCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, co
 
 MeshCollider::~MeshCollider()
 {
-    RigidBody::unbind();
+    //RigidBody::unbind();
     if(this->triangle_iv_array) delete this->triangle_iv_array;
 }

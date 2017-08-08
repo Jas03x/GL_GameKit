@@ -31,7 +31,7 @@ namespace PhysicsConfiguration
     
     extern std::vector<Collider*> colliders;
     
-    void initalize();
+    void initalize(float gravity);
     void update();
     void destroy();
     
