@@ -12,6 +12,7 @@ void StaticMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, co
 {
     if(loader.getTextures().size() == 0 || loader.getTextures().size() > STATIC_MESH_MAX_TEXTURE_COUNT) {
         printf("Invalid texture count [%zu] in file %s\n", loader.getTextures().size(), loader.getPath().c_str());
+		throw - 1;
     }
     
     this->texture = Texture(loader.getDirectory() + loader.getTextures()[0]);

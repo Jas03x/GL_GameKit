@@ -25,6 +25,7 @@ private:
     GLuint nodes;
     GLuint mvp_matrix;
 	GLuint normal_matrix;
+	GLuint materials;
     
     void bindMeshInstance(const glm::mat4& inverse_root, const DynamicMeshInstance& instance);
 

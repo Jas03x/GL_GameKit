@@ -3,14 +3,15 @@
 in vec2 _uv;
 in vec3 _normal;
 flat in uint _texture_id;
+flat in uint _m_index;
 
 uniform sampler2D textures[4];
+uniform float materials[32];
 
 out vec4 diffuse_out;
 out vec3 normal_out;
 //out vec4 light_out;
-
-in vec3 debug;
+out float brightness_out;
 
 void main()
 {
@@ -18,4 +19,5 @@ void main()
     diffuse_out = color;
 	normal_out = _normal;
 	//light_out = color * 0.5;
+	brightness_out = materials[_m_index];
 }

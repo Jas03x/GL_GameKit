@@ -8,7 +8,7 @@
 
 #include "DynamicMesh.h"
 
-void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, GLenum draw_mode)
+void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, const Transform& transform, GLenum draw_mode)
 {
     // open the asset
 	if (loader.getTextures().size() == 0 || loader.getTextures().size() > DYNAMIC_MESH_MAX_TEXTURE_COUNT) {
@@ -74,6 +74,7 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, G
     
     this->texture_count = (unsigned int) loader.getTextures().size();
     this->vertex_count = (unsigned int) loader.getFaces().size();
+	this->default_instance.transformation = transform;
 }
 
 void DynamicMesh::generateNodes(const MeshLoader& loader)

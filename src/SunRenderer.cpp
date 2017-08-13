@@ -7,6 +7,8 @@ void _SunRenderer::initalize(const DSFramebuffer& fbo)
     ShaderSource source = ShaderSource(INT_SHDR("sun.vert"), INT_SHDR("sun.frag"));
     this->source(source);
     this->bindAttributeLocation(0, "vertex");
+	this->bindFragDataLocation(0, "light_out");
+	this->bindFragDataLocation(1, "specular_out");
     this->link(source);
     
     this->sun_position = this->getUniform("sun_position");
@@ -17,15 +19,13 @@ void _SunRenderer::initalize(const DSFramebuffer& fbo)
     this->diffuse_texture = this->getUniform("diffuse_texture");
     this->normal_texture = this->getUniform("normal_texture");
     this->depth_texture = this->getUniform("depth_texture");
-    this->specular_texture = this->getUniform("specular_texture");
+    this->brightness_texture = this->getUniform("brightness_texture");
     
     this->framebuffer = &fbo;
 }
 
 void _SunRenderer::render()
 {
-    glEnable(GL_BLEND);
-    
     this->bind();
     Quad::bind();
     
@@ -40,7 +40,7 @@ void _SunRenderer::render()
     
     this->framebuffer->bindTexture(this->diffuse_texture, DSFramebuffer::DIFFUSE_TEXTURE, 0);
     this->framebuffer->bindTexture(this->normal_texture, DSFramebuffer::NORMAL_TEXTURE, 1);
-    this->framebuffer->bindTexture(this->specular_texture, DSFramebuffer::SPECULAR_TEXTURE, 2);
+    this->framebuffer->bindTexture(this->brightness_texture, DSFramebuffer::BRIGHTNESS_TEXTURE, 2);
     this->framebuffer->bindTexture(this->depth_texture, DSFramebuffer::DEPTH_TEXTURE, 3);
     
     glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -17,13 +17,15 @@ void _DynamicMeshRenderer::initalize()
     this->bindAttributeLocation(0, "vertex");
     this->bindAttributeLocation(1, "normal");
     this->bindAttributeLocation(2, "uv");
+	this->bindAttributeLocation(3, "m_index");
     this->bindAttributeLocation(4, "texture_id");
     this->bindAttributeLocation(5, "node_index");
     this->bindAttributeLocation(6, "bone_weights");
     this->bindAttributeLocation(7, "bone_indices");
-	this->bindFragDataLocation(DSFramebuffer::DIFFUSE_TEXTURE, "diffuse_out");
-	this->bindFragDataLocation(DSFramebuffer::NORMAL_TEXTURE, "normal_out");
+	this->bindFragDataLocation(0, "diffuse_out");
+	this->bindFragDataLocation(1, "normal_out");
 	//this->bindFragDataLocation(DSFramebuffer::LIGHT_TEXTURE, "light_out");
+	this->bindFragDataLocation(2, "brightness_out");
     this->link(source);
     this->textures[0] = this->getUniform("textures[0]");
     this->textures[1] = this->getUniform("textures[1]");
@@ -33,6 +35,7 @@ void _DynamicMeshRenderer::initalize()
     this->nodes = this->getUniform("nodes");
     this->mvp_matrix = this->getUniform("mvp_matrix");
 	this->normal_matrix = this->getUniform("normal_matrix");
+	this->materials = this->getUniform("materials");
 }
 
 void _DynamicMeshRenderer::bind()
@@ -60,7 +63,7 @@ void _DynamicMeshRenderer::bindMeshInstance(const glm::mat4& inverse_root, const
     }
     
     glUniformMatrix4fv(this->mvp_matrix, 1, GL_FALSE, &vmatrix[0][0]);
-    glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
+	glUniformMatrix4fv(this->normal_matrix, 1, GL_FALSE, &nmatrix[0][0]);
     glUniformMatrix4fv(this->bones, (unsigned int) instance.bones.size(), GL_FALSE, &bone_buffer[0][0][0]);
     glUniformMatrix4fv(this->nodes, (unsigned int) instance.nodes.size(), GL_FALSE, &node_buffer[0][0][0]);
 }
@@ -71,6 +74,8 @@ void _DynamicMeshRenderer::render(const DynamicMesh& mesh, const std::vector<Dyn
     
     for(unsigned int i = 0; i < mesh.getTextureCount(); i++)
         mesh.getTextures()[i].bind(this->textures[i], i);
+
+	glUniform1fv(this->materials, (unsigned int) mesh.getMaterials().size(), &mesh.getMaterials()[0]);
     
     if(instances) {
         for(unsigned int i = 0; i < instances->size(); i++) {

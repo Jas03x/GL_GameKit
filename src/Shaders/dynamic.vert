@@ -3,6 +3,7 @@
 in vec3 vertex;
 in vec3 normal;
 in vec2 uv;
+in uint m_index; 
 in uint node_index;
 in uint texture_id;
 in vec4 bone_weights;
@@ -16,6 +17,7 @@ uniform mat4 normal_matrix;
 out vec2 _uv;
 out vec3 _normal;
 flat out uint _texture_id;
+flat out uint _m_index;
 
 void main()
 {
@@ -31,8 +33,9 @@ void main()
     // mvp * inverse * offset * bindpose * bone
     vec4 v = bone * vec4(vertex, 1);
     gl_Position = mvp_matrix * vec4(v.x, -v.z, v.y, 1);
-    //gl_Position = mvp_matrix * vec4(v.x, v.z, -v.y, 1);
+
 	_normal = normalize(vec3(normal_matrix * vec4(vertex, 1)));
     _uv = uv;
     _texture_id = texture_id;
+	_m_index = m_index;
 }

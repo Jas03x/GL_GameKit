@@ -83,17 +83,18 @@ protected:
     DynamicMeshInstance default_instance;
     
     void generateNodes(const MeshLoader& loader);
-    void construct(const MeshLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f), GLenum draw_mode = GL_STATIC_DRAW);
+    void construct(const MeshLoader& loader, const glm::vec3& _scale = glm::vec3(1.0f), const Transform& transform = Transform(), GLenum draw_mode = GL_STATIC_DRAW);
     
 public:
     DynamicMesh(){}
     void destroy();
     
-    DynamicMesh(const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getDrawMode()); }
-    void operator = (const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getDrawMode()); }
+    DynamicMesh(const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getTransform(), descriptor.getDrawMode()); }
+    void operator = (const MeshDescriptor& descriptor) { this->construct(descriptor.getMeshLoader(), descriptor.getScale(), descriptor.getTransform(), descriptor.getDrawMode()); }
     
     inline const Texture* getTextures() const { return this->textures; }
     inline unsigned int getTextureCount() const { return this->texture_count; }
+	inline const std::vector<float>& getMaterials() const { return this->materials; }
     
     inline const glm::mat4& getInverseRoot() const { return this->inverse_root; }
     

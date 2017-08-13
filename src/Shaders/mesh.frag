@@ -10,7 +10,7 @@ uniform float materials[32];
 out vec4 diffuse_out;
 out vec3 normal_out;
 //out vec4 light_out;
-out vec4 specular_out;
+out float brightness_out;
 
 void main()
 {
@@ -18,5 +18,5 @@ void main()
     diffuse_out = color;
     normal_out = _normal;
     //light_out = color * 0.5;
-    specular_out = color * materials[_m_index];
+    brightness_out = materials[_m_index];
 }

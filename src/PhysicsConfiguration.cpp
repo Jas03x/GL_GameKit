@@ -19,7 +19,7 @@ btDiscreteDynamicsWorld*                    PhysicsConfiguration::dynamics_world
 
 std::vector<Collider*>                      PhysicsConfiguration::colliders;
 
-void PhysicsConfiguration::initalize(float gravity)
+void PhysicsConfiguration::initalize(const glm::vec3& gravity)
 {
     // setting up the bullet physics dynamics world
     PhysicsConfiguration::broadphase = new btDbvtBroadphase();
@@ -29,7 +29,7 @@ void PhysicsConfiguration::initalize(float gravity)
     PhysicsConfiguration::solver = new btSequentialImpulseConstraintSolver();
     PhysicsConfiguration::dynamics_world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
     //PhysicsConfiguration::dynamics_world = new btSoftRigidDynamicsWorld(dispatcher, broadphase, solver, collision_configuration);
-    PhysicsConfiguration::dynamics_world->setGravity(btVector3(0, gravity, 0));
+    PhysicsConfiguration::dynamics_world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
     
     // setting up the softbody world information
     /*

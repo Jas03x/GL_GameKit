@@ -20,7 +20,7 @@ private:
     GLuint diffuse_texture;
     GLuint normal_texture;
     GLuint depth_texture;
-    GLuint specular_texture;
+    GLuint brightness_texture;
     
     const DSFramebuffer* framebuffer;
     
