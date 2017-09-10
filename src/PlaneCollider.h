@@ -11,15 +11,14 @@
 
 #include "Math3d.h"
 #include "Collider.h"
-#include "RigidBody.h"
 
-class PlaneCollider : public RigidBody
+class PlaneCollider : public Collider
 {
 private:
     
 public:
-    PlaneCollider(Transform transform, const glm::vec3& normal = glm::vec3(0, 1, 0), const float plane_constant = 0, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
-    ~PlaneCollider();
+    PlaneCollider(const glm::vec3& normal = glm::vec3(0, 1, 0), const float plane_constant = 0);
+	~PlaneCollider() {}
 };
 
 #endif /* PlaneCollider_h */

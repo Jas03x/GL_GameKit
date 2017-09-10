@@ -18,7 +18,7 @@
 #include "MeshDescriptor.h"
 #include "PhysicsConfiguration.h"
 
-class MeshCollider : public RigidBody
+class MeshCollider : public Collider
 {
 private:
     btTriangleIndexVertexArray* triangle_iv_array;
@@ -26,12 +26,12 @@ private:
     std::vector<glm::vec3> vertices;
     
 protected:
-    void constructFromStaticMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia);
-    void constructFromDynamicMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia);
+    void constructFromStaticMesh(const MeshDescriptor& descriptor, std::vector<int>* face_array = NULL);
+    void constructFromDynamicMesh(const MeshDescriptor& descriptor, std::vector<int>* face_array = NULL);
     
 public:
     MeshCollider(){}
-    MeshCollider(const MeshDescriptor& descriptor, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
+    MeshCollider(const MeshDescriptor& descriptor, std::vector<int>* face_array = NULL);
     ~MeshCollider();
 };
 

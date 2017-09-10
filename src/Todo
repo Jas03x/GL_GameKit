@@ -9,3 +9,5 @@
 * Perhaps turn the blending addition of the light and diffuse texture into a texture combine filter
 
 * Make the physics configuration namespace into a class so that you can have different models for softbody and dynamics worlds!!!
+
+* REIMPLEMENT COMPOUND COLLIDERS

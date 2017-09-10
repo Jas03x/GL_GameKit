@@ -8,7 +8,39 @@
 
 #include "SoftBody.h"
 
-SoftBody::SoftBody(MeshDescriptor& descriptor, const std::vector<int>& face_data, const Transform& transform, Transform* ptr) : Collider(ptr)
+
+/* SOFT BODY MANAGER */
+
+std::vector<SoftBody*> SoftBodyManager::soft_bodies;
+btSoftRigidDynamicsWorld* SoftBodyManager::dynamics_world;
+
+void SoftBodyManager::addSoftBody(SoftBody* soft_body) {
+	std::vector<SoftBody*>::const_iterator it = std::find(soft_bodies.begin(), soft_bodies.end(), soft_body);
+	if (it == soft_bodies.end()) {
+		soft_bodies.push_back(soft_body);
+		dynamics_world->addSoftBody(soft_body->getSoftBodyPointer());
+	}
+}
+
+void SoftBodyManager::removeSoftBody(SoftBody* soft_body) {
+	std::vector<SoftBody*>::const_iterator it = std::find(soft_bodies.begin(), soft_bodies.end(), soft_body);
+	if (it != soft_bodies.end()) {
+		soft_bodies.erase(it);
+		dynamics_world->removeSoftBody(soft_body->getSoftBodyPointer());
+	}
+}
+
+void SoftBodyManager::UpdateBodies() {
+	for (unsigned int i = 0; i < soft_bodies.size(); i++) {
+		if (soft_bodies[i]->hasTransformationPointer()) {
+			soft_bodies[i]->hasTransformationPointer();
+		}
+	}
+}
+
+/* SOFT BODY */
+
+SoftBody::SoftBody(MeshDescriptor& descriptor, const std::vector<int>& face_data, const Transform& transform, Transform* ptr)
 {
     std::vector<glm::mat4> bone_cache;
     MeshLoader& loader = descriptor.getMeshLoader();
@@ -43,7 +75,7 @@ SoftBody::SoftBody(MeshDescriptor& descriptor, const std::vector<int>& face_data
     vertex_tree.toArray(vertex_array);
     
     this->scale = glm::vec3(1.0f / descriptor.getScale().x, 1.0f / descriptor.getScale().y, 1.0f / descriptor.getScale().z);
-    //this->body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertex_array[0][0], &this->face_array[0], (unsigned int) this->face_array.size() / 3);
+    //this->soft_body = btSoftBodyHelpers::CreateFromTriMesh(PhysicsConfiguration::softbody_info, &vertex_array[0][0], &this->face_array[0], (unsigned int) this->face_array.size() / 3);
     this->bind();
     
     // finally update the loader
@@ -57,17 +89,17 @@ SoftBody::~SoftBody()
 
 void SoftBody::bind()
 {
-    //PhysicsConfiguration::addSoftBody(this);
+	SoftBodyManager::addSoftBody(this);
 }
 
 void SoftBody::unbind()
 {
-    //PhysicsConfiguration::removeSoftBody(this);
+	SoftBodyManager::removeSoftBody(this);
 }
 
 void SoftBody::getVertexData(std::vector<glm::vec3>& vertex_data)
 {
-    btSoftBody::tNodeArray& nodes = ((btSoftBody*) body)->m_nodes;
+    btSoftBody::tNodeArray& nodes = this->soft_body->m_nodes;
     vertex_data.clear();
     vertex_data.reserve(this->face_array.size());
     

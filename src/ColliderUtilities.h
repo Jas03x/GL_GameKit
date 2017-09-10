@@ -4,7 +4,14 @@
 #include <utility>
 
 #include "Math3D.h"
+#include "Collider.h"
 #include "MeshDescriptor.h"
+
+typedef struct ShapeData
+{
+	Collider* shape;
+	glm::vec3 position;
+}ShapeData;
 
 namespace ColliderUtilities
 {

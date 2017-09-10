@@ -1,20 +1,21 @@
 #include "ConvexHullCollider.h"
 
-ConvexHullCollider::ConvexHullCollider(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+ConvexHullCollider::ConvexHullCollider(const MeshDescriptor& descriptor, const std::vector<int>* face_array)
 {
 	if (descriptor.getMeshLoader().getBoneNames().size() > 0)
-		this->constructFromDynamicMesh(descriptor, mass, inertia);
-	else this->constructFromStaticMesh(descriptor, mass, inertia);
+		this->constructFromDynamicMesh(descriptor, face_array);
+	else this->constructFromStaticMesh(descriptor, face_array);
 }
 
-void ConvexHullCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+void ConvexHullCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, const std::vector<int>* face_array)
 {
 	const MeshLoader& data = descriptor.getMeshLoader();
 	//const glm::mat4 local_transform = descriptor.getTransform().toMatrix() * glm::scale(descriptor.getScale());
 	const glm::mat4 local_transform = glm::scale(descriptor.getScale());
 	VectorTree vertex_tree;
-	for (unsigned int i = 0; i < data.getFaces().size(); i++) {
-		const unsigned int face = data.getFaces()[i];
+	const std::vector<int>& faces = face_array ? *face_array : data.getFaces();
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		const unsigned int face = faces[i];
 		glm::vec3 vertex = glm::vec3(local_transform * data.getNodeTransforms()[data.getNodeIndices()[face]] * glm::vec4(data.getVertices()[face], 1));
 		vertex_tree.insert(vertex);
 	}
@@ -30,14 +31,13 @@ void ConvexHullCollider::constructFromStaticMesh(const MeshDescriptor& descripto
 	btShapeHull* hull = new btShapeHull(chs);
 	btScalar margin = chs->getMargin();
 	hull->buildHull(margin);
-	btConvexHullShape* simplifiedConvexShape = new btConvexHullShape(&hull->getVertexPointer()->getX(), hull->numVertices());
+	this->shape = new btConvexHullShape(&hull->getVertexPointer()->getX(), hull->numVertices());
 
-	this->construct(simplifiedConvexShape, descriptor.getTransform(), mass, inertia);
 	delete chs;
 	delete hull; // TODO: MAYBE THIS SHOULD NOT BE DELETED?! IT MIGHT NEED TO STAY IN MEMORY!!
 }
 
-void ConvexHullCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+void ConvexHullCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, const std::vector<int>* face_array)
 {
 	// TODO: IMPLEMENT!!!
 	// NOTE: VERY SIMILAR PROCESS TO THE SOFTBODY CONSTRUCTION!!!
@@ -45,7 +45,3 @@ void ConvexHullCollider::constructFromDynamicMesh(const MeshDescriptor& descript
 	throw - 1;
 }
 
-ConvexHullCollider::~ConvexHullCollider()
-{
-
-}

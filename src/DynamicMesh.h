@@ -34,7 +34,7 @@ private:
     glm::vec3 scale;
     
 public:
-    Transform transformation;
+    Transform transform;
     std::vector<Bone> bones;
     std::vector<Node> nodes;
     std::map<std::string, unsigned int> bone_map;
@@ -45,7 +45,7 @@ public:
     
     DynamicMeshInstance(const DynamicMeshInstance& other) {
         this->scale = other.scale;
-        this->transformation = other.transformation;
+        this->transform = other.transform;
         this->nodes = other.nodes;
         this->bone_map = other.bone_map;
         this->node_map = other.node_map;
@@ -68,7 +68,7 @@ public:
     }
     
     inline const glm::vec3& getScale() const { return this->scale; }
-    inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
+    inline glm::mat4 getMatrix() const { return this->transform.toMatrix() * glm::scale(this->scale); }
 }DynamicMeshInstance;
 
 typedef struct DynamicMesh : public Mesh

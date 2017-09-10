@@ -24,7 +24,7 @@ void main()
     vec4 homogenousLocation = inv_proj_matrix * clipSpaceLocation;
     vec3 view_space = homogenousLocation.xyz / homogenousLocation.w;
     
-    vec3 diffuse = texture(diffuse_texture, texcoord).rgb;
+    vec4 diffuse = texture(diffuse_texture, texcoord);
     vec3 normal = texture(normal_texture, texcoord).rgb;
     float specular_factor = texture(brightness_texture, texcoord).r;
 
@@ -35,7 +35,7 @@ void main()
     float cosTheta = clamp(dot(normal, sun_direction_cameraspace), 0, 1);
     float cosAlpha = clamp(dot(eye_direction_cameraspace, reflect(-sun_direction_cameraspace, normal)), 0, 1);
     
-	vec3 color = diffuse * 0.5f + sun_color * cosTheta * 0.5f;
-    light_out = vec4(color, 1);
+	vec3 color = diffuse.rgb * 0.5f + sun_color * cosTheta * 0.5f;
+    light_out = vec4(color, diffuse.a);
 	specular_out = vec4(specular_factor * cosAlpha * color, 1);
 }

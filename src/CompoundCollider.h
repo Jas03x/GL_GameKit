@@ -9,6 +9,8 @@
 #ifndef CompoundCollider_h
 #define CompoundCollider_h
 
+/*
+
 #include <vector>
 
 #include "Mesh.h"
@@ -32,5 +34,7 @@ public:
     
     void addCollisionShape(const Transform& local_transform, btCollisionShape* shape);
 };
+
+*/
 
 #endif /* CompoundCollider_h */

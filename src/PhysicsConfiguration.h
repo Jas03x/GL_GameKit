@@ -11,12 +11,8 @@
 
 #include <vector>
 
-#include <BulletDynamics/btBulletDynamicsCommon.h>
-#include <BulletCollision/btBulletCollisionCommon.h>
-#include <BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h>
-#include <BulletSoftBody/btSoftRigidDynamicsWorld.h>
-
-#include "Collider.h"
+#include "Physics.h"
+#include "RigidBody.h"
 
 namespace PhysicsConfiguration
 {
@@ -29,16 +25,12 @@ namespace PhysicsConfiguration
     //extern btSoftRigidDynamicsWorld* dynamics_world;
     //extern btSoftBodyWorldInfo softbody_info;
     
-    extern std::vector<Collider*> colliders;
-    
     void initalize(const glm::vec3& gravity);
     void update();
     void destroy();
     
-    void addRigidBody(Collider* collider);
-    void removeRigidBody(Collider* collider);
-    void addCollider(Collider* collider);
-    void removeCollider(Collider* collider);
+    void addRigidBody(RigidBody* rigidbody);
+    void removeRigidBody(RigidBody* rigidbody);
     //void addSoftBody(Collider* collider);
     //void removeSoftBody(Collider* collider);
 }

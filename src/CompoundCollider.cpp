@@ -8,6 +8,8 @@
 
 #include "CompoundCollider.h"
 
+/*
+
 CompoundCollider::CompoundCollider(const Transform& transform, Transform* ptr, const float mass, const glm::vec3& inertia) : RigidBody(ptr)
 {
     this->shape = new btCompoundShape();
@@ -31,3 +33,5 @@ void CompoundCollider::addCollisionShape(const Transform& local_transform, btCol
     this->child_shapes.push_back(shape);
     ((btCompoundShape*) this->shape)->addChildShape(local_transform.toBulletTransform(), shape);
 }
+
+*/

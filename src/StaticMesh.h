@@ -29,12 +29,12 @@ private:
     glm::vec3 scale;
     
 public:
-    Transform transformation;
+    Transform transform;
     
     StaticMeshInstance(){}
     StaticMeshInstance(const glm::vec3& _scale) : scale(_scale) {}
     
-    inline glm::mat4 getMatrix() const { return this->transformation.toMatrix() * glm::scale(this->scale); }
+    inline glm::mat4 getMatrix() const { return this->transform.toMatrix() * glm::scale(this->scale); }
     inline const glm::vec3& getScale() const { return this->scale; }
 }StaticMeshInstance;
 

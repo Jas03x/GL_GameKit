@@ -74,7 +74,7 @@ void DynamicMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, c
     
     this->texture_count = (unsigned int) loader.getTextures().size();
     this->vertex_count = (unsigned int) loader.getFaces().size();
-	this->default_instance.transformation = transform;
+	this->default_instance.transform = transform;
 }
 
 void DynamicMesh::generateNodes(const MeshLoader& loader)

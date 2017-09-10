@@ -56,7 +56,7 @@ void StaticMesh::construct(const MeshLoader& loader, const glm::vec3& _scale, co
     this->vertex_count = (unsigned int) loader.getFaces().size();
     
     this->default_instance = StaticMeshInstance(_scale);
-    this->default_instance.transformation = transform;
+    this->default_instance.transform = transform;
 }
 
 void StaticMesh::destroy()

@@ -11,15 +11,18 @@
 
 #include <BulletCollision/btBulletCollisionCommon.h>
 #include <BulletDynamics/btBulletDynamicsCommon.h>
+#include <BulletCollision\CollisionShapes\btShapeHull.h>
+#include <BulletCollision\CollisionShapes\btConvexHullShape.h>
 
 #include "Math3d.h"
 #include "Transform.h"
+#include "MeshDescriptor.h"
+#include "VectorTree.h"
 
 class Collider
 {
 protected:
-    btCollisionObject* body;
-    Transform* transformation;
+    btCollisionShape* shape;
     
 public:
     enum Type
@@ -29,27 +32,11 @@ public:
         PLANE_COLLIDER = 2
     };
     
-    Collider(Transform* _transformation = NULL);
+    Collider();
     virtual ~Collider();
     
-    virtual void bind();
-    virtual void unbind();
-    
-    inline const btCollisionObject* getCollisionObject() const { return this->body; }
-	inline void setTransformationPointer(Transform* ptr) { this->transformation = ptr; }
-    inline bool hasTransformationPointer() const { return this->transformation != NULL; }
-    
-    void rotate(const glm::quat& rotation);
-    void translate(const glm::vec3& translation);
-    void transform(const glm::vec3& translation, const glm::quat& rotation);
-    
-    inline void updateTransformationPointer() {
-        btTransform transform = this->body->getWorldTransform();
-        const btVector3& origin = transform.getOrigin();
-        const btQuaternion& rotation = transform.getRotation();
-        this->transformation->translation = glm::vec3(origin.getX(), origin.getY(), origin.getZ());
-        this->transformation->rotation = glm::quat(rotation.getW(), rotation.getX(), rotation.getY(), rotation.getZ());
-    }
+    inline const btCollisionShape* getCollisionShape() const { return this->shape; }
+	inline btCollisionShape* getCollisionShape() { return this->shape; }
 };
 
 #endif /* Collider_h */

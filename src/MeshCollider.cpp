@@ -8,14 +8,14 @@
 
 #include "MeshCollider.h"
 
-MeshCollider::MeshCollider(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+MeshCollider::MeshCollider(const MeshDescriptor& descriptor, std::vector<int>* face_array)
 {
     if(descriptor.getMeshLoader().getBoneNames().size() > 0)
-        this->constructFromDynamicMesh(descriptor, mass, inertia);
-    else this->constructFromStaticMesh(descriptor, mass, inertia);
+        this->constructFromDynamicMesh(descriptor, face_array);
+    else this->constructFromStaticMesh(descriptor, face_array);
 }
 
-void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, std::vector<int>* face_array)
 {
     /*
      void MeshLoader::getStaticVertexArray(std::vector<glm::vec3>& source) const
@@ -28,22 +28,24 @@ void MeshCollider::constructFromStaticMesh(const MeshDescriptor& descriptor, con
      */
 
     const MeshLoader& data = descriptor.getMeshLoader();
-    this->faces.reserve(descriptor.getMeshLoader().getFaces().size());
     VectorTree vertex_tree;
     //const glm::mat4 local_transform = descriptor.getTransform().toMatrix() * glm::scale(descriptor.getScale());
 	const glm::mat4 local_transform = glm::scale(descriptor.getScale());
-    for(unsigned int i = 0; i < data.getFaces().size(); i++) {
-        const unsigned int face = data.getFaces()[i];
+	//const std::vector<int>& face_data = face_array ? *face_array : data.getFaces();
+	const std::vector<int>& face_data = data.getFaces();
+	this->faces.reserve(face_data.size());
+    for(unsigned int i = 0; i < face_data.size(); i++) {
+        const unsigned int face = face_data[i];
         glm::vec3 vertex = glm::vec3(local_transform * data.getNodeTransforms()[data.getNodeIndices()[face]] * glm::vec4(data.getVertices()[face], 1));
         this->faces.push_back(vertex_tree.insert(vertex));
     }
     vertex_tree.toArray(this->vertices);
 
 	this->triangle_iv_array = new btTriangleIndexVertexArray((int) faces.size() / 3, &faces[0], sizeof(int) * 3, (unsigned int) vertices.size(), &vertices[0][0], sizeof(glm::vec3));
-	this->construct(new btBvhTriangleMeshShape(triangle_iv_array, true), descriptor.getTransform(), mass, inertia);
+	this->shape = new btBvhTriangleMeshShape(triangle_iv_array, true);
 }
 
-void MeshCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia)
+void MeshCollider::constructFromDynamicMesh(const MeshDescriptor& descriptor, std::vector<int>* face_array)
 {
     // TODO: IMPLEMENT!!!
     // NOTE: VERY SIMILAR PROCESS TO THE SOFTBODY CONSTRUCTION!!!

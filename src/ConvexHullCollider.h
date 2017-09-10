@@ -13,18 +13,18 @@
 #include <BulletCollision\CollisionShapes\btShapeHull.h>
 #include <BulletCollision\CollisionShapes\btConvexHullShape.h>
 
-class ConvexHullCollider : public RigidBody
+class ConvexHullCollider : public Collider
 {
 private:
 
 protected:
-	void constructFromStaticMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia);
-	void constructFromDynamicMesh(const MeshDescriptor& descriptor, const float mass, const glm::vec3& inertia);
+	void constructFromStaticMesh(const MeshDescriptor& descriptor, const std::vector<int>* face_array = NULL);
+	void constructFromDynamicMesh(const MeshDescriptor& descriptor, const std::vector<int>* face_array = NULL);
 
 public:
 	ConvexHullCollider() {}
-	ConvexHullCollider(const MeshDescriptor& descriptor, const float mass = 0, const glm::vec3& inertia = glm::vec3(0));
-	~ConvexHullCollider();
+	ConvexHullCollider(const MeshDescriptor& descriptor, const std::vector<int>* face_array = NULL);
+	~ConvexHullCollider() {}
 };
 
 #endif /*CONVEX_HULL_COLLIDER*/
